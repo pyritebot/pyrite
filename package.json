@@ -3,8 +3,9 @@
 	"version": "1.0.0",
 	"type": "module",
 	"description": "",
-	"main": "./.build/index.js",
+	"main": "./dist/index.js",
 	"scripts": {
+		"start": "node .",
 		"build": "./.config/build.sh"
 	},
 	"repository": {
