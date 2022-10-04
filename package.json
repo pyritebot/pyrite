@@ -1,0 +1,36 @@
+{
+	"name": "pyrite",
+	"version": "1.0.0",
+	"type": "module",
+	"description": "",
+	"main": "./.build/index.js",
+	"scripts": {
+		"build": "./.config/build.sh"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/PyriteBot/pyrite.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/PyriteBot/pyrite/issues"
+	},
+	"homepage": "https://github.com/PyriteBot/pyrite#readme",
+	"dependencies": {
+		"@prisma/client": "^4.4.0",
+		"captcha-canvas": "^3.2.1",
+		"dayjs": "^1.11.5",
+		"discord.js": "^14.5.0",
+		"fastify": "^4.7.0",
+		"googleapis": "^108.0.0",
+		"loxt": "^3.4.0",
+		"node-fetch": "^3.2.10",
+		"sharp": "^0.31.1"
+	},
+	"devDependencies": {
+		"esbuild": "^0.15.10",
+		"prisma": "^4.4.0"
+	}
+}
