@@ -1,13 +1,15 @@
-#!/usr/bin/env wsl
+#!/usr/bin/env bash
 
 set -e
 
 rm -rf .build
 mkdir -p ./.build
 
-npx esbuild src \
+ENTRYPOINTS=$(find -type f -name '*.[tj]s' -not -path './node_modules/*')
+
+npx esbuild $ENTRYPOINTS \
 	--log-level=warning \
-	--outdir='./dist' \
+	--outdir='./.build' \
 	--outbase=. \
 	--sourcemap \
 	--target='node16' \

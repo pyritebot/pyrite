@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../commands/developers.ts"],
+  "sourcesContent": ["import { ChatInputCommandInteraction } from 'discord.js';\nimport { SlashCommandBuilder, AttachmentBuilder } from 'discord.js';\nimport { join } from 'node:path';\nimport { buttons } from '../utils.js';\n\nexport default class Developers {\n\tdata = new SlashCommandBuilder().setName('devs').setDescription('The official bot developers');\n\n\tasync run(interaction: ChatInputCommandInteraction) {\n\t\tawait interaction.reply({\n\t\t\tfiles: [\n\t\t\t\tnew AttachmentBuilder(join(process.cwd(), './assets/angelnext.png'), { name: 'angelnext.png' }),\n\t\t\t\tnew AttachmentBuilder(join(process.cwd(), './assets/eldi.png'), { name: 'eldi.png' }),\n\t\t\t],\n\t\t\tcomponents: [buttons],\n\t\t});\n\t}\n}\n"],
+  "mappings": "AACA,SAAS,qBAAqB,yBAAyB;AACvD,SAAS,YAAY;AACrB,SAAS,eAAe;AAExB,qBAAqB,WAAW;AAAA,EAAhC;AACC,gBAAO,IAAI,oBAAoB,EAAE,QAAQ,MAAM,EAAE,eAAe,6BAA6B;AAAA;AAAA,EAE7F,MAAM,IAAI,aAA0C;AACnD,UAAM,YAAY,MAAM;AAAA,MACvB,OAAO;AAAA,QACN,IAAI,kBAAkB,KAAK,QAAQ,IAAI,GAAG,wBAAwB,GAAG,EAAE,MAAM,gBAAgB,CAAC;AAAA,QAC9F,IAAI,kBAAkB,KAAK,QAAQ,IAAI,GAAG,mBAAmB,GAAG,EAAE,MAAM,WAAW,CAAC;AAAA,MACrF;AAAA,MACA,YAAY,CAAC,OAAO;AAAA,IACrB,CAAC;AAAA,EACF;AACD;",
+  "names": []
+}

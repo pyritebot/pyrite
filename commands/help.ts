@@ -1,11 +1,15 @@
-import type { CommandInteraction } from 'discord.js';
+import type { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, Colors } from 'discord.js';
 import { defaultError, buttons } from '../utils.js';
 
 export default class Help {
-	data = new SlashCommandBuilder().setName('help').setDescription('Display the help command!');
+	data = new SlashCommandBuilder()
+		.setName('help')
+		.setNameLocalizations({ 'es-ES': 'ayuda' })
+		.setDescription('Display the help command!')
+		.setDescriptionLocalizations({ 'es-ES': 'Mostrar el comando de ayuda (en inglés)' });
 
-	async run(interaction: CommandInteraction) {
+	async run(interaction: ChatInputCommandInteraction) {
 		const helpEmbed = new EmbedBuilder({
 			title: '<:pyrite:1014918476982394891> Pyrite Bot',
 			description:

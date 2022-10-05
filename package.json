@@ -1,40 +1,38 @@
 {
-	"name": "pyrite",
-	"version": "1.0.0",
-	"type": "module",
-	"description": "",
-	"main": "./dist/index.js",
-	"scripts": {
-		"start": "node .",
-		"build": "tsc"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/PyriteBot/pyrite.git"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/PyriteBot/pyrite/issues"
-	},
-	"homepage": "https://github.com/PyriteBot/pyrite#readme",
-	"dependencies": {
-		"@googleapis/docs": "^1.0.1",
-		"@prisma/client": "^4.4.0",
-		"captcha-canvas": "^3.2.1",
-		"dayjs": "^1.11.5",
-		"discord.js": "^14.5.0",
-		"fastify": "^4.7.0",
-		"googleapis": "^108.0.0",
-		"loxt": "^3.4.0",
-		"node-fetch": "^3.2.10",
-		"sharp": "^0.31.1"
-	},
-	"devDependencies": {
-		"@types/sharp": "^0.31.0",
-		"esbuild": "^0.15.10",
-		"prisma": "^4.4.0",
-		"typescript": "^4.8.4"
-	}
+  "name": "pyrite",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@prisma/client": "^4.4.0",
+    "canvas": "^2.9.3",
+    "captcha-canvas": "^2.3.1",
+    "cuid": "^2.1.8",
+    "dayjs": "^1.11.5",
+    "discord.js": "^14.3.0",
+    "fastify": "^4.5.0",
+    "googleapis": "^108.0.0",
+    "loxt": "^3.4.0",
+    "node-fetch": "^3.2.10",
+    "sharp": "^0.31.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.10",
+    "prisma": "^4.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PyriteBot/pyrite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PyriteBot/pyrite/issues"
+  },
+  "homepage": "https://github.com/PyriteBot/pyrite#readme"
 }

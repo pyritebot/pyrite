@@ -8,45 +8,45 @@ generator client {
 }
 
 type Warn {
-  id     String @default(cuid())
-  guild  String
-  reason String
+	id     String @default(cuid())
+	guild  String
+	reason String
 }
 
 type Report {
-  id     String @default(cuid())
-  reason String
+	id     String @default(cuid())
+	reason String
 }
 
 model Guild {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
-  guild               String   @unique
-  logs                String?
-  lockdownChannel     String?
-  lockdownMessage     String?
-  verificationChannel String?
-  members             String?
-  mods                String?
-  admins              String[]
-  owners              String[]
-  raidMode            Boolean  @default(false)
-  antiSpam            Boolean  @default(false)
-  toxicityFilter      Boolean  @default(false)
-  antiLinks           Boolean  @default(false)
-  antiRaid            Boolean  @default(false)
-  antiAlts            Boolean  @default(false)
-  spamMinutes         Int      @default(5)
-  spamMessageLimit    Int      @default(7)
+	id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+	guild               String   @unique
+	logs                String?
+	lockdownChannel     String?
+	lockdownMessage     String?
+	verificationChannel String?
+	members             String?
+	mods                String?
+	admins              String[]
+	owners              String[]
+	raidMode            Boolean  @default(false)
+	antiSpam            Boolean  @default(false)
+	toxicityFilter      Boolean  @default(false)
+	antiLinks           Boolean  @default(false)
+	antiRaid            Boolean  @default(false)
+	antiAlts						Boolean	 @default(false)
+	spamMinutes         Int      @default(5)
+	spamMessageLimit    Int      @default(7)
 
-  @@map("guilds")
+	@@map("guilds")
 }
 
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  user     String   @unique
-  warns    Warn[]
-  reports  Report[]
-  toxicity Float    @default(0)
+	id       String    @id @default(auto()) @map("_id") @db.ObjectId
+	user     String    @unique
+	warns    Warn[]
+	reports  Report[]
+	toxicity Float     @default(0)
 
-  @@map("users")
+	@@map("users")
 }
