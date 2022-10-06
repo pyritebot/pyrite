@@ -1,6 +1,6 @@
 import type { ChatInputCommandInteraction, GuildMember, TextChannel } from 'discord.js';
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
-import { errorEmbedBuilder, successEmbedBuilder, logBuilder } from '../utils.js';
+import { errorEmbedBuilder, successEmbedBuilder, warnEmbedBuilder, logBuilder } from '../utils.js';
 import prisma from '../database.js';
 
 export default class Ban {
@@ -32,10 +32,13 @@ export default class Ban {
 			return;
 		}
 
+		const msg = await member.send({ embeds: [warnEmbedBuilder(`You have been banned from **${interaction.guild.name}**!`)] }).catch(() => {})
+
 		try {
 			await member.ban({ reason });
 		} catch {
 			await interaction.reply({ embeds: [errorEmbedBuilder('Cannot ban this member!')], ephemeral: true });
+			await msg?.edit({ embeds: [warnEmbedBuilder(`${interaction.user} tried to ban you from **${interaction.guild.name}**!`)] })
 			return;
 		}
 

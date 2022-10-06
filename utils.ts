@@ -63,7 +63,7 @@ export const buttons = new ActionRowBuilder<ButtonBuilder>({
 		new ButtonBuilder({
 			label: 'Support Server',
 			style: ButtonStyle.Link,
-			url: 'https://discord.gg/C8bpMPwJen',
+			url: 'https://discord.gg/NxJzWWqhdQ',
 		}),
 		new ButtonBuilder({
 			label: 'Website',
@@ -75,20 +75,20 @@ export const buttons = new ActionRowBuilder<ButtonBuilder>({
 
 export const errorEmbedBuilder = (message: string) =>
 	new EmbedBuilder({
-		description: `<:error:1009134465995509810> ${message}`,
-		color: Colors.Blurple,
+		description: `<:error:1027359606126690344>  ${message}`,
+		color: Colors.DarkRed,
 	});
 
 export const successEmbedBuilder = (message: string) =>
 	new EmbedBuilder({
-		description: `<:check:1008718056891101194> ${message}`,
-		color: Colors.Blurple,
+		description: `<:check:1027354811164786739>  ${message}`,
+		color: Colors.Green,
 	});
 
 export const warnEmbedBuilder = (message: string) =>
 	new EmbedBuilder({
-		description: `<:warn:1009191992040894657> ${message}`,
-		color: Colors.Blurple,
+		description: `<:warn:1027361416119853187>  ${message}`,
+		color: Colors.Yellow,
 	});
 
 export const logBuilder = ({ member, content, reason }: LogBuilderOptions) => {
@@ -239,9 +239,7 @@ export const addWarn = async (interaction: CommandInteraction) => {
 		return;
 	}
 
-	try {
-		await member.send({ embeds: [warnEmbedBuilder(`You have been warned in **${member.guild.name}** for **${reason}**!`)] });
-	} catch {}
+	await member.send({ embeds: [warnEmbedBuilder(`You have been warned in **${member.guild.name}** for **${reason}**!`)] });
 
 	await interaction.editReply({ embeds: [successEmbedBuilder(`${member.user} was successfully warned for **${reason}**!`)] });
 

@@ -12,7 +12,7 @@ export default class Verification {
       const messages = await msg.channel.awaitMessages({ max: 1, time: 1e4, errors: ["time"] });
       const roles = (_a = interaction.member) == null ? void 0 : _a.roles;
       if (((_b = messages.first()) == null ? void 0 : _b.content) === text) {
-        await msg.channel.send({ embeds: [successEmbedBuilder("Successfully verified you!")] });
+        await msg.channel.send({ embeds: [successEmbedBuilder("You have been verified successfully, you can now continue to the server!")] });
         const role = (_c = interaction.guild) == null ? void 0 : _c.roles.cache.get(guild == null ? void 0 : guild.members);
         await (roles == null ? void 0 : roles.add(role));
         return;
@@ -27,16 +27,16 @@ export default class Verification {
     }
   }
   async embedBuilder() {
-    const captcha = new CaptchaGenerator({ width: 450, height: 150 }).setCaptcha({ color: "#5865f2" }).setTrace({ color: "#5865f2" });
+    const captcha = new CaptchaGenerator({ width: 450, height: 150 });
     const buffer = await captcha.generate();
     const file = new AttachmentBuilder(buffer, { name: "verification.png" });
     const verificationEmbed = new EmbedBuilder({
-      title: "<:check:1008718056891101194> Verification",
+      title: "<:check:1027354811164786739> Verification",
       description: `<:1412reply:1009087336828649533> Are you a human? Lets find out. Simply type the following captcha below so I can verify that you are human. The captcha will only last 10 seconds so be quick!`,
       image: {
         url: "attachment://verification.png"
       },
-      color: Colors.Blurple
+      color: Colors.Green
     });
     return {
       message: { embeds: [verificationEmbed], files: [file] },
@@ -101,7 +101,7 @@ export default class Verification {
       await interaction.editReply({ embeds: [errorEmbedBuilder("You are already verified!")] });
       return;
     }
-    await interaction.editReply({ content: "Follow the instructions on DM!" });
+    await interaction.editReply({ embeds: [successEmbedBuilder("Follow instructions on DMs")] });
     const { message: initialEmbed, text: initialText } = await this.embedBuilder();
     const msg = await ((_d = interaction.member) == null ? void 0 : _d.send(initialEmbed).catch(async () => {
       await interaction.editReply("You must activate DMs to verify.");

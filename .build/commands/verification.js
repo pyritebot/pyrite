@@ -33,7 +33,7 @@ export default class Verification {
           }
           (_a = interaction.guild) == null ? void 0 : _a.roles.everyone.setPermissions(
             [PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.UseExternalEmojis],
-            "Adding verification"
+            "Turning verification on"
           );
           const oldGuild = await prisma.guild.findUnique({
             where: { guild: interaction.guildId },
@@ -62,19 +62,25 @@ export default class Verification {
             components: [
               new ButtonBuilder({
                 label: "Verify",
-                style: ButtonStyle.Primary,
+                style: ButtonStyle.Success,
                 custom_id: "verify"
+              }),
+              new ButtonBuilder({
+                label: "Support Server",
+                style: ButtonStyle.Link,
+                url: "https://discord.gg/NxJzWWqhdQ"
               })
             ]
           });
           const verificationEmbed = new EmbedBuilder({
-            title: "<:check:1008718056891101194> Verification",
-            description: `<:1412reply:1009087336828649533> This server is protected by **Pyrite**, no one can gain access without completing a verification system.`,
-            color: Colors.Blurple
+            title: "<:check:1027354811164786739> Verification",
+            description: `<:blank:1008721958210383902> <:arrow:1009057573590290452> To access \`${interaction.guild.name}\` you must complete the verification process. 
+<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
+            color: Colors.Green
           });
           await channel.send({ embeds: [verificationEmbed], components: [verificationButtons] });
           await interaction.editReply({
-            embeds: [successEmbedBuilder(`Successfully activated verification! (<@&${guild == null ? void 0 : guild.members}> will be assigned once user verifies!)`)]
+            embeds: [successEmbedBuilder(`Successfully activated verification! (<@&${guild == null ? void 0 : guild.members}>)`)]
           });
           const onLogs = (_d = interaction.guild) == null ? void 0 : _d.channels.cache.get(guild == null ? void 0 : guild.logs);
           onLogs == null ? void 0 : onLogs.send(

@@ -4,7 +4,11 @@ import { join } from 'node:path';
 import { buttons } from '../utils.js';
 
 export default class Developers {
-	data = new SlashCommandBuilder().setName('devs').setDescription('The official bot developers');
+	data = new SlashCommandBuilder()
+		.setName('devs')
+		.setNameLocalizations({ 'es-ES': 'desarrolladores' })
+		.setDescription('The Official Bot Developers')
+		.setDescriptionLocalizations({ 'es-ES': 'Los Desarrolladores Oficiales del Bot' });
 
 	async run(interaction: ChatInputCommandInteraction) {
 		await interaction.reply({

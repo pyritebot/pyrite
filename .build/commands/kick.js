@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import { errorEmbedBuilder, successEmbedBuilder, logBuilder } from "../utils.js";
+import { errorEmbedBuilder, successEmbedBuilder, warnEmbedBuilder, logBuilder } from "../utils.js";
 import prisma from "../database.js";
 export default class Kick {
   constructor() {
@@ -23,10 +23,13 @@ export default class Kick {
       await interaction.reply({ embeds: [errorEmbedBuilder("Member could not be found!")], ephemeral: true });
       return;
     }
+    const msg = await member.send({ embeds: [warnEmbedBuilder(`You have been kicked from **${interaction.guild.name}**!`)] }).catch(() => {
+    });
     try {
       await member.kick(reason);
     } catch {
       await interaction.reply({ embeds: [errorEmbedBuilder("Cannot kick this member!")], ephemeral: true });
+      await (msg == null ? void 0 : msg.edit({ embeds: [warnEmbedBuilder(`${interaction.user} tried to kick you from **${interaction.guild.name}**!`)] }));
       return;
     }
     await interaction.reply({ embeds: [successEmbedBuilder(`${member.user} was kicked from the server for ${reason}`)], ephemeral: true });

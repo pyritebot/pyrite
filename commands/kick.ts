@@ -1,6 +1,6 @@
 import type { ChatInputCommandInteraction, GuildMember, TextChannel } from 'discord.js';
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
-import { errorEmbedBuilder, successEmbedBuilder, logBuilder } from '../utils.js';
+import { errorEmbedBuilder, successEmbedBuilder, warnEmbedBuilder, logBuilder } from '../utils.js';
 import prisma from '../database.js';
 
 export default class Kick {
@@ -31,11 +31,14 @@ export default class Kick {
 			await interaction.reply({ embeds: [errorEmbedBuilder('Member could not be found!')], ephemeral: true });
 			return;
 		}
+		
+		const msg = await member.send({ embeds: [warnEmbedBuilder(`You have been kicked from **${interaction.guild.name}**!`)] }).catch(() => {})
 
 		try {
 			await member.kick(reason);
 		} catch {
 			await interaction.reply({ embeds: [errorEmbedBuilder('Cannot kick this member!')], ephemeral: true });
+			await msg?.edit({ embeds: [warnEmbedBuilder(`${interaction.user} tried to kick you from **${interaction.guild.name}**!`)] })
 			return;
 		}
 

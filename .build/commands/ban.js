@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import { errorEmbedBuilder, successEmbedBuilder, logBuilder } from "../utils.js";
+import { errorEmbedBuilder, successEmbedBuilder, warnEmbedBuilder, logBuilder } from "../utils.js";
 import prisma from "../database.js";
 export default class Ban {
   constructor() {
@@ -23,10 +23,13 @@ export default class Ban {
       await interaction.reply({ embeds: [errorEmbedBuilder("Member could not be found!")], ephemeral: true });
       return;
     }
+    const msg = await member.send({ embeds: [warnEmbedBuilder(`You have been banned from **${interaction.guild.name}**!`)] }).catch(() => {
+    });
     try {
       await member.ban({ reason });
     } catch {
       await interaction.reply({ embeds: [errorEmbedBuilder("Cannot ban this member!")], ephemeral: true });
+      await (msg == null ? void 0 : msg.edit({ embeds: [warnEmbedBuilder(`${interaction.user} tried to ban you from **${interaction.guild.name}**!`)] }));
       return;
     }
     await interaction.reply({ embeds: [successEmbedBuilder(`${member.user} was banned from the server for ${reason}`)], ephemeral: true });

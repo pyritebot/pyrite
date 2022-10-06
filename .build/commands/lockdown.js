@@ -29,25 +29,20 @@ export default class Lockdown {
           components: [
             new ButtonBuilder({
               label: "Continue",
-              style: ButtonStyle.Primary,
+              style: ButtonStyle.Danger,
               custom_id: "lockdown_continue"
             }),
             new ButtonBuilder({
               label: "Cancel",
-              style: ButtonStyle.Danger,
+              style: ButtonStyle.Secondary,
               custom_id: "lockdown_cancel"
             })
           ]
         });
         const lockdownOnEmbed = new EmbedBuilder({
-          title: "Are you sure you want to procced?",
-          fields: [
-            {
-              name: "<:warn:1009191992040894657> Warning!",
-              value: "<:1412reply:1009087336828649533> The lockdown goes through the entire server and lock every channel and remove all role permissions, and no new members will be able to enter your server while it's on!"
-            }
-          ],
-          color: Colors.Blurple
+          title: "<:warn:1027361416119853187> Warning!",
+          description: "The lockdown goes through the entire server and lock every channel and remove all role permissions, and no new members will be able to enter your server while it's on!",
+          color: Colors.Yellow
         });
         await interaction.reply({ embeds: [lockdownOnEmbed], components: [confirm], ephemeral: true });
         break;

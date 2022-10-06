@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import { errorEmbedBuilder, successEmbedBuilder, logBuilder } from "../utils.js";
+import { errorEmbedBuilder, successEmbedBuilder, warnEmbedBuilder, logBuilder } from "../utils.js";
 import prisma from "../database.js";
 export default class Mute {
   constructor() {
@@ -24,10 +24,13 @@ export default class Mute {
       await interaction.reply({ embeds: [errorEmbedBuilder("Member could not be found!")], ephemeral: true });
       return;
     }
+    const msg = await member.send({ embeds: [warnEmbedBuilder(`You have been timeouted in **${interaction.guild.name}**!`)] }).catch(() => {
+    });
     try {
       await member.timeout(minutes * 6e4, reason);
     } catch (err) {
       await interaction.reply({ embeds: [errorEmbedBuilder(`${member.user} cannot be timeouted!`)], ephemeral: true });
+      await (msg == null ? void 0 : msg.edit({ embeds: [warnEmbedBuilder(`${interaction.user} tried to timeout you in **${interaction.guild.name}**!`)] }));
       return;
     }
     await interaction.reply({ embeds: [successEmbedBuilder(`${member.user} was sucessfully timeouted.`)], ephemeral: true });

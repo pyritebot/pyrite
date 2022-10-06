@@ -323,6 +323,10 @@ client.on('interactionCreate', async interaction => {
 					name: '`/ban <user> <reason>`',
 					value: "<:blank:1008721958210383902> <:arrow:1009057573590290452> Ban a user thats either a raider or didn't follow your server rules.",
 				},
+        {
+					name: '`/modnick <user>`',
+					value: "<:blank:1008721958210383902> <:arrow:1009057573590290452> Change a users name to a pingable one.",
+				},
 				{ name: '`/logs on <channel>`', value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Set the mod log channel.' },
 				{ name: '`/logs off`', value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Turn off mod logs.' }
 			);
@@ -409,7 +413,17 @@ client.on('interactionCreate', async interaction => {
 					name: '`/antialts on`',
 					value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Turn on the anti alts system to keep alt accounts out of your server. \n',
 				},
-				{ name: '`/antialts off`', value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Turn off the anti alts system. \n' }
+				{ name: '`/antialts off`', 
+          value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Turn off the anti alts system. \n' 
+        },
+        {
+					name: '`/antinsfw on`',
+					value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Turn on the anti NSFW system. \n',
+				},
+        {
+					name: '`/antinsfw on`',
+					value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Turn on the anti NSFW system. \n',
+				},
 			);
 			break;
 	}

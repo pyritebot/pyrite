@@ -1,6 +1,6 @@
 import type { ChatInputCommandInteraction, GuildMember, TextChannel } from 'discord.js';
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
-import { errorEmbedBuilder, successEmbedBuilder, logBuilder } from '../utils.js';
+import { errorEmbedBuilder, successEmbedBuilder, warnEmbedBuilder, logBuilder } from '../utils.js';
 import prisma from '../database.js';
 
 export default class Mute {
@@ -34,10 +34,13 @@ export default class Mute {
 			return;
 		}
 
+		const msg = await member.send({ embeds: [warnEmbedBuilder(`You have been timeouted in **${interaction.guild.name}**!`)] }).catch(() => {})
+    
 		try {
 			await member.timeout(minutes * 60_000, reason);
 		} catch (err) {
 			await interaction.reply({ embeds: [errorEmbedBuilder(`${member.user} cannot be timeouted!`)], ephemeral: true });
+			await msg?.edit({ embeds: [warnEmbedBuilder(`${interaction.user} tried to timeout you in **${interaction.guild.name}**!`)] })
 			return;
 		}
 

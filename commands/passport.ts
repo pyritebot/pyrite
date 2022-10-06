@@ -20,7 +20,7 @@ export default class Info {
 				.setName('user')
 				.setNameLocalizations({ 'es-ES': 'usuario' })
 				.setDescription('You can pass a mention or an id of a user.')
-				.setDescriptionLocalizations({ 'es-ES': 'Puedes pasar una mención o un id de un usuaria' })
+				.setDescriptionLocalizations({ 'es-ES': 'Puedes pasar una mención o un id de un usuario' })
 		);
 
 	async run(interaction: CommandInteraction) {

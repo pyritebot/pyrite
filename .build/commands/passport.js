@@ -9,7 +9,7 @@ dayjs.extend(relativeTime);
 export default class Info {
   constructor() {
     this.data = new SlashCommandBuilder().setName("passport").setNameLocalizations({ "es-ES": "pasaporte" }).setDescription("A card with all important info of a user.").setDescriptionLocalizations({ "es-ES": "Una tarjeta con toda la informacion importante de un usuario." }).addUserOption(
-      (option) => option.setName("user").setNameLocalizations({ "es-ES": "usuario" }).setDescription("You can pass a mention or an id of a user.").setDescriptionLocalizations({ "es-ES": "Puedes pasar una menci\xF3n o un id de un usuaria" })
+      (option) => option.setName("user").setNameLocalizations({ "es-ES": "usuario" }).setDescription("You can pass a mention or an id of a user.").setDescriptionLocalizations({ "es-ES": "Puedes pasar una menci\xF3n o un id de un usuario" })
     );
   }
   async run(interaction) {

@@ -2,8 +2,8 @@
   "name": "pyrite",
   "type": "module",
   "version": "1.6.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Know your members. Know your community.",
+  "main": ".build/index.js",
   "dependencies": {
     "@prisma/client": "^4.4.0",
     "canvas": "^2.9.3",
