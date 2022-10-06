@@ -1,4 +1,4 @@
-import type { ChatInputCommandInteraction, GuildMember, TextChannel } from 'discord.js';
+import type { ChatInputCommandInteraction, GuildMember, TextChannel, VoiceChannel } from 'discord.js';
 import {
 	SlashCommandBuilder,
 	EmbedBuilder,
@@ -42,11 +42,6 @@ export default class Verification {
 						return;
 					}
 
-					interaction.guild?.roles.everyone.setPermissions(
-						[PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.UseExternalEmojis],
-						'Turning verification on'
-					);
-
 					const oldGuild = await prisma.guild.findUnique({
 						where: { guild: interaction.guildId! },
 						select: { members: true },
@@ -54,14 +49,17 @@ export default class Verification {
 
 					if (!oldGuild?.members) {
 						const role = await interaction.guild?.roles?.create({
-							name: 'Members',
+							name: 'Quarantine',
 						});
+
+						role?.setPermissions([]);
 
 						await prisma.guild.upsert({
 							where: { guild: interaction.guildId! },
-							update: { members: role?.id, verificationChannel: channel.id },
+							update: { quarantine: role?.id!, verificationChannel: channel.id },
 							create: {
 								guild: interaction.guildId!,
+								quarantine: role?.id!,
 								verificationChannel: channel.id,
 							},
 						});
@@ -70,6 +68,14 @@ export default class Verification {
 					const guild = await prisma.guild.findUnique({
 						where: { guild: interaction.guildId! },
 						select: { members: true, logs: true },
+					});
+
+					interaction.guild?.channels.cache.forEach(ch => {
+						const c = ch as TextChannel | VoiceChannel;
+						if (!c.permissionsFor(interaction.guild?.roles.everyone!)?.has(PermissionFlagsBits.ViewChannel)) return;
+						const members = interaction.guild?.roles.cache.get(guild?.members!);
+						c.permissionOverwrites.edit(members!, { ViewChannel: true });
+						c.permissionOverwrites.edit(interaction.guild?.roles.everyone!, { ViewChannel: false });
 					});
 
 					channel.permissionOverwrites.edit(interaction.guildId!, { ViewChannel: true, SendMessages: false });
@@ -92,7 +98,7 @@ export default class Verification {
 
 					const verificationEmbed = new EmbedBuilder({
 						title: '<:check:1027354811164786739> Verification',
-						description: `<:blank:1008721958210383902> <:arrow:1009057573590290452> To access \`${interaction.guild.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
+						description: `<:blank:1008721958210383902> <:arrow:1009057573590290452> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
 						color: Colors.Green,
 					});
 
