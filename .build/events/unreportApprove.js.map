@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../events/unreportApprove.ts"],
-  "sourcesContent": ["import type { ButtonInteraction } from \"discord.js\"\nimport { Events } from \"discord.js\";\nimport prisma from \"../database.js\";\n\nexport default class UnReportApprove {\n\tname = Events.InteractionCreate\n\n\tasync run(interaction: ButtonInteraction) {\n\t\tif (!interaction.customId?.startsWith('unreport_approve')) return;\n\t\t\n\t\tconst data = interaction.customId.slice(15)\n\t\tconsole.log(data)\n\t\tconst [_, id, user] = data.split('-')\n\t\t\n\t\tconst oldUser = await prisma.user.findUnique({\n\t\t\twhere: { user },\n\t\t\tselect: { reports: true }\n\t\t})\n\n\t\tconst reports = oldUser?.reports?.filter(r => r.id !== id)\n\t\t\n\t\tawait prisma.user.update({\n\t\t\twhere: { user },\n\t\t\tdata: { reports },\n\t\t})\n\n\t\tawait interaction.message.delete()\n\t}\n}"],
-  "mappings": "AACA,SAAS,cAAc;AACvB,OAAO,YAAY;AAEnB,qBAAqB,gBAAgB;AAAA,EAArC;AACC,gBAAO,OAAO;AAAA;AAAA,EAEd,MAAM,IAAI,aAAgC;AAP3C;AAQE,QAAI,GAAC,iBAAY,aAAZ,mBAAsB,WAAW;AAAqB;AAE3D,UAAM,OAAO,YAAY,SAAS,MAAM,EAAE;AAC1C,YAAQ,IAAI,IAAI;AAChB,UAAM,CAAC,GAAG,IAAI,IAAI,IAAI,KAAK,MAAM,GAAG;AAEpC,UAAM,UAAU,MAAM,OAAO,KAAK,WAAW;AAAA,MAC5C,OAAO,EAAE,KAAK;AAAA,MACd,QAAQ,EAAE,SAAS,KAAK;AAAA,IACzB,CAAC;AAED,UAAM,WAAU,wCAAS,YAAT,mBAAkB,OAAO,OAAK,EAAE,OAAO;AAEvD,UAAM,OAAO,KAAK,OAAO;AAAA,MACxB,OAAO,EAAE,KAAK;AAAA,MACd,MAAM,EAAE,QAAQ;AAAA,IACjB,CAAC;AAED,UAAM,YAAY,QAAQ,OAAO;AAAA,EAClC;AACD;",
-  "names": []
-}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../commands/warn.ts"],
-  "sourcesContent": ["import type { CommandInteraction } from 'discord.js';\nimport { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';\nimport { addWarn, errorEmbedBuilder } from '../utils.js';\n\nexport default class Warn {\n\tdata = new SlashCommandBuilder()\n\t\t.setName('warn')\n\t\t.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)\n\t\t.setDescription('Add a warn to a user! (alias to /warns add)')\n\t\t.addUserOption(option => option.setName('member').setDescription('You can pass a mention or an id of a member.').setRequired(true))\n\t\t.addStringOption(option => option.setName('reason').setDescription('You must provide a reason for this warning').setRequired(true));\n\n\tasync run(interaction: CommandInteraction) {\n\t\tif (!interaction.inGuild()) {\n\t\t\tawait interaction.reply({ embeds: [errorEmbedBuilder('This command can only be run on a server!')] });\n\t\t\treturn;\n\t\t}\n\n\t\tawait addWarn(interaction);\n\t}\n}\n"],
-  "mappings": "AACA,SAAS,qBAAqB,2BAA2B;AACzD,SAAS,SAAS,yBAAyB;AAE3C,qBAAqB,KAAK;AAAA,EAA1B;AACC,gBAAO,IAAI,oBAAoB,EAC7B,QAAQ,MAAM,EACd,4BAA4B,oBAAoB,WAAW,EAC3D,eAAe,6CAA6C,EAC5D,cAAc,YAAU,OAAO,QAAQ,QAAQ,EAAE,eAAe,8CAA8C,EAAE,YAAY,IAAI,CAAC,EACjI,gBAAgB,YAAU,OAAO,QAAQ,QAAQ,EAAE,eAAe,4CAA4C,EAAE,YAAY,IAAI,CAAC;AAAA;AAAA,EAEnI,MAAM,IAAI,aAAiC;AAC1C,QAAI,CAAC,YAAY,QAAQ,GAAG;AAC3B,YAAM,YAAY,MAAM,EAAE,QAAQ,CAAC,kBAAkB,2CAA2C,CAAC,EAAE,CAAC;AACpG;AAAA,IACD;AAEA,UAAM,QAAQ,WAAW;AAAA,EAC1B;AACD;",
-  "names": []
-}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../events/reportApprove.ts"],
-  "sourcesContent": ["import type { ButtonInteraction } from 'discord.js';\nimport { Events } from 'discord.js';\nimport prisma from '../database.js';\n\nexport default class ReportApprove {\n\tname = Events.InteractionCreate;\n\n\tasync run(interaction: ButtonInteraction) {\n\t\tif (!interaction.customId?.startsWith('report_approve')) return;\n\n\t\tconst data = interaction.customId.slice(15);\n\t\tconst [reason, user] = data.split('-');\n\n\t\tawait prisma.user.upsert({\n\t\t\twhere: { user },\n\t\t\tupdate: { reports: { push: { reason: reason! } } },\n\t\t\tcreate: { user: user!, reports: [{ reason: reason! }] },\n\t\t});\n\n\t\tawait interaction.message.delete();\n\t}\n}\n"],
-  "mappings": "AACA,SAAS,cAAc;AACvB,OAAO,YAAY;AAEnB,qBAAqB,cAAc;AAAA,EAAnC;AACC,gBAAO,OAAO;AAAA;AAAA,EAEd,MAAM,IAAI,aAAgC;AAP3C;AAQE,QAAI,GAAC,iBAAY,aAAZ,mBAAsB,WAAW;AAAmB;AAEzD,UAAM,OAAO,YAAY,SAAS,MAAM,EAAE;AAC1C,UAAM,CAAC,QAAQ,IAAI,IAAI,KAAK,MAAM,GAAG;AAErC,UAAM,OAAO,KAAK,OAAO;AAAA,MACxB,OAAO,EAAE,KAAK;AAAA,MACd,QAAQ,EAAE,SAAS,EAAE,MAAM,EAAE,OAAgB,EAAE,EAAE;AAAA,MACjD,QAAQ,EAAE,MAAa,SAAS,CAAC,EAAE,OAAgB,CAAC,EAAE;AAAA,IACvD,CAAC;AAED,UAAM,YAAY,QAAQ,OAAO;AAAA,EAClC;AACD;",
-  "names": []
-}

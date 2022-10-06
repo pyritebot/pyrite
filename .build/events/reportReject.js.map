@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../events/reportReject.ts"],
-  "sourcesContent": ["import type { ButtonInteraction } from 'discord.js';\nimport { Events } from 'discord.js';\n\nexport default class ReportApprove {\n\tname = Events.InteractionCreate;\n\n\tasync run(interaction: ButtonInteraction) {\n\t\tif (!interaction.customId?.startsWith('report_reject')) return;\n\n\t\tawait interaction.message.delete();\n\t}\n}\n"],
-  "mappings": "AACA,SAAS,cAAc;AAEvB,qBAAqB,cAAc;AAAA,EAAnC;AACC,gBAAO,OAAO;AAAA;AAAA,EAEd,MAAM,IAAI,aAAgC;AAN3C;AAOE,QAAI,GAAC,iBAAY,aAAZ,mBAAsB,WAAW;AAAkB;AAExD,UAAM,YAAY,QAAQ,OAAO;AAAA,EAClC;AACD;",
-  "names": []
-}

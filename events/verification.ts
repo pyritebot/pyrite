@@ -7,7 +7,7 @@ import prisma from '../database.js';
 export default class Verification {
 	name = Events.InteractionCreate;
 
-	async verify(text: string, interaction: Interaction, msg: Message, guild: { members: string | null } | null) {
+	async verify(text: string, interaction: Interaction, msg: Message, guild: { quarantine: string | null } | null) {
 		try {
 			const messages = await msg.channel.awaitMessages({ max: 1, time: 10_000, errors: ['time'] });
 
@@ -15,8 +15,8 @@ export default class Verification {
 
 			if (messages.first()?.content === text) {
 				await msg.channel.send({ embeds: [successEmbedBuilder('You have been verified successfully, you can now continue to the server!')] });
-				const role = interaction.guild?.roles.cache.get(guild?.members!);
-				await roles?.add(role!);
+				const role = interaction.guild?.roles.cache.get(guild?.quarantine!);
+				await roles?.remove(role!);
 				return;
 			}
 
@@ -33,7 +33,7 @@ export default class Verification {
 	}
 
 	async embedBuilder() {
-		const captcha = new CaptchaGenerator({ width: 450, height: 150 })
+		const captcha = new CaptchaGenerator({ width: 450, height: 150 });
 
 		const buffer = await captcha.generate();
 
@@ -63,7 +63,7 @@ export default class Verification {
 
 		const guild = await prisma.guild.findUnique({
 			where: { guild: interaction.guildId },
-			select: { members: true, logs: true },
+			select: { quarantine: true, logs: true },
 		});
 
 		const user = await prisma.user.findUnique({
@@ -113,8 +113,10 @@ export default class Verification {
 			return;
 		}
 
-		if ((interaction.member?.roles as GuildMemberRoleManager).cache.has(guild?.members!)) {
-			await interaction.editReply({ embeds: [errorEmbedBuilder('You are already verified!')] });
+		if (!(interaction.member?.roles as GuildMemberRoleManager).cache.has(guild?.quarantine!)) {
+			await interaction.editReply({
+				embeds: [errorEmbedBuilder('It seems that you have already verified. If this is an error, ask an admin to verify you!')],
+			});
 			return;
 		}
 
