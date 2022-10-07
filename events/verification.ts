@@ -7,7 +7,7 @@ import prisma from '../database.js';
 export default class Verification {
 	name = Events.InteractionCreate;
 
-	async verify(text: string, interaction: Interaction, msg: Message, guild: { quarantine: string | null } | null) {
+	async verify(text: string, interaction: Interaction, msg: Message, guild: { quarantine: string | null,  members: string | null } | null) {
 		try {
 			const messages = await msg.channel.awaitMessages({ max: 1, time: 10_000, errors: ['time'] });
 
@@ -15,8 +15,10 @@ export default class Verification {
 
 			if (messages.first()?.content === text) {
 				await msg.channel.send({ embeds: [successEmbedBuilder('You have been verified successfully, you can now continue to the server!')] });
-				const role = interaction.guild?.roles.cache.get(guild?.quarantine!);
-				await roles?.remove(role!);
+				const quarantine = interaction.guild?.roles.cache.get(guild?.quarantine!);
+				await roles?.remove(quarantine!);
+				const members = interaction.guild?.roles.cache.get(guild?.members!);
+				await roles?.add(members!);
 				return;
 			}
 
@@ -40,7 +42,7 @@ export default class Verification {
 		const file = new AttachmentBuilder(buffer, { name: 'verification.png' });
 		const verificationEmbed = new EmbedBuilder({
 			title: '<:check:1027354811164786739> Verification',
-			description: `<:1412reply:1009087336828649533> Are you a human? Lets find out. Simply type the following captcha below so I can verify that you are human. The captcha will only last 10 seconds so be quick!`,
+			description: `Are you a human? Lets find out. Simply type the following captcha below so I can verify that you are human. The captcha will only last 10 seconds so be quick!`,
 			image: {
 				url: 'attachment://verification.png',
 			},
@@ -63,7 +65,7 @@ export default class Verification {
 
 		const guild = await prisma.guild.findUnique({
 			where: { guild: interaction.guildId },
-			select: { quarantine: true, logs: true },
+			select: { quarantine: true, members: true, logs: true },
 		});
 
 		const user = await prisma.user.findUnique({

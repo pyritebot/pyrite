@@ -6,14 +6,8 @@ import prisma from '../database.js';
 export default class Whitelist {
 	data = new SlashCommandBuilder()
 		.setName('whitelist')
-		.setDescription('Turn this on incase of a big raid!')
+		.setDescription('Manage the whitelist!')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.addSubcommand(subcommand =>
-			subcommand
-				.setName('member')
-				.setDescription('The default member role!')
-				.addRoleOption(option => option.setName('role').setDescription('The default member role that will be set').setRequired(true))
-		)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('mod')
@@ -88,7 +82,6 @@ export default class Whitelist {
 				case 'member':
 					await prisma.guild.upsert({
 						where: { guild: interaction.guildId! },
-						select: { verificationChannel: true },
 						update: { members: role?.id },
 						create: {
 							guild: interaction.guildId!,

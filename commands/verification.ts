@@ -23,7 +23,20 @@ export default class Verification {
 				.setDescription('Turn on verification.')
 				.addChannelOption(option => option.setName('channel').setDescription('The verification channel').setRequired(true))
 		)
-		.addSubcommand(subcommand => subcommand.setName('off').setDescription('Turn off verification.'));
+		.addSubcommand(subcommand => subcommand.setName('off').setDescription('Turn off verification.'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('role')
+				.setDescription('Add the role to be assigned once verified')
+				.addRoleOption(option =>
+					option.setName('role').setDescription('role to be assigned once verified').setRequired(true)
+				)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('removerole')
+				.setDescription('Remove the role to be assigned once verified')
+		);
 
 	async run(interaction: ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
@@ -44,10 +57,10 @@ export default class Verification {
 
 					const oldGuild = await prisma.guild.findUnique({
 						where: { guild: interaction.guildId! },
-						select: { members: true },
+						select: { quarantine: true },
 					});
 
-					if (!oldGuild?.members) {
+					if (!interaction.guild?.roles.cache.get(oldGuild?.quarantine!)) {
 						const role = await interaction.guild?.roles?.create({
 							name: 'Quarantine',
 						});
@@ -67,19 +80,17 @@ export default class Verification {
 
 					const guild = await prisma.guild.findUnique({
 						where: { guild: interaction.guildId! },
-						select: { members: true, logs: true },
+						select: { quarantine: true, logs: true },
 					});
 
-					interaction.guild?.channels.cache.forEach(ch => {
+					interaction.guild?.channels.cache.forEach(async ch => {
 						const c = ch as TextChannel | VoiceChannel;
-						if (!c.permissionsFor(interaction.guild?.roles.everyone!)?.has(PermissionFlagsBits.ViewChannel)) return;
-						const members = interaction.guild?.roles.cache.get(guild?.members!);
-						c.permissionOverwrites.edit(members!, { ViewChannel: true });
-						c.permissionOverwrites.edit(interaction.guild?.roles.everyone!, { ViewChannel: false });
+						const quarantine = interaction.guild?.roles.cache.get(guild?.quarantine!);
+						await c.permissionOverwrites?.edit(quarantine!, { ViewChannel: false })
 					});
 
-					channel.permissionOverwrites.edit(interaction.guildId!, { ViewChannel: true, SendMessages: false });
-					channel.permissionOverwrites.edit(guild?.members!, { ViewChannel: false });
+					channel.permissionOverwrites.edit(guild?.quarantine!, { ViewChannel: true, SendMessages: false });
+					channel.permissionOverwrites.edit(interaction.guildId!, { ViewChannel: false });
 
 					const verificationButtons = new ActionRowBuilder<ButtonBuilder>({
 						components: [
@@ -89,7 +100,7 @@ export default class Verification {
 								custom_id: 'verify',
 							}),
 							new ButtonBuilder({
-								label: 'Support Server',
+								label: 'Help',
 								style: ButtonStyle.Link,
 								url: 'https://discord.gg/NxJzWWqhdQ',
 							}),
@@ -98,13 +109,13 @@ export default class Verification {
 
 					const verificationEmbed = new EmbedBuilder({
 						title: '<:check:1027354811164786739> Verification',
-						description: `<:blank:1008721958210383902> <:arrow:1009057573590290452> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
+						description: `<:blank:1008721958210383902> <:arrow:1027722692662673429> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
 						color: Colors.Green,
 					});
 
 					await channel.send({ embeds: [verificationEmbed], components: [verificationButtons] });
 					await interaction.editReply({
-						embeds: [successEmbedBuilder(`Successfully activated verification! (<@&${guild?.members}>)`)],
+						embeds: [successEmbedBuilder(`Successfully activated verification!`)],
 					});
 
 					const onLogs = interaction.guild?.channels.cache.get(guild?.logs!) as TextChannel;
@@ -139,6 +150,34 @@ export default class Verification {
 							reason: `Verification turned off by ${interaction.user.tag}`,
 						})
 					);
+					break;
+
+				case 'role':
+					const role = interaction.options.getRole('role')
+					
+					await prisma.guild.upsert({
+						where: { guild: interaction.guildId! },
+						update: { members: role?.id },
+						create: {
+							guild: interaction.guildId!,
+							members: role?.id,
+						},
+					});
+
+					await interaction.editReply({ embeds: [successEmbedBuilder(`Successfully set the **Member** role as ${role}`)] });
+					break;
+
+				case 'removerole':
+					await prisma.guild.upsert({
+						where: { guild: interaction.guildId! },
+						update: { members: null },
+						create: {
+							guild: interaction.guildId!,
+							members: null,
+						},
+					});
+
+					await interaction.editReply({ embeds: [successEmbedBuilder(`Successfully removed the **Member** role`)] });
 					break;
 			}
 		} catch (err) {

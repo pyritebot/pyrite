@@ -1,7 +1,12 @@
 { pkgs }: {
   deps = with pkgs; [
+		esbuild
     nodejs-17_x
-		libuuid
+		
+		nodePackages.typescript
+		nodePackages.typescript-language-server
+		
+		fontconfig
   ];
-	env = { LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [pkgs.libuuid]; };
+	env = { LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [pkgs.fontconfig]; };
 }

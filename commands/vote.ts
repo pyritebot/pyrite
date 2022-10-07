@@ -2,7 +2,11 @@ import type { CommandInteraction } from 'discord.js';
 import { SlashCommandBuilder, EmbedBuilder, Colors, ButtonBuilder, ActionRowBuilder, ButtonStyle } from 'discord.js';
 
 export default class Help {
-	data = new SlashCommandBuilder().setName('vote').setDescription('Vote our bot to help us!');
+	data = new SlashCommandBuilder()
+		.setName('vote')
+		.setNameLocalizations({ 'es-ES': 'votar' })
+		.setDescription('Vote our bot to help us!')
+		.setDescriptionLocalizations({ 'es-ES': 'Vota a nuestro bot para ayudarnos!' });
 
 	async run(interaction: CommandInteraction) {
 		const embed = new EmbedBuilder({

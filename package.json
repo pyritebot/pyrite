@@ -7,7 +7,7 @@
   "dependencies": {
     "@prisma/client": "^4.4.0",
     "canvas": "^2.9.3",
-    "captcha-canvas": "^2.3.1",
+    "captcha-canvas": "^3.2.1",
     "cuid": "^2.1.8",
     "dayjs": "^1.11.5",
     "discord.js": "^14.3.0",
@@ -21,15 +21,12 @@
     "esbuild": "^0.15.10",
     "prisma": "^4.4.0"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PyriteBot/pyrite.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["bot", "verification"],
+  "author": "AngelNext",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/PyriteBot/pyrite/issues"

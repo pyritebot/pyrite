@@ -132,9 +132,10 @@ export default class Lockdown {
 					const newEmbed = { ...embed?.data };
 					newEmbed.fields ??= [];
 					newEmbed.fields.push({
-						name: `<:arrow:1009057573590290452> Update #${(embed?.fields?.length ?? 0) + 1}`,
-						value: `<:1412reply:1009087336828649533> ${content}`,
+						name: `<:arrow:1027722692662673429> Update #${(embed?.fields?.length ?? 0) + 1}`,
+						value: `<:blank:1008721958210383902> ${content}`,
 					});
+					newEmbed.timestamp = new Date().toISOString()
 
 					await message?.edit({ embeds: [newEmbed] });
 				} catch {

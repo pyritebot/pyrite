@@ -224,16 +224,18 @@ client.on('interactionCreate', async interaction => {
 				.forEach(role => c.permissionOverwrites.edit(role.id, { SendMessages: false }));
 		});
 
-		const lockDownEmbed = new EmbedBuilder({
-			author: {
-				name: interaction.guild?.name!,
-				icon_url: interaction.guild?.iconURL()!,
-			},
+		const lockdownEmbed = new EmbedBuilder({
+			title: `<:lock:1027724211944431708> Lockdown`,
 			description: `This server is currently on lockdown. Meaning no one can chat in this server. Please wait until the owners unlock the server.`,
-			color: Colors.Blurple,
+			color: Colors.Grey,
+			footer: {
+				icon_url: interaction.guild.iconURL(),
+				text: interaction.guild.name,
+			},
+			timestamp: new Date().toISOString()
 		});
 
-		const message = await channel?.send({ embeds: [lockDownEmbed] });
+		const message = await channel?.send({ embeds: [lockdownEmbed] });
 
 		await prisma.guild.upsert({
 			where: {
@@ -334,12 +336,13 @@ client.on('interactionCreate', async interaction => {
 
 		case 'verification':
 			helpEmbed
-				.setTitle('<:check:1008718056891101194> Verification')
+				.setTitle('<:check:1027354811164786739> Verification')
 				.setDescription("> Here's a list of the verification commands")
 				.setFields(
 					{ name: '`/verification on <channel>`', value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Turn on verification.' },
 					{ name: '`/verification off`', value: '<:blank:1008721958210383902> <:arrow:1009057573590290452> Turn off verification.' }
-				);
+				)
+				.setColor(Colors.Green);
 			break;
 
 		case 'whitelisting':
