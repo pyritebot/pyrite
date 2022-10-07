@@ -10,23 +10,41 @@ export default class Warns {
 		.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName('add')
-				.setDescription('Add a warning to a user!')
-				.addUserOption(option => option.setName('member').setDescription('You can pass a mention or an id of a member.').setRequired(true))
-				.addStringOption(option => option.setName('reason').setDescription('You must provide a reason for this warning').setRequired(true))
+				.setName('warn')
+				.setNameLocalizations({ 'es-ES': 'advertir' })
+				.setDescription('Warn a user!')
+				.setDescriptionLocalizations({ 'es-ES': 'Advierte a un usuario!' })
+				.addUserOption(option =>
+					option
+						.setName('user')
+						.setNameLocalizations({ 'es-ES': 'usuario' })
+						.setDescription('You can pass a mention or an id of a member.')
+						.setDescriptionLocalizations({ 'es-ES': 'Puedes pasar una mención o un id de un miembro.' })
+						.setRequired(true)
+				)
+				.addStringOption(option =>
+					option
+						.setName('reason')
+						.setNameLocalizations({ 'es-ES': 'razón' })
+						.setDescription('You must provide a reason for this warning')
+						.setDescriptionLocalizations({ 'es-ES': 'Debes proveer una razón para esta advertencia' })
+						.setRequired(true)
+				)
 		)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('remove')
+				.setNameLocalizations({ 'es-ES': 'quitar' })
 				.setDescription('Remove a warning from a user!')
-				.addUserOption(option => option.setName('member').setDescription('You can pass a mention or an id of a member.').setRequired(true))
-				.addStringOption(option => option.setName('id').setDescription('You must provide the id of the warning you want to delete!'))
+				.setDescriptionLocalizations({ 'es-ES': 'Quita una advertencia de un usuario!' })
+				.addUserOption(option => option.setName('user').setDescription('You can pass a mention or an id of a member.').setRequired(true))
+				.addStringOption(option => option.setName('id').setDescription('You can provide the id of the warning you want to delete!'))
 		)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('show')
 				.setDescription('Show all warnings of a user!')
-				.addUserOption(option => option.setName('member').setDescription('You can pass a mention or an id of a member.').setRequired(true))
+				.addUserOption(option => option.setName('user').setDescription('You can pass a mention or an id of a member.').setRequired(true))
 		);
 
 	async run(interaction: ChatInputCommandInteraction) {
@@ -35,7 +53,7 @@ export default class Warns {
 			return;
 		}
 
-		const member = interaction.options.getMember('member') as GuildMember | null;
+		const member = interaction.options.getMember('user') as GuildMember | null;
 
 		if (!member) {
 			await interaction.reply({ embeds: [errorEmbedBuilder("Couldn't find that member!")], ephemeral: true });

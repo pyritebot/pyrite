@@ -15,27 +15,53 @@ import prisma from '../database.js';
 export default class Verification {
 	data = new SlashCommandBuilder()
 		.setName('verification')
+		.setNameLocalizations({ 'es-ES': 'verificación' })
+		.setDescription('Configure verification in your server!')
+		.setDescriptionLocalizations({ 'es-ES': '¡Configura la verificación en tu servidor!' })
 		.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
-		.setDescription('Set verification in your server and configure it!')
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('on')
-				.setDescription('Turn on verification.')
-				.addChannelOption(option => option.setName('channel').setDescription('The verification channel').setRequired(true))
+				.setNameLocalizations({ 'es-ES': 'en' })
+				.setDescription('Turn on verification and post embed in the specified channel!')
+				.setDescriptionLocalizations({ 'es-ES': '¡Enciende la verificación y publica el "embed" en el canal especificado!' })
+				.addChannelOption(option =>
+					option
+						.setName('channel')
+						.setNameLocalizations({ 'es-ES': 'canal' })
+						.setDescription('The verification channel')
+						.setDescriptionLocalizations({ 'es-ES': 'El canal de verificación' })
+						.setRequired(true)
+				)
 		)
-		.addSubcommand(subcommand => subcommand.setName('off').setDescription('Turn off verification.'))
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('off')
+				.setNameLocalizations({ 'es-ES': 'apagada' })
+				.setDescription('Turn off verification.')
+				.setDescriptionLocalizations({ 'es-ES': 'Apagar la verificación' })
+		)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('role')
-				.setDescription('Add the role to be assigned once verified')
+				.setNameLocalizations({ 'es-ES': 'rol' })
+				.setDescription('Set the role to be assigned once verified')
+				.setDescriptionLocalizations({ 'es-ES': 'Configura el rol que debe ser asignado una vez verificado!' })
 				.addRoleOption(option =>
-					option.setName('role').setDescription('role to be assigned once verified').setRequired(true)
+					option
+						.setName('role')
+						.setNameLocalizations({ 'es-ES': 'rol' })
+						.setDescription('role to be assigned once verified')
+						.setDescriptionLocalizations({ 'es-ES': 'rol que debe ser asignado una vez verificado' })
+						.setRequired(true)
 				)
 		)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('removerole')
+				.setNameLocalizations({ 'es-ES': 'eliminar-rol' })
 				.setDescription('Remove the role to be assigned once verified')
+				.setDescriptionLocalizations({ 'es-ES': 'Eliminar el role que debe ser asignado una vez verificado' })
 		);
 
 	async run(interaction: ChatInputCommandInteraction) {
@@ -86,7 +112,7 @@ export default class Verification {
 					interaction.guild?.channels.cache.forEach(async ch => {
 						const c = ch as TextChannel | VoiceChannel;
 						const quarantine = interaction.guild?.roles.cache.get(guild?.quarantine!);
-						await c.permissionOverwrites?.edit(quarantine!, { ViewChannel: false })
+						await c.permissionOverwrites?.edit(quarantine!, { ViewChannel: false });
 					});
 
 					channel.permissionOverwrites.edit(guild?.quarantine!, { ViewChannel: true, SendMessages: false });
@@ -153,8 +179,8 @@ export default class Verification {
 					break;
 
 				case 'role':
-					const role = interaction.options.getRole('role')
-					
+					const role = interaction.options.getRole('role');
+
 					await prisma.guild.upsert({
 						where: { guild: interaction.guildId! },
 						update: { members: role?.id },

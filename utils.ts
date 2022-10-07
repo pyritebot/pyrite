@@ -1,4 +1,4 @@
-import type { Client, GuildMember, CommandInteraction, TextChannel, GuildMemberRoleManager } from 'discord.js';
+import type { Client, GuildMember, ChatInputCommandInteraction, TextChannel, GuildMemberRoleManager } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder, EmbedBuilder, Colors, ActivityType } from 'discord.js';
 import fetch from 'node-fetch';
 import { google } from 'googleapis';
@@ -12,6 +12,7 @@ interface LogBuilderOptions {
 	member: GuildMember;
 	content: string;
 	reason: string;
+	punished?: boolean;
 }
 
 const API_KEY = process.env.GOOGLE_API_KEY;
@@ -91,31 +92,30 @@ export const warnEmbedBuilder = (message: string) =>
 		color: Colors.Yellow,
 	});
 
-export const logBuilder = ({ member, content, reason }: LogBuilderOptions) => {
+export const logBuilder = ({ member, content, reason, punished = false }: LogBuilderOptions) => {
 	const embed = new EmbedBuilder({
-		description: `<:arrow:1009057573590290452> ${content} \n <:arrow:1009057573590290452> **Executor:** ${
-			member.user
-		} \n <:arrow:1009057573590290452> **Reason:** **\`${reason}\`**\n <:arrow:1009057573590290452> **Time:** <t:${Math.floor(Date.now() / 1000)}:R> `,
-		author: {
-			name: member.user.tag,
-			icon_url: member.user.displayAvatarURL(),
-		},
+		description: `
+<:arrow:1027722692662673429> ${content} 
+<:arrow:1027722692662673429> **Executor:** ${member.user}
+<:arrow:1027722692662673429> **Reason:** **\`${reason}\`**
+<:arrow:1027722692662673429> **Punished:** \`${punished ? 'yes' : 'no'}\`
+<:arrow:1027722692662673429> **Time:** <t:${Math.floor(Date.now() / 1000)}:R>`,
 		footer: {
 			text: member.guild.name,
 			icon_url: member.guild.iconURL()!,
 		},
 		timestamp: new Date().toISOString(),
-		color: Colors.Blurple,
+		color: 0x2f3136,
 	});
 	return {
 		embeds: [embed],
 	};
 };
 
-export const addReport = async (interaction: CommandInteraction) => {
+export const addReport = async (interaction: ChatInputCommandInteraction) => {
 	const user = interaction.options.getUser('user', true);
-	const reason = interaction.options.get('reason', true).value;
-	const file = interaction.options.get('image', true).attachment;
+	const reason = interaction.options.getString('reason', true);
+	const file = interaction.options.getAttachment('image', true);
 
 	if (user?.id === interaction.user.id) {
 		await interaction.reply({ embeds: [errorEmbedBuilder("You can't report yourself!")] });
@@ -171,9 +171,9 @@ Thank you for submitting this report. For more updates please join our support s
 	});
 };
 
-export const addWarn = async (interaction: CommandInteraction) => {
-	const member = interaction.options.getMember('member') as GuildMember;
-	const reason = interaction.options.get('reason', true).value as string;
+export const addWarn = async (interaction: ChatInputCommandInteraction) => {
+	const member = interaction.options.getMember('user') as GuildMember;
+	const reason = interaction.options.getString('reason', true);
 
 	if (!member) {
 		await interaction.reply({ embeds: [errorEmbedBuilder("Couldn't find that member!")], ephemeral: true });
