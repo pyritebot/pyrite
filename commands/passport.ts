@@ -1,7 +1,7 @@
-import type { CommandInteraction } from 'discord.js';
+import type { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder, AttachmentBuilder } from 'discord.js';
 import sharp from 'sharp';
-import { loadImage, defaultError } from '../utils.js';
+import { loadImage, defaultError, errorEmbedBuilder, timeSince } from '../utils.js';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import { join } from 'node:path';
@@ -23,11 +23,11 @@ export default class Info {
 				.setDescriptionLocalizations({ 'es-ES': 'Puedes pasar una mención o un id de un usuario' })
 		);
 
-	async run(interaction: CommandInteraction) {
+	async run(interaction: ChatInputCommandInteraction) {
 		const user = interaction.options.getUser('user') ?? interaction.user;
 
 		if (user.bot) {
-			await interaction.reply({ content: '<:error:1009134465995509810> | **You cannot get reports for a bot**', ephemeral: true });
+			await interaction.reply({ embeds: [errorEmbedBuilder('You cannot get the passport of a Bot!')] });
 			return;
 		}
 
@@ -35,7 +35,6 @@ export default class Info {
 
 		try {
 			const avatarBuffer = await loadImage(user.displayAvatarURL());
-
 			const roundedCorners = Buffer.from(`
 				<svg>
 					<rect x="0" y="0" width="128" height="128" rx="50%" ry="50%"/>
@@ -79,15 +78,9 @@ export default class Info {
 					<text x="410" y="220" class="name">
 						<tspan class="tag">Reports:</tspan> ${toxicityUser?.reports?.length ?? 0}
 		 			</text>
-					<text x="40" y="180" class="tag">Created ${dayjs(user.createdAt).fromNow()}</text>
+					<text x="40" y="180" class="tag">Created ${timeSince(user.createdAt)}</text>
 				</svg>
  			`);
-
-			const circle = Buffer.from(`
-	 			<svg>
-					<rect x="0" y="0" width="158" height="158" rx="50%" ry="50%" fill="#0000f5"/>
-				</svg>
-	 		`);
 
 			const avatarRoundedBuffer = await sharp(avatarBuffer)
 				.resize(128, 128)
@@ -100,31 +93,12 @@ export default class Info {
 				.png()
 				.toBuffer();
 
-			const avatarBorderBuffer = await sharp(circle)
+			const image = await sharp(join(process.cwd(), './assets/card.png'))
 				.composite([
 					{
 						input: avatarRoundedBuffer,
-					},
-				])
-				.png()
-				.toBuffer();
-
-			const image = await sharp({
-				create: {
-					channels: 4,
-					width: 618,
-					height: 537,
-					background: { r: 0, g: 0, b: 0, alpha: 0 },
-				},
-			})
-				.composite([
-					{
-						input: join(process.cwd(), './assets/background.png'),
-					},
-					{
-						input: avatarBorderBuffer,
-						top: 0,
-						left: 60,
+						top: 15,
+						left: 75,
 					},
 					{ input: username },
 				])

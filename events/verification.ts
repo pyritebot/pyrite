@@ -46,7 +46,7 @@ export default class Verification {
 			image: {
 				url: 'attachment://verification.png',
 			},
-			color: Colors.Green,
+			color: 0x2f3136,
 		});
 
 		return {
@@ -83,7 +83,7 @@ export default class Verification {
 				description: `${interaction.user} has a estimate toxicity of **${user?.toxicity ?? 0}%**, and **${user?.reports?.length ?? 0} reports.**
 <:blank:1008721958210383902> <:arrow:1009057573590290452> What would you like to proceed with? 
 <:blank:1008721958210383902> <:arrow:1009057573590290452> **Verification was attempted:** <t:${Math.floor(Date.now() / 1000)}:R>`,
-				color: Colors.Blurple,
+				color: 0x2f3136,
 				thumbnail: {
 					url: interaction.user.displayAvatarURL(),
 				},
@@ -94,12 +94,12 @@ export default class Verification {
 					new ButtonBuilder({
 						custom_id: `verify_toxic-${interaction.user.id}`,
 						label: 'Verify',
-						style: ButtonStyle.Primary,
+						style: ButtonStyle.Success,
 					}),
 					new ButtonBuilder({
 						custom_id: `kick_toxic-${interaction.user.id}`,
 						label: 'Kick',
-						style: ButtonStyle.Success,
+						style: ButtonStyle.Danger,
 					}),
 					new ButtonBuilder({
 						custom_id: `ban_toxic-${interaction.user.id}`,

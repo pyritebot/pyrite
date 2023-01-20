@@ -2,14 +2,13 @@ import type { ChatInputCommandInteraction, GuildMember, TextChannel, VoiceChanne
 import {
 	SlashCommandBuilder,
 	EmbedBuilder,
-	Colors,
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
 	PermissionFlagsBits,
 	ChannelType,
 } from 'discord.js';
-import { defaultError, errorEmbedBuilder, logBuilder, successEmbedBuilder } from '../utils.js';
+import { defaultError, errorEmbedBuilder, logBuilder, successEmbedBuilder, getQuarantine } from '../utils.js';
 import prisma from '../database.js';
 
 export default class Verification {
@@ -81,41 +80,14 @@ export default class Verification {
 						return;
 					}
 
-					const oldGuild = await prisma.guild.findUnique({
-						where: { guild: interaction.guildId! },
-						select: { quarantine: true },
-					});
-
-					if (!interaction.guild?.roles.cache.get(oldGuild?.quarantine!)) {
-						const role = await interaction.guild?.roles?.create({
-							name: 'Quarantine',
-						});
-
-						role?.setPermissions([]);
-
-						await prisma.guild.upsert({
-							where: { guild: interaction.guildId! },
-							update: { quarantine: role?.id!, verificationChannel: channel.id },
-							create: {
-								guild: interaction.guildId!,
-								quarantine: role?.id!,
-								verificationChannel: channel.id,
-							},
-						});
-					}
-
-					const guild = await prisma.guild.findUnique({
-						where: { guild: interaction.guildId! },
-						select: { quarantine: true, logs: true },
-					});
+					const quarantine = await getQuarantine(interaction?.guild!)
 
 					interaction.guild?.channels.cache.forEach(async ch => {
 						const c = ch as TextChannel | VoiceChannel;
-						const quarantine = interaction.guild?.roles.cache.get(guild?.quarantine!);
 						await c.permissionOverwrites?.edit(quarantine!, { ViewChannel: false });
 					});
 
-					channel.permissionOverwrites.edit(guild?.quarantine!, { ViewChannel: true, SendMessages: false });
+					channel.permissionOverwrites.edit(quarantine!, { ViewChannel: true, SendMessages: false });
 					channel.permissionOverwrites.edit(interaction.guildId!, { ViewChannel: false });
 
 					const verificationButtons = new ActionRowBuilder<ButtonBuilder>({
@@ -136,12 +108,19 @@ export default class Verification {
 					const verificationEmbed = new EmbedBuilder({
 						title: '<:check:1027354811164786739> Verification',
 						description: `<:blank:1008721958210383902> <:arrow:1027722692662673429> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
-						color: Colors.Green,
+						color: 0x2f3136,
 					});
 
 					await channel.send({ embeds: [verificationEmbed], components: [verificationButtons] });
 					await interaction.editReply({
 						embeds: [successEmbedBuilder(`Successfully activated verification!`)],
+					});
+
+					const guild = await prisma.guild.upsert({
+						where: { guild: interaction.guildId! },
+						update: { verificationChannel: channel.id },
+						create: { guild: interaction.guildId, verificationChannel: channel.id },
+						select: { logs: true },
 					});
 
 					const onLogs = interaction.guild?.channels.cache.get(guild?.logs!) as TextChannel;

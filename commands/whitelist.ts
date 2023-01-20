@@ -70,7 +70,7 @@ export default class Whitelist {
 		});
 
 		if (!(tempGuild?.owners.includes(interaction.user.id) || interaction.guild?.ownerId === interaction.user.id)) {
-			await interaction.reply({ embeds: [errorEmbedBuilder('Only an owner can use the whitelist.')], ephemeral: true });
+			await interaction.reply({ embeds: [errorEmbedBuilder('Only an owner can use the </whitelist:1014153355377004670>.')], ephemeral: true });
 			return;
 		}
 
@@ -166,12 +166,10 @@ export default class Whitelist {
 					break;
 
 				case 'show':
-					const NOT_SET = '<:error:1009134465995509810> Not Set';
+					const NOT_SET = '<:error:1027359606126690344> Not Set';
 
 					const guild = await prisma.guild.findUnique({
-						where: {
-							guild: interaction.guildId,
-						},
+						where: { guild: interaction.guildId, },
 						select: {
 							members: true,
 							mods: true,
@@ -181,15 +179,14 @@ export default class Whitelist {
 					});
 
 					const showEmbed = new EmbedBuilder({
-						title: `<:staff:1008719693827285002> Whitelisted Roles`,
-						description: '> All the current whitelisted roles.',
-						fields: [
+						title: `<:list:1030927155472904283> Whitelist`,
+					  fields: [
 							{ name: 'Members', value: `${guild?.members ? `<@&${guild?.members}>` : NOT_SET}` },
 							{ name: 'Mods', value: `${guild?.mods ? `<@&${guild?.mods}>` : NOT_SET}` },
 							{ name: 'Admins', value: `${guild?.admins?.length ? guild.admins.reduce((acc, val) => acc.concat(`<@${val}>\n`), '') : NOT_SET}` },
 							{ name: 'Owners', value: `${guild?.owners?.length ? guild.owners.reduce((acc, val) => acc.concat(`<@${val}>\n`), '') : NOT_SET}` },
 						],
-						color: Colors.Blurple,
+						color: 0x2f3136,
 					});
 
 					await interaction.editReply({ embeds: [showEmbed] });

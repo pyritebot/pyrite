@@ -30,20 +30,24 @@ export default class AntiSpam {
 				lockdownChannel: true
 			}
 		})
+
+		const check = '<:check:1027354811164786739>'
+		const error = '<:error:1027359606126690344>'
+		const blank = '<:blank:1008721958210383902>'
 		
     const embed = new EmbedBuilder({
-      title: '<:settings:1020748294542082078> Settings',
+      title: '<:settings:1028282277299503104>  Settings',
       description: `
-${guild?.verificationChannel ? '<:check:1008718056891101194>' : '<:error:1009134465995509810>'} Verification
-${guild?.logs ? '<:check:1008718056891101194>' : '<:error:1009134465995509810>'} Logs
-${guild?.antiRaid ? '<:check:1008718056891101194>' : '<:error:1009134465995509810>'} Anti Raid
-${guild?.raidMode ? '<:check:1008718056891101194>' : '<:error:1009134465995509810>'} Join Gate
-${guild?.lockdownChannel ? '<:check:1008718056891101194>' : '<:error:1009134465995509810>'} Lockdown
-${guild?.antiSpam ? '<:check:1008718056891101194>' : '<:error:1009134465995509810>'} Anti Spam
-${guild?.toxicityFilter ? '<:check:1008718056891101194>' : '<:error:1009134465995509810>'} Toxicity Filter
-${guild?.antiLinks ? '<:check:1008718056891101194>' : '<:error:1009134465995509810>'} Anti Links
+${blank}${guild?.verificationChannel ? check : error} Verification
+${blank}${guild?.logs ? check : error} Logs
+${blank}${guild?.antiRaid ? check : error} Anti Raid
+${blank}${guild?.raidMode ? check : error} Join Gate
+${blank}${guild?.lockdownChannel ? check : error} Lockdown
+${blank}${guild?.antiSpam ? check : error} Anti Spam
+${blank}${guild?.toxicityFilter ? check : error} Toxicity Filter
+${blank}${guild?.antiLinks ? check : error} Anti Links
 	`,
-      color: Colors.Blurple,
+      color: 0x2f3136,
 		})
 
 		await interaction.editReply({ embeds: [embed] })

@@ -1,6 +1,6 @@
 import type { Interaction } from 'discord.js';
 import { PermissionFlagsBits, Events, EmbedBuilder, Colors, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { optionButtons, successEmbedBuilder } from '../utils.js';
+import { optionButtons, successEmbedBuilder, getQuarantine } from '../utils.js';
 import prisma from '../database.js';
 
 export default class Setup {
@@ -26,8 +26,8 @@ export default class Setup {
 		if (interaction.customId === 'antispam_yes' || interaction.customId === 'antispam_no') {
 			const embed = new EmbedBuilder({
 				title: ':speech_balloon: Anti Toxicity',
-				description: '> Ok, Would you like to use our effective anti toxicity system to mantain a PG-13 environment in the server?',
-				color: Colors.Blurple,
+				description: '> Would you like to use our anti toxicity system to mantain a PG-13 environment in the server?',
+				color: 0x2f3136,
 			});
 
 			await interaction.editReply({ embeds: [embed], components: [optionButtons('antitoxicity')] });
@@ -51,8 +51,8 @@ export default class Setup {
 		if (interaction.customId === 'antitoxicity_yes' || interaction.customId === 'antitoxicity_no') {
 			const embed = new EmbedBuilder({
 				title: ':scroll: Logger',
-				description: '> Nice!, Would you like to use the logger to know how your moderators use this bot?',
-				color: Colors.Blurple,
+				description: '> Would you like to use the logger to know how your moderators use this bot?',
+				color: 0x2f3136,
 			});
 
 			await interaction.editReply({ embeds: [embed], components: [optionButtons('logger')] });
@@ -84,10 +84,10 @@ export default class Setup {
 
 		if (interaction.customId === 'logger_yes' || interaction.customId === 'logger_no') {
 			const embed = new EmbedBuilder({
-				title: '<:check:1008718056891101194> Verification',
+				title: '<:check:1027354811164786739> Verification',
 				description:
-					'> Perfect!, Would you also like to set up verification in this server? (this will create a members role and verification channel, if you want to customize it use the `/verification` and `/whitelist` commands), please note that setting up verification will remove permissions from everyone role.',
-				color: Colors.Blurple,
+					'> Would you also like to set up verification in this server? (this will create a members role and verification channel, if you want to customize it use the `/verification` and `/whitelist` commands), please note that setting up verification will remove permissions from everyone role.',
+				color: 0x2f3136,
 			});
 
 			await interaction.editReply({ embeds: [embed], components: [optionButtons('verification')] });
@@ -96,101 +96,49 @@ export default class Setup {
 		if (interaction.customId === 'verification_yes') {
 			await interaction.deferReply();
 
-			interaction.guild?.roles.everyone.setPermissions(
-				[PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.UseExternalEmojis],
-				'Adding verification'
-			);
+			const channel = await interaction.guild?.channels.create({
+				name: 'verify-here'
+			})
 
-			const oldGuild = await prisma.guild.findUnique({
-				where: { guild: interaction.guildId! },
-				select: { members: true },
+			const quarantine = await getQuarantine(interaction?.guild!)
+
+			interaction.guild?.channels.cache.forEach(async ch => {
+				const c = ch as TextChannel | VoiceChannel;
+				await c.permissionOverwrites?.edit(quarantine!, { ViewChannel: false });
 			});
 
-			if (!oldGuild?.members) {
-				const role = await interaction.guild?.roles.create({
-					name: 'Members',
-				});
-
-				await prisma.guild.upsert({
-					where: { guild: interaction.guildId! },
-					update: { members: role?.id },
-					create: { guild: interaction.guildId!, members: role?.id },
-				});
-			}
-
-			const { members } = (await prisma.guild.findUnique({
-				where: { guild: interaction.guildId! },
-				select: { members: true },
-			}))!;
-
-			const role = interaction.guild?.roles.cache.get(members!);
-			role?.setPermissions([
-				PermissionFlagsBits.ViewChannel,
-				PermissionFlagsBits.CreateInstantInvite,
-				PermissionFlagsBits.ChangeNickname,
-				PermissionFlagsBits.SendMessages,
-				PermissionFlagsBits.SendMessagesInThreads,
-				PermissionFlagsBits.CreatePublicThreads,
-				PermissionFlagsBits.CreatePrivateThreads,
-				PermissionFlagsBits.EmbedLinks,
-				PermissionFlagsBits.AttachFiles,
-				PermissionFlagsBits.AddReactions,
-				PermissionFlagsBits.UseExternalEmojis,
-				PermissionFlagsBits.UseExternalStickers,
-				PermissionFlagsBits.ReadMessageHistory,
-				PermissionFlagsBits.UseApplicationCommands,
-				PermissionFlagsBits.Connect,
-				PermissionFlagsBits.Speak,
-				PermissionFlagsBits.Stream,
-				PermissionFlagsBits.UseEmbeddedActivities,
-				PermissionFlagsBits.UseVAD,
-			]);
-
-			const verificationChannel = await interaction.guild?.channels.create({
-				name: 'verification',
-				permissionOverwrites: [
-					{
-						id: interaction.guildId!,
-						allow: [PermissionFlagsBits.ViewChannel],
-						deny: [PermissionFlagsBits.SendMessages],
-					},
-					{
-						id: members!,
-						deny: [PermissionFlagsBits.ViewChannel],
-					},
-				],
-			});
+			channel.permissionOverwrites?.edit(quarantine!, { ViewChannel: true, SendMessages: false });
+			channel.permissionOverwrites?.edit(interaction.guildId!, { ViewChannel: false });
 
 			const verificationButtons = new ActionRowBuilder<ButtonBuilder>({
 				components: [
 					new ButtonBuilder({
 						label: 'Verify',
-						style: ButtonStyle.Primary,
+						style: ButtonStyle.Success,
 						custom_id: 'verify',
+					}),
+					new ButtonBuilder({
+						label: 'Help',
+						style: ButtonStyle.Link,
+						url: 'https://discord.gg/NxJzWWqhdQ',
 					}),
 				],
 			});
 
 			const verificationEmbed = new EmbedBuilder({
-				title: '<:check:1008718056891101194> Verification',
-				description: `<:1412reply:1009087336828649533> This server is protected by **Pyrite**, no one can gain access without completing a verification system.`,
-				color: Colors.Blurple,
+				title: '<:check:1027354811164786739> Verification',
+				description: `<:blank:1008721958210383902> <:arrow:1027722692662673429> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
+				color: 0x2f3136,
 			});
 
-			await verificationChannel?.send({ embeds: [verificationEmbed], components: [verificationButtons] });
-
-			await prisma.guild.upsert({
-				where: { guild: interaction.guildId! },
-				update: { verificationChannel: verificationChannel?.id },
-				create: { guild: interaction.guildId!, verificationChannel: verificationChannel?.id },
-			});
+			await channel.send({ embeds: [verificationEmbed], components: [verificationButtons] });
 		}
 
 		if (interaction.customId === 'verification_yes' || interaction.customId === 'verification_no') {
 			const embed = new EmbedBuilder({
 				title: '<:check:1008718056891101194> Anti Raid',
 				description: '> Perfect!, would you like to activate the Anti Raid Sytem?',
-				color: Colors.Blurple,
+				color: 0x2f3136,
 			});
 
 			await interaction.editReply({ embeds: [embed], components: [optionButtons('antiraid')] });

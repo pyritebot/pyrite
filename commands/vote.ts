@@ -10,10 +10,10 @@ export default class Help {
 
 	async run(interaction: CommandInteraction) {
 		const embed = new EmbedBuilder({
-			title: '<:pyrite:1014918476982394891> Vote Us!',
+			title: '<:check:1027354811164786739> Vote Us!',
 			description:
-				'<:blank:1008721958210383902><:arrow:1009057573590290452> By voting us, you help us grow and protect more servers! Please take 1 minute of your time to help us get to more servers.',
-			color: Colors.Blurple,
+				'<:arrow:1027722692662673429> By voting us, you help us grow and protect more servers! Please take 1 minute of your time to help us get to more servers.',
+			color: 0x2f3136,
 		});
 
 		const buttons = new ActionRowBuilder<ButtonBuilder>({

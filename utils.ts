@@ -1,16 +1,18 @@
-import type { Client, GuildMember, ChatInputCommandInteraction, TextChannel, GuildMemberRoleManager } from 'discord.js';
+import type { Client, GuildMember, Guild, ChatInputCommandInteraction, TextChannel, GuildMemberRoleManager } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder, EmbedBuilder, Colors, ActivityType } from 'discord.js';
 import fetch from 'node-fetch';
 import { google } from 'googleapis';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import prisma from './database.js';
+import emojis from './emojis.js'
 
 export const dir = dirname(fileURLToPath(import.meta.url));
 
 interface LogBuilderOptions {
-	member: GuildMember;
-	content: string;
+	member: GuildMember | string;
+	guild?: Guild;
+	content?: string;
 	reason: string;
 	punished?: boolean;
 }
@@ -23,10 +25,58 @@ export const setActivity = (client: Client): void => {
 	});
 };
 
+export const timeSince = (timestamp: number) => {
+  const now = new Date()
+  const secondsPast = (now.getTime() - timestamp) / 1000;
+	
+  if (secondsPast < 60) {
+    return `${parseInt(secondsPast)}s`;
+  } else if (secondsPast < 3600) {
+    return `${parseInt(secondsPast / 60)}m`;
+  } else if (secondsPast <= 86400) {
+    return `${parseInt(secondsPast / 3600)}h`;
+  } else if (secondsPast > 86400) {
+    const day = timestamp.getDate();
+    const month = timestamp.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
+    const year = timestamp.getFullYear() == now.getFullYear() ? "" : ` ${timestamp.getFullYear()}`;
+    return `${day} ${month}${year}`;
+  }
+}
+
 export const loadImage = async (image: string): Promise<Buffer> => {
 	const res = await fetch(image);
 	return Buffer.from(await res.arrayBuffer());
 };
+
+export const getQuarantine = async (guild: string) => {
+	const oldGuild = await prisma.guild.findUnique({
+		where: { guild: guild.id },
+		select: { quarantine: true }
+	})
+
+	const quarantine = guild.roles.cache.get(oldGuild?.quarantine)
+	
+	if (!guild.roles.cache.get(quarantine?.id!)) {
+		const role = await guild?.roles?.create({
+			name: 'Quarantine',
+		});
+
+		role?.setPermissions([]);
+
+		await prisma.guild.upsert({
+			where: { guild: guild.id },
+			update: { quarantine: role?.id! },
+			create: {
+				guild: guild.id,
+				quarantine: role?.id!,
+			},
+		});
+
+		return role
+	}
+
+	return quarantine
+}
 
 export const analyzeText = async (text: string) => {
 	const DISCOVERY_URL = 'https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1';
@@ -76,33 +126,32 @@ export const buttons = new ActionRowBuilder<ButtonBuilder>({
 
 export const errorEmbedBuilder = (message: string) =>
 	new EmbedBuilder({
-		description: `<:error:1027359606126690344>  ${message}`,
+		description: `${emojis.error}  ${message}`,
 		color: Colors.DarkRed,
 	});
 
 export const successEmbedBuilder = (message: string) =>
 	new EmbedBuilder({
-		description: `<:check:1027354811164786739>  ${message}`,
+		description: `${emojis.check}  ${message}`,
 		color: Colors.Green,
 	});
 
 export const warnEmbedBuilder = (message: string) =>
 	new EmbedBuilder({
-		description: `<:warn:1027361416119853187>  ${message}`,
+		description: `${emojis.warn}  ${message}`,
 		color: Colors.Yellow,
 	});
 
-export const logBuilder = ({ member, content, reason, punished = false }: LogBuilderOptions) => {
+export const logBuilder = ({ member, guild, content, reason, punished = false }: LogBuilderOptions) => {
 	const embed = new EmbedBuilder({
 		description: `
-<:arrow:1027722692662673429> ${content} 
-<:arrow:1027722692662673429> **Executor:** ${member.user}
+<:arrow:1027722692662673429> **Executor:** ${member?.user ?? member}
 <:arrow:1027722692662673429> **Reason:** **\`${reason}\`**
 <:arrow:1027722692662673429> **Punished:** \`${punished ? 'yes' : 'no'}\`
 <:arrow:1027722692662673429> **Time:** <t:${Math.floor(Date.now() / 1000)}:R>`,
 		footer: {
-			text: member.guild.name,
-			icon_url: member.guild.iconURL()!,
+			text: member?.guild?.name ?? guild?.name!,
+			icon_url: member?.guild?.iconURL() ?? guild?.iconURL()!,
 		},
 		timestamp: new Date().toISOString(),
 		color: 0x2f3136,
@@ -111,6 +160,26 @@ export const logBuilder = ({ member, content, reason, punished = false }: LogBui
 		embeds: [embed],
 	};
 };
+
+export const punishButtons = id => new ActionRowBuilder<ButtonBuilder>({
+	components: [
+		new ButtonBuilder({
+			custom_id: `punish_kick-${id}`,
+			label: 'Kick',
+			style: ButtonStyle.Danger,
+		}),
+		new ButtonBuilder({
+			custom_id: `punish_ban-${id}`,
+			label: 'Ban',
+			style: ButtonStyle.Danger,
+		}),
+		new ButtonBuilder({
+			custom_id: `punish_quarantine-${id}`,
+			label: 'Quarantine',
+			style: ButtonStyle.Secondary,
+		}),
+	]
+})
 
 export const addReport = async (interaction: ChatInputCommandInteraction) => {
 	const user = interaction.options.getUser('user', true);
@@ -123,10 +192,10 @@ export const addReport = async (interaction: ChatInputCommandInteraction) => {
 	}
 
 	const reportSubmittedEmbed = new EmbedBuilder({
-		title: '<:check:1008718056891101194> Report Submitted',
+		title: '<:check:1027354811164786739> Report Submitted',
 		description: `Your report was submitted and our staff team will be looking into it.
 Thank you for submitting this report. For more updates please join our support server below. Please also keep your DMS on so we can easly send you feedback.`,
-		color: Colors.Blurple,
+		color: 0x2f3136,
 	});
 
 	await interaction.reply({
@@ -143,7 +212,7 @@ Thank you for submitting this report. For more updates please join our support s
 	await channel?.send({
 		embeds: [
 			new EmbedBuilder({
-				color: Colors.Blurple,
+				color: 0x2f3136,
 				title: '<:arrow:1009057573590290452> New Report!',
 				description: `<:1412reply:1009087336828649533>*New report for ${user}* \n\n **Reason:** ${reason}`,
 				image: {
@@ -154,18 +223,11 @@ Thank you for submitting this report. For more updates please join our support s
 		files: [new AttachmentBuilder(file?.url!, { name: 'report.png' })],
 		components: [
 			new ActionRowBuilder<ButtonBuilder>({
-				components: [
-					new ButtonBuilder({
-						custom_id: `report_approve-${reason}-${user?.id}`,
-						label: 'Approve',
-						style: ButtonStyle.Success,
-					}),
-					new ButtonBuilder({
-						custom_id: `report_reject`,
-						label: 'Ignore',
-						style: ButtonStyle.Danger,
-					}),
-				],
+				components: [new ButtonBuilder({
+					custom_id: `report_approve-${reason}-${user?.id}`,
+					label: 'Approve',
+					style: ButtonStyle.Success,
+				})],
 			}),
 		],
 	});

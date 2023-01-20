@@ -78,10 +78,10 @@ export default class Report {
 					}
 
 					const reportSubmittedEmbed = new EmbedBuilder({
-						title: '<:check:1008718056891101194> Report Submitted',
+						title: '<:check:1027354811164786739> Report Submitted',
 						description: `Your report was submitted and our staff team will be looking into it.
 Thank you for submitting this report. For more updates please join our support server below. Please also keep your DMS on so we can easly send you feedback.`,
-						color: Colors.Blurple,
+						color: 0x2f3136,
 					});
 					await interaction.editReply({ embeds: [reportSubmittedEmbed] });
 
@@ -101,18 +101,11 @@ Thank you for submitting this report. For more updates please join our support s
 						files: [new AttachmentBuilder(file?.url!, { name: 'report.png' })],
 						components: [
 							new ActionRowBuilder<ButtonBuilder>({
-								components: [
-									new ButtonBuilder({
-										custom_id: `unreport_approve-${id}-${interaction.user.id}`,
-										label: 'Remove Report',
-										style: ButtonStyle.Success,
-									}),
-									new ButtonBuilder({
-										custom_id: `report_reject`,
-										label: 'Ignore',
-										style: ButtonStyle.Danger,
-									}),
-								],
+								components: [new ButtonBuilder({
+									custom_id: `unreport_approve-${id}-${interaction.user.id}`,
+									label: 'Remove Report',
+									style: ButtonStyle.Success,
+								})],
 							}),
 						],
 					});

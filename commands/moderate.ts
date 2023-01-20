@@ -46,7 +46,7 @@ export default class Help {
 		}
 		
 		try {
-			await member.setNickname(`Bad Name ${cuid().slice(0, 6)}`, 'Username was not pingable!')
+			await member.setNickname(`Moderated Nickname ${cuid().slice(0, 6)}`, 'Username was not pingable!')
 		} catch {
 			await interaction.editReply({ embeds: [errorEmbedBuilder("Can't moderate this user")] });
 			return;

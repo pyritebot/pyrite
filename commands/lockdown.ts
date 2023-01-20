@@ -31,25 +31,18 @@ export default class Lockdown {
 		});
 
 		if (!(tempGuild?.owners.includes(interaction.user.id) || interaction.guild?.ownerId === interaction.user.id)) {
-			await interaction.reply({ embeds: [errorEmbedBuilder('Only an owner can use the whitelist.')], ephemeral: true });
+			await interaction.reply({ embeds: [errorEmbedBuilder('Only an owner can use the </lockdown:1014153355330850855>.')], ephemeral: true });
 			return;
 		}
 
 		switch (interaction.options.getSubcommand()) {
 			case 'on':
 				const confirm = new ActionRowBuilder<ButtonBuilder>({
-					components: [
-						new ButtonBuilder({
-							label: 'Continue',
-							style: ButtonStyle.Danger,
-							custom_id: 'lockdown_continue',
-						}),
-						new ButtonBuilder({
-							label: 'Cancel',
-							style: ButtonStyle.Secondary,
-							custom_id: 'lockdown_cancel',
-						}),
-					],
+					components: [new ButtonBuilder({
+						label: 'Continue',
+						style: ButtonStyle.Danger,
+						custom_id: 'lockdown_continue',
+					})],
 				});
 
 				const lockdownOnEmbed = new EmbedBuilder({
@@ -93,7 +86,6 @@ export default class Lockdown {
 					interaction.guild?.channels.cache.forEach(ch => {
 						const c = ch as TextChannel | VoiceChannel;
 						interaction.guild?.roles.cache
-							.filter(role => role.id !== '@everyone' && role.id !== guild?.verificationChannel)
 							.forEach(async role => await c.permissionOverwrites.edit(role.id, { SendMessages: true }));
 					});
 

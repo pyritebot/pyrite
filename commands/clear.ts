@@ -6,9 +6,18 @@ import prisma from '../database.js';
 export default class Clear {
 	data = new SlashCommandBuilder()
 		.setName('clear')
+		.setNameLocalizations({ 'es-ES': 'limpiar-mensajes' })
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.setDescription('Clear messages in a channel!')
-		.addIntegerOption(amount => amount.setName('amount').setDescription('You can pass an integer up to 100').setRequired(true));
+		.setDescription('Clear messages in a channel.')
+		.setDescriptionLocalizations({ 'es-ES': 'Limpiar los mensajes en un canal.' })
+		.addIntegerOption(amount => 
+			amount
+				.setName('amount')
+				.setNameLocalizations({ 'es-ES': 'cantidad' })
+				.setDescription('You can pass an integer up to 100.')
+				.setDescriptionLocalizations({ 'es-ES': 'Puedes pasar un número entero menor de 100.' })
+				.setRequired(true)
+		);
 
 	async run(interaction: ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
@@ -37,7 +46,7 @@ export default class Clear {
 				logBuilder({
 					member: interaction.member as GuildMember,
 					content: `${interaction.user} has cleared **${size}** messages in ${interaction.channel}!`,
-					reason: `Bulk delete made by ${interaction.user.tag}`,
+					reason: `Bulk delete (${size}) made by ${interaction.user.tag}`,
 				})
 			);
 		} catch {

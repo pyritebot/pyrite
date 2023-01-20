@@ -54,7 +54,7 @@ export default class Ban {
 			logBuilder({
 				member: interaction.member as GuildMember,
 				content: `${member.user} has been banned by ${interaction.user}!`,
-				reason,
+				reason: `${member.user.tag} banned by ${interaction.user.tag}, reason: ${reason}`,
 			})
 		);
 	}

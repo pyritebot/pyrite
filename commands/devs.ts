@@ -7,8 +7,8 @@ export default class Developers {
 	data = new SlashCommandBuilder()
 		.setName('devs')
 		.setNameLocalizations({ 'es-ES': 'desarrolladores' })
-		.setDescription('The Official Bot Developers')
-		.setDescriptionLocalizations({ 'es-ES': 'Los Desarrolladores Oficiales del Bot' });
+		.setDescription('The official bot developers.')
+		.setDescriptionLocalizations({ 'es-ES': 'Los desarrolladores oficiales del bot.' });
 
 	async run(interaction: ChatInputCommandInteraction) {
 		await interaction.reply({

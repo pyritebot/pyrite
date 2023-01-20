@@ -6,22 +6,25 @@ export default class Help {
 	data = new SlashCommandBuilder()
 		.setName('help')
 		.setNameLocalizations({ 'es-ES': 'ayuda' })
-		.setDescription('Display the help command!')
-		.setDescriptionLocalizations({ 'es-ES': 'Mostrar el comando de ayuda (en inglés)' });
+		.setDescription('Display the help command.')
+		.setDescriptionLocalizations({ 'es-ES': 'Mostrar el comando de ayuda (en inglés).' });
 
 	async run(interaction: ChatInputCommandInteraction) {
 		const helpEmbed = new EmbedBuilder({
-			title: '<:pyrite:1014918476982394891> Pyrite Bot',
-			description:
-				'<:1412reply:1009087336828649533> Welcome to **Pyrite Bot** heres a list of my features below. If you need help using any scroll down in the select menu for them.',
-			fields: [
-				{ name: '<:moderator:1008717826552504321> Moderation', value: '<:1412reply:1009087336828649533> Advanced moderation system.' },
-				{ name: '<:check:1008718056891101194> Verification', value: '<:1412reply:1009087336828649533> Advanced verification system.' },
-				{ name: '<:staff:1008719693827285002> Whitelisting', value: '<:1412reply:1009087336828649533> Advanced whitelist system.' },
-				{ name: '<:ban:1020333545887113246> Anti Raid', value: '<:1412reply:1009087336828649533> Advanced Anti Raid system.' },
-				{ name: '<:muted:1010127791070658570> AutoMod', value: '<:1412reply:1009087336828649533> Advanced AutoMod system.' },
-			],
-			color: Colors.Blurple,
+			title: ':blue_book:  Help',
+			description: `
+Thanks for using Pyrite Bot, here you can see all of my commands!
+
+<:blank:1008721958210383902> <:arrow:1027722692662673429> Im gonna help you keep your server safe from any raider or spammer. To fully set me up it is recommended looking at the categories below.
+
+Click on __**Select Category**__ below to get started. 
+<:blank:1008721958210383902> <:arrow:1027722692662673429> If you got any doubts join us in our [Support Server](https://discord.gg/NxJzWWqhdQ) \:)
+`,
+			color: 0x2f3136,
+			footer: {
+				text: 'Developed by AngelNext#6138 and eldi mindcrafter#4743',
+				icon_url: interaction.client.user?.displayAvatarURL()!
+			}
 		});
 
 		const row = new ActionRowBuilder<SelectMenuBuilder>({
