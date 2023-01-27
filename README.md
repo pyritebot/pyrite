@@ -12,7 +12,7 @@
 	<a href="https://github.com/PyriteBot/pyrite">
 		<img src="https://img.shields.io/static/v1?color=%232161b8&logo=github&style=for-the-badge&label=GitHub&message=pyrite">
 	</a>
-	<a href="https://discord.gg/fE4GNHsmcB">
-		<img src="https://img.shields.io/discord/1002660982591586534?color=%09%235865F2&label=Discord&logo=discord&logoColor=%23FFF&style=for-the-badge">
+	<a href="https://discord.gg/NxJzWWqhdQ">
+		<img src="https://img.shields.io/discord/1008365644636495953?color=%09%235865F2&label=Discord&logo=discord&logoColor=%23FFF&style=for-the-badge">
 	</a>
 </div>
