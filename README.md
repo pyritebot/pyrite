@@ -1,5 +1,5 @@
 <div align="center">
-	<a href="https://angelnext.gitbook.io/loxt/">
+	<a href="https://pyritebot.netlify.appe/">
 		<img
 			src="https://user-images.githubusercontent.com/79442303/215068077-5ae12c02-4970-4844-985d-df50e516538a.png" 
       height="200" 
@@ -15,7 +15,8 @@
 	<a href="https://discord.gg/NxJzWWqhdQ">
 		<img src="https://img.shields.io/discord/1008365644636495953?color=%09%235865F2&label=Discord&logo=discord&logoColor=%23FFF&style=for-the-badge">
 	</a>
+	<hr />
 	<img
-			src="https://media.discordapp.net/attachments/1009363862837002360/1068611332649254942/PYRITE.png"
+			src="https://user-images.githubusercontent.com/79442303/216783390-3c3c1947-dd4f-474e-aa6b-c3687bfd6cd7.png"
 		/>
 </div>
