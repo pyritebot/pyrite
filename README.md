@@ -17,6 +17,6 @@
 	</a>
 	<hr />
 	<img
-			src="https://user-images.githubusercontent.com/79442303/216783390-3c3c1947-dd4f-474e-aa6b-c3687bfd6cd7.png"
+			src="https://media.discordapp.net/attachments/825431866516570112/1074792858302824509/pyritebot.png?width=1352&height=676"
 		/>
 </div>
