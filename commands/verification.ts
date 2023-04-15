@@ -107,7 +107,7 @@ export default class Verification {
 
 					const verificationEmbed = new EmbedBuilder({
 						title: '<:check:1027354811164786739> Verification',
-						description: `<:blank:1008721958210383902> <:arrow:1027722692662673429> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
+						description: `<:blank:1008721958210383902> <:arrow:1068604670764916876> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:reply:1067159718646263910> Press on the **Verify** button below.`,
 						color: 0x2f3136,
 					});
 

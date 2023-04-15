@@ -46,9 +46,10 @@ export default class Lockdown {
 				});
 
 				const lockdownOnEmbed = new EmbedBuilder({
-					title: '<:warn:1027361416119853187> Warning!',
-					description: "The lockdown goes through the entire server and lock every channel and remove all role permissions, and no new members will be able to enter your server while it's on!",
-					color: Colors.Yellow,
+					color: 0x2f3136,
+          image: {
+            url: 'https://media.discordapp.net/attachments/1009363862837002360/1068617054812381224/WARNING.png?width=1352&height=676',
+          }
 				});
 				await interaction.reply({ embeds: [lockdownOnEmbed], components: [confirm], ephemeral: true });
 				break;

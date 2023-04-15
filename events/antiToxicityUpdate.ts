@@ -64,7 +64,12 @@ export default class AntiToxicity {
 					icon_url: message.author.displayAvatarURL(),
 				},
 				title: 'Toxic message detected!',
-				description: `The message ||${message.content}|| has been reported in ${message.channel} for toxicity\n<:blank:1008721958210383902>`,
+				description: `
+A user was detected being toxic in a channel, here are the details below:
+    
+    <:arrow:1068604670764916876> **Message:** ||${message.content}||  
+    <:arrow:1068604670764916876> **Channel:** ${message.channel} 
+<:arrow:1068604670764916876> **Reason:** toxicity`,
 				color: 0x2f3136,
 				footer: {
 					text: message.guild?.name!,

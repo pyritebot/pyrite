@@ -13,13 +13,16 @@ export default class Help {
 		const helpEmbed = new EmbedBuilder({
 			title: ':blue_book:  Help',
 			description: `
-Thanks for using Pyrite Bot, here you can see all of my commands!
+Thanks for using Pyrite Bot, the future of discord server security!
 
-<:blank:1008721958210383902> <:arrow:1027722692662673429> Im gonna help you keep your server safe from any raider or spammer. To fully set me up it is recommended looking at the categories below.
+<:blank:1008721958210383902> <:arrow:1068604670764916876> Im gonna help you keep your server safe from any raider or spammer. To fully set me up it is recommended looking at the categories below.
 
 Click on __**Select Category**__ below to get started. 
-<:blank:1008721958210383902> <:arrow:1027722692662673429> If you got any doubts join us in our [Support Server](https://discord.gg/NxJzWWqhdQ) \:)
+<:blank:1008721958210383902> <:arrow:1068604670764916876> If you got any doubts join us in our [Support Server](https://discord.gg/NxJzWWqhdQ) \:)
 `,
+      image: {
+        url: 'https://media.discordapp.net/attachments/1009363862837002360/1068611332649254942/PYRITE.png?width=1127&height=676',
+      },
 			color: 0x2f3136,
 			footer: {
 				text: 'Developed by AngelNext#6138 and eldi mindcrafter#4743',
@@ -35,7 +38,7 @@ Click on __**Select Category**__ below to get started.
 					options: [
 						{
 							label: 'Start',
-							emoji: '<:home:1010265828446457996>',
+							emoji: '<:home:1068613634957266964>',
 							description: 'Go back to the start.',
 							value: 'start',
 						},
@@ -47,7 +50,7 @@ Click on __**Select Category**__ below to get started.
 						},
 						{
 							label: 'Verification',
-							emoji: '<:check:1008718056891101194>',
+							emoji: '<:check:1027354811164786739>',
 							description: 'Get a list of the verification commands.',
 							value: 'verification',
 						},
@@ -76,7 +79,8 @@ Click on __**Select Category**__ below to get started.
 
 		try {
 			await interaction.reply({ embeds: [helpEmbed], components: [row, buttons], ephemeral: true });
-		} catch {
+		} catch (e) {
+			console.error(e)
 			await interaction.reply(defaultError);
 		}
 	}

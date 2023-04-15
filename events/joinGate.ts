@@ -18,7 +18,7 @@ export default class JoinGate {
 				name: member.guild.name,
 				icon_url: member.guild.iconURL()!,
 			},
-			description: `<:arrow:1027722692662673429> **Join Gate** is currently active in this server. Meaning no one can join at the moment.`,
+			description: `<:arrow:1068604670764916876> **Join Gate** is currently active in this server. Meaning no one can join at the moment.`,
 			color: 0x2f3136,
 		});
 	

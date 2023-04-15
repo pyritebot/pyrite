@@ -43,10 +43,13 @@ client.once('ready', async () => {
 client.on('guildCreate', async guild => {
 	setActivity(client)
 	const embed = new EmbedBuilder({
-		title: 'Thanks for using Pyrite!',
+		title: '<:list:1030927155472904283> Welcome to Pyrite Bot',
 		description:
-			'>>> I will make sure to prevent your server from getting raided etc. \nTo set me up please type </setup:1014153355377004666>. If you need help join our [official support server](https://discord.gg/C8bpMPwJen) If you want to view the full commands I have please type </help:1014153355330850852>\nI have more features including **Moderation**, **Whitelisting** and much more.',
+			'<:reply:1067159718646263910> Pyrite is the future of discord moderation and anti raid. Pyrite will keep your server safe and monitor it 24/7. Pyrite offers a variety of features and more to keep your server protected from any raiders and spammers. \n \n <:arrow:1068604670764916876> If you need any help with pyrite please use the links below this message.',
 		color: 0x2f3136,
+    image: {
+      url: 'https://media.discordapp.net/attachments/1009363862837002360/1068611332649254942/PYRITE.png?width=970&height=582',
+    }
 	});
 	const owner = await guild.fetchOwner();
 	owner.send({ embeds: [embed], components: [buttons] }).catch(() => {});
@@ -80,7 +83,7 @@ client.on('interactionCreate', async interaction => {
 
 		const lockdownEmbed = new EmbedBuilder({
 			title: `<:lock:1027724211944431708> Lockdown`,
-			description: `This server is currently on lockdown. Meaning no one can chat in this server. Please wait until the owners unlock the server.`,
+			description: `<:reply:1067159718646263910>This server is currently on lockdown. Meaning no one can chat in this server. Please wait until the owners unlock the server.`,
 			color: 0x2f3136,
 			footer: {
 				icon_url: interaction.guild.iconURL(),

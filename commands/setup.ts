@@ -32,7 +32,7 @@ export default class Setup {
 		await channel?.send({ content: `${interaction.user}, I will walk you through the steps to set up ${interaction.client.user} in this server!` });
 		const embed = new EmbedBuilder({
 			title: ':no_entry_sign: Anti Spam',
-			description: '> Would you like to use our effective spam system to stop members from spamming in your server?',
+			description: '<:reply:1067159718646263910> Would you like to use our effective spam system to stop members from spamming in your server?',
 			color: 0x2f3136,
 		});
 		await channel?.send({ embeds: [embed], components: [optionButtons('antispam')] });

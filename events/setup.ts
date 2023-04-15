@@ -26,7 +26,7 @@ export default class Setup {
 		if (interaction.customId === 'antispam_yes' || interaction.customId === 'antispam_no') {
 			const embed = new EmbedBuilder({
 				title: ':speech_balloon: Anti Toxicity',
-				description: '> Would you like to use our anti toxicity system to mantain a PG-13 environment in the server?',
+				description: '<:reply:1067159718646263910> Would you like to use our anti toxicity system to mantain a PG-13 environment in the server?',
 				color: 0x2f3136,
 			});
 
@@ -51,7 +51,7 @@ export default class Setup {
 		if (interaction.customId === 'antitoxicity_yes' || interaction.customId === 'antitoxicity_no') {
 			const embed = new EmbedBuilder({
 				title: ':scroll: Logger',
-				description: '> Would you like to use the logger to know how your moderators use this bot?',
+				description: '<:reply:1067159718646263910> Would you like to use the logger to know how your moderators use this bot?',
 				color: 0x2f3136,
 			});
 
@@ -86,7 +86,7 @@ export default class Setup {
 			const embed = new EmbedBuilder({
 				title: '<:check:1027354811164786739> Verification',
 				description:
-					'> Would you also like to set up verification in this server? (this will create a members role and verification channel, if you want to customize it use the `/verification` and `/whitelist` commands), please note that setting up verification will remove permissions from everyone role.',
+					'<:reply:1067159718646263910> Would you also like to set up verification in this server? (this will create a members role and verification channel, if you want to customize it use the `/verification` and `/whitelist` commands), please note that setting up verification will remove permissions from everyone role.',
 				color: 0x2f3136,
 			});
 
@@ -127,7 +127,7 @@ export default class Setup {
 
 			const verificationEmbed = new EmbedBuilder({
 				title: '<:check:1027354811164786739> Verification',
-				description: `<:blank:1008721958210383902> <:arrow:1027722692662673429> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:1412reply:1009087336828649533> Press on the **Verify** button below.`,
+				description: `<:blank:1008721958210383902> <:arrow:1068604670764916876> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:reply:1067159718646263910> Press on the **Verify** button below.`,
 				color: 0x2f3136,
 			});
 
@@ -137,7 +137,7 @@ export default class Setup {
 		if (interaction.customId === 'verification_yes' || interaction.customId === 'verification_no') {
 			const embed = new EmbedBuilder({
 				title: '<:check:1008718056891101194> Anti Raid',
-				description: '> Perfect!, would you like to activate the Anti Raid Sytem?',
+				description: '<:reply:1067159718646263910> Perfect!, would you like to activate the Anti Raid Sytem?',
 				color: 0x2f3136,
 			});
 

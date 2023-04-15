@@ -20,13 +20,13 @@ export default class AntiAlts {
 
 			const embed = new EmbedBuilder({
 				title: 'Alt Account Detected!',
-				description: `<:arrow:1009057573590290452> ${user} was detected as a alternative account.
-        <:blank:1008721958210383902> They were kicked by the **Anti Alts system**
-        <:blank:1008721958210383902> This happened at: <t:${Math.floor(Date.now() / 1000)}:R>`,
+				description: `<:arrow:1068604670764916876> ${user} was detected as a alternative account.
+        <:arrow:1068604670764916876> They were kicked by the **Anti Alts system**
+        <:arrow:1068604670764916876> This happened at: <t:${Math.floor(Date.now() / 1000)}:R>`,
 				thumbnail: {
 					url: user.displayAvatarURL(),
 				},
-				color: Colors.Blurple,
+				color: 0x2f3136,
 			});
 
 			await logs?.send({ embeds: [embed] });
