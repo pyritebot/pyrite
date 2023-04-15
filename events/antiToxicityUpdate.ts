@@ -70,7 +70,7 @@ A user was detected being toxic in a channel, here are the details below:
     <:arrow:1068604670764916876> **Message:** ||${message.content}||  
     <:arrow:1068604670764916876> **Channel:** ${message.channel} 
 <:arrow:1068604670764916876> **Reason:** toxicity`,
-				color: 0x2f3136,
+				color: 0x2b2d31,
 				footer: {
 					text: message.guild?.name!,
 					icon_url: message.guild?.iconURL()!,

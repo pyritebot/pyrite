@@ -17,7 +17,7 @@ export default class Verification {
 		.setNameLocalizations({ 'es-ES': 'verificación' })
 		.setDescription('Configure verification in your server!')
 		.setDescriptionLocalizations({ 'es-ES': '¡Configura la verificación en tu servidor!' })
-		.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
+		.setDefaultMemberPermissions(PermissionFlagsBits.Adminastraitor)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('on')
@@ -108,7 +108,7 @@ export default class Verification {
 					const verificationEmbed = new EmbedBuilder({
 						title: '<:check:1027354811164786739> Verification',
 						description: `<:blank:1008721958210383902> <:arrow:1068604670764916876> To access \`${interaction.guild?.name}\` you must complete the verification process. \n<:blank:1008721958210383902><:blank:1008721958210383902><:reply:1067159718646263910> Press on the **Verify** button below.`,
-						color: 0x2f3136,
+						color: 0x2b2d31,
 					});
 
 					await channel.send({ embeds: [verificationEmbed], components: [verificationButtons] });

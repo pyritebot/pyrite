@@ -1,23 +1,24 @@
 import type { ChatInputCommandInteraction, GuildMember, GuildMemberRoleManager, TextChannel } from 'discord.js';
-import { SlashCommandBuilder, EmbedBuilder, Colors, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { defaultError, errorEmbedBuilder, successEmbedBuilder, addWarn, logBuilder } from '../utils.js';
+import emojis from '../emojis.js';
 import prisma from '../database.js';
 
-export default class Warns {
+export default class Warnings {
 	data = new SlashCommandBuilder()
-		.setName('warns')
+		.setName('warnings')
 		.setDescription('Use this command to manage the warnings in your server!')
 		.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName('warn')
+				.setName('add')
 				.setNameLocalizations({ 'es-ES': 'advertir' })
 				.setDescription('Warn a user!')
 				.setDescriptionLocalizations({ 'es-ES': 'Advierte a un usuario!' })
 				.addUserOption(option =>
 					option
-						.setName('user')
-						.setNameLocalizations({ 'es-ES': 'usuario' })
+						.setName('member')
+						.setNameLocalizations({ 'es-ES': 'miembro' })
 						.setDescription('You can pass a mention or an id of a member.')
 						.setDescriptionLocalizations({ 'es-ES': 'Puedes pasar una mención o un id de un miembro.' })
 						.setRequired(true)
@@ -168,13 +169,15 @@ export default class Warns {
 							name: interaction.guild?.name!,
 							icon_url: interaction.guild?.iconURL()!,
 						},
-						title: '<:warn:1009191992040894657> Warnings',
+						title: `${emojis.warn} Warnings`,
 						description:
 							(warns?.length ?? 0) === 0
-								? `> ${member.user} doesn't have any warnings!`
-								: `> ${warns?.length === 1 ? `This is the warning` : `These are the ${warns?.length ?? 0} warnings`} that ${member.user} has!`,
-						fields: warns?.map(warn => ({ name: warn.id, value: `<:blank:1008721958210383902> <:arrow:1009057573590290452> ${warn.reason}` })),
-						color: Colors.Blurple,
+								? `${emojis.arrow} ${member.user} doesn't have any warnings!`
+								: `> ${warns?.length === 1 ? `This is the warning` : `These are the ${warns?.length ?? 0} warnings`} that ${member.user} has!
+
+`,
+						fields: warns?.map((warn, i) => ({ name: `${i+1}. ${warn.id}`, value: `${emojis.arrow} ${warn.reason}` })),
+						color: 0x2b2d31,
 					});
 
 					await interaction.editReply({ embeds: [show] });

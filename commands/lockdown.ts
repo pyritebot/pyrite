@@ -46,7 +46,7 @@ export default class Lockdown {
 				});
 
 				const lockdownOnEmbed = new EmbedBuilder({
-					color: 0x2f3136,
+					color: 0x2b2d31,
           image: {
             url: 'https://media.discordapp.net/attachments/1009363862837002360/1068617054812381224/WARNING.png?width=1352&height=676',
           }

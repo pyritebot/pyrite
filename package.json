@@ -1,35 +1,35 @@
 {
   "name": "pyrite",
   "type": "module",
-  "version": "1.6.1",
+  "version": "2.3.2",
   "description": "Know your members. Know your community.",
   "main": ".build/index.js",
   "dependencies": {
-    "@prisma/client": "^4.4.0",
-    "canvas": "^2.9.3",
+    "@prisma/client": "^4.10.1",
     "captcha-canvas": "^3.2.1",
-    "cuid": "^2.1.8",
-    "dayjs": "^1.11.5",
-    "discord.js": "^14.3.0",
-    "fastify": "^4.5.0",
-    "googleapis": "^108.0.0",
-    "loxt": "^3.4.0",
-    "node-fetch": "^3.2.10",
-    "sharp": "^0.31.1"
+    "dayjs": "^1.11.7",
+    "discord.js": "^14.9.0",
+    "fastify": "^4.15.0",
+    "googleapis": "^118.0.0",
+    "loxt": "^3.9.1",
+    "sharp": "^0.32.0"
   },
   "devDependencies": {
     "esbuild": "^0.15.10",
-    "prisma": "^4.4.0"
+    "prisma": "^4.10.1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PyriteBot/pyrite.git"
+    "url": "git+https://github.com/pyritebot/pyrite.git"
   },
-  "keywords": ["bot", "verification"],
+  "keywords": [
+    "bot",
+    "verification"
+  ],
   "author": "AngelNext",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/PyriteBot/pyrite/issues"
+    "url": "https://github.com/pyriteBot/pyrite/issues"
   },
-  "homepage": "https://github.com/PyriteBot/pyrite#readme"
+  "homepage": "https://github.com/pyritebot/pyrite#readme"
 }

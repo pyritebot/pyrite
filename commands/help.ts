@@ -1,6 +1,8 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, Colors } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, Colors } from 'discord.js';
 import { defaultError, buttons } from '../utils.js';
+import emojis from '../emojis.js';
+import { join } from 'node:path'
 
 export default class Help {
 	data = new SlashCommandBuilder()
@@ -11,28 +13,30 @@ export default class Help {
 
 	async run(interaction: ChatInputCommandInteraction) {
 		const helpEmbed = new EmbedBuilder({
-			title: ':blue_book:  Help',
+			title: `${emojis.list}  Help`,
 			description: `
-Thanks for using Pyrite Bot, the future of discord server security!
+Thanks for choosing Pyrite Bot, the future of Discord server security! 
 
-<:blank:1008721958210383902> <:arrow:1068604670764916876> Im gonna help you keep your server safe from any raider or spammer. To fully set me up it is recommended looking at the categories below.
+I'm gonna help you keep your server safe from any threats that try ruin your community. 
+
+${emojis.blank}${emojis.arrow} To fully set me up it is recommended looking at the categories below.
 
 Click on __**Select Category**__ below to get started. 
 <:blank:1008721958210383902> <:arrow:1068604670764916876> If you got any doubts join us in our [Support Server](https://discord.gg/NxJzWWqhdQ) \:)
 `,
-      image: {
-        url: 'https://media.discordapp.net/attachments/1009363862837002360/1068611332649254942/PYRITE.png?width=1127&height=676',
-      },
-			color: 0x2f3136,
+			image: {
+				url: 'attachment://pyritebot.png',
+			},
+			color: 0x2b2d31,
 			footer: {
 				text: 'Developed by AngelNext#6138 and eldi mindcrafter#4743',
 				icon_url: interaction.client.user?.displayAvatarURL()!
 			}
 		});
 
-		const row = new ActionRowBuilder<SelectMenuBuilder>({
+		const row = new ActionRowBuilder<StringSelectMenuBuilder>({
 			components: [
-				new SelectMenuBuilder({
+				new StringSelectMenuBuilder({
 					custom_id: 'help_select',
 					placeholder: 'Select Category',
 					options: [
@@ -44,7 +48,7 @@ Click on __**Select Category**__ below to get started.
 						},
 						{
 							label: 'Moderation',
-							emoji: '<:moderator:1008717826552504321>',
+							emoji: '<:security:1071812054010298528>',
 							description: 'Get a list of the moderation commands.',
 							value: 'moderation',
 						},
@@ -79,8 +83,7 @@ Click on __**Select Category**__ below to get started.
 
 		try {
 			await interaction.reply({ embeds: [helpEmbed], components: [row, buttons], ephemeral: true });
-		} catch (e) {
-			console.error(e)
+		} catch {
 			await interaction.reply(defaultError);
 		}
 	}

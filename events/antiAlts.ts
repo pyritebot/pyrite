@@ -26,7 +26,7 @@ export default class AntiAlts {
 				thumbnail: {
 					url: user.displayAvatarURL(),
 				},
-				color: 0x2f3136,
+				color: 0x2b2d31,
 			});
 
 			await logs?.send({ embeds: [embed] });

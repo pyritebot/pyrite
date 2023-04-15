@@ -6,7 +6,7 @@ export default class Warn {
 	data = new SlashCommandBuilder()
 		.setName('warn')
 		.setNameLocalizations({ 'es-ES': 'advertir' })
-		.setDescription('Warn a user! (alias to /warns add)')
+		.setDescription('Warn a user! (alias to /warnings add)')
 		.setDescriptionLocalizations({ 'es-ES': 'Advierte a un usuario!' })
 		.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
 		.addUserOption(option =>

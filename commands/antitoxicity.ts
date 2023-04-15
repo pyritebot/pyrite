@@ -36,8 +36,8 @@ export default class AntiToxicity {
 					await onLogs?.send(
 						logBuilder({
 							member: interaction.member as GuildMember,
-							content: `Anti Toxicity has been activated by ${interaction.user}!`,
-							reason: `anti toxicity feature has been activated by ${interaction.user.tag}`,
+							content: `Anti-Toxicity has been activated by ${interaction.user}!`,
+							reason: `anti-toxicity feature has been activated by ${interaction.user.tag}`,
 						})
 					);
 					break;
@@ -58,8 +58,8 @@ export default class AntiToxicity {
 					await offLogs?.send(
 						logBuilder({
 							member: interaction.member as GuildMember,
-							content: `Anti Toxicity has been deactivated by ${interaction.user}!`,
-							reason: `anti toxicity feature has been deactivated by ${interaction.user.tag}`,
+							content: `Anti-Toxicity has been deactivated by ${interaction.user}!`,
+							reason: `anti-toxicity feature has been deactivated by ${interaction.user.tag}`,
 						})
 					);
 					break;

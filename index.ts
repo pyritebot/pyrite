@@ -1,9 +1,10 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, TextChannel, VoiceChannel } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, TextChannel, VoiceChannel, AttachmentBuilder } from 'discord.js';
 import { Client, GatewayIntentBits, REST, Collection, Routes, EmbedBuilder, Colors, PermissionFlagsBits } from 'discord.js';
 import { loxt } from 'loxt';
 import { setActivity, analyzeText, dir, buttons, successEmbedBuilder, defaultError, logBuilder } from './utils.js';
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import emojis from '../emojis.js';
 import prisma from './database.js';
 import Fastify from 'fastify';
 
@@ -45,14 +46,18 @@ client.on('guildCreate', async guild => {
 	const embed = new EmbedBuilder({
 		title: '<:list:1030927155472904283> Welcome to Pyrite Bot',
 		description:
-			'<:reply:1067159718646263910> Pyrite is the future of discord moderation and anti raid. Pyrite will keep your server safe and monitor it 24/7. Pyrite offers a variety of features and more to keep your server protected from any raiders and spammers. \n \n <:arrow:1068604670764916876> If you need any help with pyrite please use the links below this message.',
-		color: 0x2f3136,
+`<:reply:1067159718646263910> Thank you for choosing **Pyrite Bot**, I will make sure to try my best to protect your server from raider's, spammer's and so much more.
+   
+You can configure me on the dashboard below this message. Need more servers protected? Add me to any server you think needs protection!
+
+`,
+		color: 0x2b2d31,
     image: {
-      url: 'https://media.discordapp.net/attachments/1009363862837002360/1068611332649254942/PYRITE.png?width=970&height=582',
+      url: 'attachment://pyritebot.png',
     }
 	});
 	const owner = await guild.fetchOwner();
-	owner.send({ embeds: [embed], components: [buttons] }).catch(() => {});
+	await owner.send({ embeds: [embed], files: [new AttachmentBuilder(join(process.cwd(), './assets/pyritebot.png'))], components: [buttons] }).catch(() => {});
 });
 
 client.on('guildDelete', () => setActivity(client));
@@ -84,7 +89,7 @@ client.on('interactionCreate', async interaction => {
 		const lockdownEmbed = new EmbedBuilder({
 			title: `<:lock:1027724211944431708> Lockdown`,
 			description: `<:reply:1067159718646263910>This server is currently on lockdown. Meaning no one can chat in this server. Please wait until the owners unlock the server.`,
-			color: 0x2f3136,
+			color: 0x2b2d31,
 			footer: {
 				icon_url: interaction.guild.iconURL(),
 				text: interaction.guild.name,

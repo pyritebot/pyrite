@@ -186,7 +186,7 @@ export default class Whitelist {
 							{ name: 'Admins', value: `${guild?.admins?.length ? guild.admins.reduce((acc, val) => acc.concat(`<@${val}>\n`), '') : NOT_SET}` },
 							{ name: 'Owners', value: `${guild?.owners?.length ? guild.owners.reduce((acc, val) => acc.concat(`<@${val}>\n`), '') : NOT_SET}` },
 						],
-						color: 0x2f3136,
+						color: 0x2b2d31,
 					});
 
 					await interaction.editReply({ embeds: [showEmbed] });

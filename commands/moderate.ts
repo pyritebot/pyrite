@@ -4,13 +4,13 @@ import { successEmbedBuilder, errorEmbedBuilder } from '../utils.js';
 import cuid from 'cuid';
 import prisma from '../database.js'
 
-export default class Help {
+export default class Moderate {
 	data = new SlashCommandBuilder()
 		.setName('modnick')
 		.setNameLocalizations({ 'es-ES': 'moderar-apodo' })
 		.setDescription('Moderate a users name to a pingable one!')
 		.setDescriptionLocalizations({ 'es-ES': 'Cambia el nombre de usuario a uno al que se le pueda hacer ping!' })
-  	.setDefaultMemberPermissions(PermissionFlagsBits.ChangeNickname)
+  	.setDefaultMemberPermissions(PermissionFlagsBits.ManageNicknames)
   	.addUserOption(option =>
 			option
 				.setName('user')
@@ -28,8 +28,8 @@ export default class Help {
 			return;
 		}
 
-		if (!interaction.guild?.members?.me?.permissions?.has(PermissionFlagsBits.ChangeNickname)) {
-			await interaction.reply({ embeds: [errorEmbedBuilder("The bot doesn't have permissions to change member's nicknames!")], ephemeral: true });
+		if (!interaction.guild?.members?.me?.permissions?.has(PermissionFlagsBits.ManageNicknames)) {
+			await interaction.reply({ embeds: [errorEmbedBuilder("The bot doesn't have permissions to manage member's nicknames!")], ephemeral: true });
 			return;
 		}
 

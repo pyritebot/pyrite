@@ -3,25 +3,27 @@ run = "node --enable-source-maps .build/index.js"
 entrypoint = "index.ts"
 
 [languages.typescript]
-pattern = "**/{*.ts,*.js,*.tsx,*.jsx}"
+pattern = "**/{*.ts}"
 syntax = "typescript"
 
 [languages.typescript.languageServer]
 start = [ "typescript-language-server", "--stdio" ]
 
 [packager]
-language = "nodejs"
+language = "nodejs-npm"
 
-[packager.features]
-enabledForHosting = false
-packageSearch = true
-guessImports = true
+	[packager.features]
+	enabledForHosting = false
+	packageSearch = true
+	guessImports = true
 
 [env]
 XDG_CONFIG_HOME = "/home/runner/.config"
+PATH = "/home/runner/$REPL_SLUG/.config/bin:/home/runner/$REPL_SLUG/.config/npm/node_global/bin:$PATH"
+npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
 
 [nix]
-channel = "stable-21_11"
+channel = "stable-22_11"
 
 [gitHubImport]
 requiredFiles = [".replit", "replit.nix", ".config"]

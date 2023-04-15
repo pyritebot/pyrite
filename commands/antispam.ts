@@ -1,6 +1,11 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
-import { defaultError, successEmbedBuilder, errorEmbedBuilder } from '../utils.js';
+import { 
+	defaultError, 
+	successEmbedBuilder, 
+	errorEmbedBuilder, 
+	logBuilder,
+} from '../utils.js';
 import prisma from '../database.js';
 
 export default class AntiSpam {
@@ -41,9 +46,12 @@ export default class AntiSpam {
 
 			switch (interaction.options.getSubcommand()) {
 				case 'on':
-					await prisma.guild.upsert({
+					const onGuild = await prisma.guild.upsert({
 						where: {
 							guild: interaction.guildId,
+						},
+						select: {
+							logs: true,
 						},
 						update: {
 							antiSpam: true,
@@ -53,13 +61,26 @@ export default class AntiSpam {
 							antiSpam: true,
 						},
 					});
+					
 					await interaction.editReply({ embeds: [successEmbedBuilder(`anti spam filter has been activated successfully!`)] });
+					
+					const onLogs = interaction.guild?.channels.cache.get(onGuild?.logs!) as TextChannel;
+					await onLogs?.send(
+						logBuilder({
+							member: interaction.member as GuildMember,
+							content: `Anti-Spam has been activated by ${interaction.user}!`,
+							reason: `anti-spam feature has been activated by ${interaction.user.tag}`,
+						})
+					);
 					break;
 
 				case 'off':
-					await prisma.guild.upsert({
+					const offGuild = await prisma.guild.upsert({
 						where: {
 							guild: interaction.guildId,
+						},
+						select: {
+							logs: true,
 						},
 						update: {
 							antiSpam: false,
@@ -69,15 +90,28 @@ export default class AntiSpam {
 							antiSpam: false,
 						},
 					});
+					
 					await interaction.editReply({ embeds: [successEmbedBuilder(`anti spam filter has been deactivated successfully!`)] });
+					
+					const offLogs = interaction.guild?.channels.cache.get(offGuild?.logs!) as TextChannel;
+					await offLogs?.send(
+						logBuilder({
+							member: interaction.member as GuildMember,
+							content: `Anti-Spam has been deactivated by ${interaction.user}!`,
+							reason: `anti-spam feature has been deactivated by ${interaction.user.tag}`,
+						})
+					);
 					break;
 
 				case 'minutes':
 					const minutes = interaction.options.getInteger('minutes', true);
 
-					await prisma.guild.upsert({
+					const minGuild = await prisma.guild.upsert({
 						where: {
 							guild: interaction.guildId,
+						},
+						select: {
+							logs: true,
 						},
 						update: {
 							spamMinutes: minutes,
@@ -87,6 +121,15 @@ export default class AntiSpam {
 							spamMinutes: minutes,
 						},
 					});
+
+					const minLogs = interaction.guild?.channels.cache.get(minGuild?.logs!) as TextChannel;
+					await minLogs?.send(
+						logBuilder({
+							member: interaction.member as GuildMember,
+							content: `Anti-Spam minutes has been changed by ${interaction.user}!`,
+							reason: `anti-spam minutes has been changed by ${interaction.user.tag}`,
+						})
+					);
 
 					await interaction.editReply({ embeds: [successEmbedBuilder(`Changed timeout time to ${minutes} minutes`)] });
 					break;
@@ -94,9 +137,12 @@ export default class AntiSpam {
 				case 'limit':
 					const limit = interaction.options.getInteger('limit', true);
 
-					await prisma.guild.upsert({
+					const limitGuild = await prisma.guild.upsert({
 						where: {
 							guild: interaction.guildId,
+						},
+						select: {
+							logs: true,
 						},
 						update: {
 							spamMessageLimit: limit,
@@ -106,6 +152,15 @@ export default class AntiSpam {
 							spamMessageLimit: limit,
 						},
 					});
+
+					const limitLogs = interaction.guild?.channels.cache.get(limitGuild?.logs!) as TextChannel;
+					await limitLogs?.send(
+						logBuilder({
+							member: interaction.member as GuildMember,
+							content: `Anti-Spam message limit has been changed by ${interaction.user}!`,
+							reason: `anti-spam message limit has been changed by ${interaction.user.tag}`,
+						})
+					);
 
 					await interaction.editReply({ embeds: [successEmbedBuilder(`Changed message limit to ${limit}!`)] });
 					break;

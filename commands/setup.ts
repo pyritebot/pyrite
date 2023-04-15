@@ -33,7 +33,7 @@ export default class Setup {
 		const embed = new EmbedBuilder({
 			title: ':no_entry_sign: Anti Spam',
 			description: '<:reply:1067159718646263910> Would you like to use our effective spam system to stop members from spamming in your server?',
-			color: 0x2f3136,
+			color: 0x2b2d31,
 		});
 		await channel?.send({ embeds: [embed], components: [optionButtons('antispam')] });
 	}

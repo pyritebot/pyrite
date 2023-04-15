@@ -1,6 +1,5 @@
 import type { Client, GuildMember, Guild, ChatInputCommandInteraction, TextChannel, GuildMemberRoleManager } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder, EmbedBuilder, Colors, ActivityType } from 'discord.js';
-import fetch from 'node-fetch';
 import { google } from 'googleapis';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -154,7 +153,7 @@ export const logBuilder = ({ member, guild, content, reason, punished = false }:
 			icon_url: member?.guild?.iconURL() ?? guild?.iconURL()!,
 		},
 		timestamp: new Date().toISOString(),
-		color: 0x2f3136,
+		color: 0x2b2d31,
 	});
 	return {
 		embeds: [embed],
@@ -181,60 +180,8 @@ export const punishButtons = id => new ActionRowBuilder<ButtonBuilder>({
 	]
 })
 
-export const addReport = async (interaction: ChatInputCommandInteraction) => {
-	const user = interaction.options.getUser('user', true);
-	const reason = interaction.options.getString('reason', true);
-	const file = interaction.options.getAttachment('image', true);
-
-	if (user?.id === interaction.user.id) {
-		await interaction.reply({ embeds: [errorEmbedBuilder("You can't report yourself!")] });
-		return;
-	}
-
-	const reportSubmittedEmbed = new EmbedBuilder({
-		title: '<:check:1027354811164786739> Report Submitted',
-		description: `<:reply:1067159718646263910>Your report was submitted and our staff team will be looking into it.
-Thank you for submitting this report. For more updates please join our support server below. Please also keep your DMS on so we can easly send you feedback.`,
-		color: 0x2f3136,
-	});
-
-	await interaction.reply({
-		embeds: [reportSubmittedEmbed],
-		components: [
-			new ActionRowBuilder<ButtonBuilder>({
-				components: [new ButtonBuilder({ label: 'Support Server', style: ButtonStyle.Link, url: 'https://discord.gg/NxJzWWqhdQ' })],
-			}),
-		],
-		ephemeral: true,
-	});
-	const channel = interaction.client.channels.cache.get('1022909267440828466') as TextChannel;
-
-	await channel?.send({
-		embeds: [
-			new EmbedBuilder({
-				color: 0x2f3136,
-				title: '<:arrow:1009057573590290452> New Report!',
-				description: `<:1412reply:1009087336828649533>*New report for ${user}* \n\n **Reason:** ${reason}`,
-				image: {
-					url: 'attachment://report.png',
-				},
-			}),
-		],
-		files: [new AttachmentBuilder(file?.url!, { name: 'report.png' })],
-		components: [
-			new ActionRowBuilder<ButtonBuilder>({
-				components: [new ButtonBuilder({
-					custom_id: `report_approve-${reason}-${user?.id}`,
-					label: 'Approve',
-					style: ButtonStyle.Success,
-				})],
-			}),
-		],
-	});
-};
-
 export const addWarn = async (interaction: ChatInputCommandInteraction) => {
-	const member = interaction.options.getMember('user') as GuildMember;
+	const member = interaction.options.getMember('member') as GuildMember;
 	const reason = interaction.options.getString('reason', true);
 
 	if (!member) {
@@ -288,7 +235,7 @@ export const addWarn = async (interaction: ChatInputCommandInteraction) => {
 			where: { user: member.user.id },
 			update: {
 				warns: {
-					push: { guild: interaction.guildId!, reason },
+					push: { guild: interaction.guildId!, reason, created },
 				},
 			},
 			create: {
@@ -296,12 +243,13 @@ export const addWarn = async (interaction: ChatInputCommandInteraction) => {
 				warns: [{ guild: interaction.guildId!, reason }],
 			},
 		});
-	} catch {
+	} catch (err) {
+		console.error(err)
 		await interaction.editReply(defaultError);
 		return;
 	}
 
-	await member.send({ embeds: [warnEmbedBuilder(`You have been warned in **${member.guild.name}** for **${reason}**!`)] });
+	await member.send({ embeds: [warnEmbedBuilder(`You have been warned in **${member.guild.name}** for **${reason}**!`)] }).catch(() => {});
 
 	await interaction.editReply({ embeds: [successEmbedBuilder(`${member.user} was successfully warned for **${reason}**!`)] });
 
@@ -315,7 +263,7 @@ export const addWarn = async (interaction: ChatInputCommandInteraction) => {
 		logBuilder({
 			member: interaction.member as GuildMember,
 			content: `${member.user} has been warned by ${interaction.user}`,
-			reason,
+			reason: `${member.user.tag} has been warned by ${interaction.user.tag}: ${reason}`,
 		})
 	);
 };
@@ -337,7 +285,7 @@ export const optionButtons = (id: string) =>
 	});
 
 export const defaultError = {
-	files: [new AttachmentBuilder(join(process.cwd(), './assets/defaultError.png'), { name: 'error.png' })],
+	files: [new AttachmentBuilder(join(process.cwd(), './assets/error.gif'), { name: 'error.gif' })],
 	components: [buttons],
 	ephemeral: true,
 };

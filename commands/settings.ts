@@ -47,7 +47,7 @@ ${blank}${guild?.antiSpam ? check : error} Anti Spam
 ${blank}${guild?.toxicityFilter ? check : error} Toxicity Filter
 ${blank}${guild?.antiLinks ? check : error} Anti Links
 	`,
-      color: 0x2f3136,
+      color: 0x2b2d31,
 		})
 
 		await interaction.editReply({ embeds: [embed] })

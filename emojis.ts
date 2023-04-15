@@ -9,5 +9,9 @@ export default {
 	arrow: '<:arrow:1068604670764916876>',
   reply1: '<:reply:1067159718646263910>',
   reply2: '<:replycontinued2:1067140301187186738>',
-  reply3: '<:replycontinued:1067140193146114048>'
+  reply3: '<:replycontinued:1067140193146114048>',
+	blank: '<:blank:1008721958210383902>',
+  moderator: '<:security:1071812054010298528>',
+  pyrite: '<:pyrite:1074700667307950180>',
+  pyritebeta: '<:pyritebeta:1074701015644901417>',
 }

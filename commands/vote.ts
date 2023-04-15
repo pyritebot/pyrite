@@ -13,7 +13,7 @@ export default class Help {
 			title: '<:check:1027354811164786739> Vote Us!',
 			description:
 				'<:arrow:1068604670764916876> By voting us, you help us grow and protect more servers! Please take 1 minute of your time to help us get to more servers.',
-			color: 0x2f3136,
+			color: 0x2b2d31,
 		});
 
 		const buttons = new ActionRowBuilder<ButtonBuilder>({
@@ -31,6 +31,6 @@ export default class Help {
 			],
 		});
 
-		await interaction.reply({ embeds: [embed], components: [buttons] });
+		await interaction.reply({ embeds: [embed], components: [buttons], ephemeral: true });
 	}
 }

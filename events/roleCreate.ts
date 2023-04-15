@@ -26,7 +26,7 @@ export default class RoleCreations {
 		RoleCreations.timeout.refresh()
 		
 		if (RoleCreations.times % 5 === 0) {
-			const auditLogFetch = await role.guild.fetchAuditLogs({ limit: 1, type: AuditLogEvent.RoleDelete });
+			const auditLogFetch = await role.guild.fetchAuditLogs({ limit: 1, type: AuditLogEvent.RoleCreate });
 			const log = auditLogFetch.entries.first()
 			
 			if (role.client.user?.id === log?.executor?.id) return;

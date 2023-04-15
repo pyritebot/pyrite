@@ -8,14 +8,10 @@ generator client {
 }
 
 type Warn {
-  id     String @default(cuid())
-  guild  String
-  reason String
-}
-
-type Report {
-  id     String @default(cuid())
-  reason String
+  id        String   @default(cuid())
+  guild     String
+  reason    String
+  createdAt DateTime @default(now())
 }
 
 model Guild {
@@ -29,7 +25,7 @@ model Guild {
   mods                String?
   admins              String[]
   owners              String[]
-  quarantine          String?
+  quarantine          String? 
   raidMode            Boolean  @default(false)
   antiSpam            Boolean  @default(false)
   toxicityFilter      Boolean  @default(false)
@@ -43,11 +39,10 @@ model Guild {
 }
 
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  user     String   @unique
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  user     String @unique
   warns    Warn[]
-  reports  Report[]
-  toxicity Float    @default(0)
+  toxicity Float  @default(0)
 
   @@map("users")
 }

@@ -27,7 +27,7 @@ export default class Info {
 		const user = interaction.options.getUser('user') ?? interaction.user;
 
 		if (user.bot) {
-			await interaction.reply({ embeds: [errorEmbedBuilder('You cannot get the passport of a Bot!')] });
+			await interaction.reply({ embeds: [errorEmbedBuilder('You cannot get the passport of a Bot!')], ephemeral: true });
 			return;
 		}
 
@@ -43,7 +43,10 @@ export default class Info {
 
 			const toxicityUser = await prisma.user.findUnique({
 				where: { user: user.id },
-				select: { toxicity: true, reports: true, warns: true },
+				select: { 
+					toxicity: true, 
+					warns: true,
+				},
 			});
 
 			const toxicity = toxicityUser?.toxicity?.toFixed(2);
@@ -74,9 +77,6 @@ export default class Info {
 		 			</text>
 					<text x="410" y="180" class="name">
 						<tspan class="tag">Warnings:</tspan> ${toxicityUser?.warns?.length ?? 0}
-		 			</text>
-					<text x="410" y="220" class="name">
-						<tspan class="tag">Reports:</tspan> ${toxicityUser?.reports?.length ?? 0}
 		 			</text>
 					<text x="40" y="180" class="tag">Created ${timeSince(user.createdAt)}</text>
 				</svg>

@@ -46,7 +46,7 @@ export default class Verification {
 			image: {
 				url: 'attachment://verification.png',
 			},
-			color: 0x2f3136,
+			color: 0x2b2d31,
 		});
 
 		return {
@@ -70,7 +70,7 @@ export default class Verification {
 
 		const user = await prisma.user.findUnique({
 			where: { user: interaction.user.id },
-			select: { toxicity: true, reports: true },
+			select: { toxicity: true },
 		});
 
 		if ((user?.toxicity ?? 0) >= 90) {
@@ -79,11 +79,11 @@ export default class Verification {
 			});
 
 			const embed = new EmbedBuilder({
-				title: '<:warn:1009191992040894657> Toxic User Detected!',
-				description: `${interaction.user} has a estimate toxicity of **${user?.toxicity ?? 0}%**, and **${user?.reports?.length ?? 0} reports.**
-<:blank:1008721958210383902> <:arrow:1009057573590290452> What would you like to proceed with? 
-<:blank:1008721958210383902> <:arrow:1009057573590290452> **Verification was attempted:** <t:${Math.floor(Date.now() / 1000)}:R>`,
-				color: 0x2f3136,
+				title: '<:warn:1027361416119853187> Toxic User Detected!',
+				description: `${interaction.user} has a estimate toxicity of **${user?.toxicity ?? 0}%**.
+<:blank:1008721958210383902> <:arrow:1068604670764916876> What would you like to proceed with? 
+<:blank:1008721958210383902> <:arrow:1068604670764916876> **Verification was attempted:** <t:${Math.floor(Date.now() / 1000)}:R>`,
+				color: 0x2b2d31,
 				thumbnail: {
 					url: interaction.user.displayAvatarURL(),
 				},

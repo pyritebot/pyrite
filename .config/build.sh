@@ -7,7 +7,7 @@ mkdir -p ./.build
 
 ENTRYPOINTS=$(find -type f -name '*.[tj]s' -not -path './node_modules/*')
 
-npx esbuild $ENTRYPOINTS \
+esbuild $ENTRYPOINTS \
 	--log-level=warning \
 	--outdir='./.build' \
 	--outbase=. \
