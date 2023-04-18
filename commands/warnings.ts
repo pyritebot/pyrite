@@ -1,6 +1,8 @@
 import type { ChatInputCommandInteraction, GuildMember, GuildMemberRoleManager, TextChannel } from 'discord.js';
-import { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, AttachmentBuilder } from 'discord.js';
 import { defaultError, errorEmbedBuilder, successEmbedBuilder, addWarn, logBuilder } from '../utils.js';
+import { pagination, ButtonTypes, ButtonStyles } from '@devraelfreeze/discordjs-pagination';
+import { join } from 'node:path'
 import emojis from '../emojis.js';
 import prisma from '../database.js';
 
@@ -75,7 +77,7 @@ export default class Warnings {
 				}
 
 				if (member.user.id === interaction.user.id) {
-					await interaction.reply({ embeds: [errorEmbedBuilder('You cannot remove warnings yourself!')], ephemeral: true });
+					await interaction.reply({ embeds: [errorEmbedBuilder('You cannot remove warnings from yourself!')], ephemeral: true });
 					return;
 				}
 
@@ -83,34 +85,44 @@ export default class Warnings {
 
 				try {
 					const guild = await prisma.guild.findUnique({
-						where: { guild: interaction.guildId! },
-						select: { mods: true, admins: true, logs: true },
+						where: { 
+							guild: interaction.guildId! 
+						},
+						select: {
+							mods: true, 
+							admins: true, 
+							owners: true, 
+							logs: true,
+						},
 					});
 
 					const roles = interaction.member?.roles as GuildMemberRoleManager;
 
-					if (!(roles.cache.has(guild?.mods!) || guild?.admins.includes(interaction.user.id) || interaction.user.id === interaction.guild?.ownerId)) {
+					if (!(roles.cache.has(guild?.mods!) || guild?.admins.includes(interaction.user.id) || guild?.owners.includes(interaction.user.id) || interaction.user.id === interaction.guild?.ownerId)) {
 						await interaction.editReply({ embeds: [errorEmbedBuilder("You don't have permission to remove warnings from members!")] });
 						return;
 					}
 
-					const user = await prisma.user.findUnique({
-						where: { user: member.user.id },
-						select: { warns: true },
+					const warns = await prisma.warn.findMany({
+						where: { 
+							userId: member.user.id,
+							guildId: member.guild.id,
+						},
 					});
 
-					const warns = user?.warns;
-
-					if (!warns?.length) {
+					if (warns?.length === 0) {
 						await interaction.editReply({ embeds: [errorEmbedBuilder("This user doesn't have any warnings")] });
 						break;
 					}
 
 					if (!id) {
-						const newWarns = warns.filter(warn => warn.guild !== member.guild.id);
-						await prisma.user.update({
-							where: { user: member.user.id },
-							data: { warns: newWarns },
+						await prisma.warn.delete({
+							where: { 
+								userId_guildId: {
+									userId: member.user.id, 
+									guildId: member.guild.id,
+								}
+							},
 						});
 						await interaction.editReply({ embeds: [successEmbedBuilder(`Removed all warnings from ${member.user}`)] });
 
@@ -125,16 +137,21 @@ export default class Warnings {
 						break;
 					}
 
-					const newWarns = warns.filter(warn => warn.id !== id);
-					if (JSON.stringify(warns) === JSON.stringify(newWarns)) {
-						await interaction.editReply({ embeds: [errorEmbedBuilder(`Warning with id **${id}** has not been found!`)] });
+				
+					try {
+						
+						await prisma.warn.delete({
+							where: { id },
+						});
+						
+					} catch {
+						
+						await interaction.editReply({ embeds: [errorEmbedBuilder(`Warning with id \`${id}\` has not been found!`)] });
 						break;
+						
 					}
-					await prisma.user.update({
-						where: { user: member.user.id },
-						data: { warns: newWarns },
-					});
-					await interaction.editReply({ embeds: [successEmbedBuilder(`Removed warning with id **${id}** from ${member.user}`)] });
+					
+					await interaction.editReply({ embeds: [successEmbedBuilder(`Removed warning with id \`${id}\` from ${member.user}`)] });
 					const logs = interaction.guild?.channels.cache.get(guild?.logs!) as TextChannel;
 					await logs?.send(
 						logBuilder({
@@ -155,32 +172,73 @@ export default class Warnings {
 				}
 
 				await interaction.deferReply({ ephemeral: true });
-
+				
 				try {
-					const user = await prisma.user.findUnique({
-						where: { user: member.user.id },
-						select: { warns: true },
-					});
-
-					const warns = user?.warns?.filter(warn => warn.guild === interaction.guildId);
-
-					const show = new EmbedBuilder({
-						author: {
-							name: interaction.guild?.name!,
-							icon_url: interaction.guild?.iconURL()!,
+					const warns = await prisma.warn.findMany({
+						where: { 
+							userId: member.user.id, 
+							guildId: interaction.guildId 
 						},
-						title: `${emojis.warn} Warnings`,
-						description:
-							(warns?.length ?? 0) === 0
-								? `${emojis.arrow} ${member.user} doesn't have any warnings!`
-								: `> ${warns?.length === 1 ? `This is the warning` : `These are the ${warns?.length ?? 0} warnings`} that ${member.user} has!
-
-`,
-						fields: warns?.map((warn, i) => ({ name: `${i+1}. ${warn.id}`, value: `${emojis.arrow} ${warn.reason}` })),
-						color: 0x2b2d31,
 					});
+					
+					let min = 0
+					let max = 5
 
-					await interaction.editReply({ embeds: [show] });
+					const show = () => { 
+						min = min + 5
+						max = max + 5
+						
+						return new EmbedBuilder({
+							title: `${emojis.warn} Warnings`,
+							description:
+								`${emojis.reply1} Here are the current warnings for ${member.user} \n`,
+							thumbnail: {
+								url: member.user.displayAvatarURL()!,
+							},
+							image: {
+								url: warns?.length === 0  ? 'https://i.imgur.com/ozUEfs5.gif' : undefined
+							},
+							fields: 
+								warns?.filter((_, i) => i < (max - 5) && i >= (min - 5))
+									.map((warn, i) => {
+										return { 
+											name: `__Warning ${i+(min - 4)}__`,
+											value: `${emojis.arrow} **ID:** \`${warn.id}\` \n ${emojis.arrow} **Date:** <t:${Math.floor(warn.createdAt.getTime() / 1000)}:R> \n ${emojis.arrow} **Reason:** ${warn.reason} \n`,
+										}
+									}),
+							color: 0x2b2d31,
+	            footer: {
+	              text: interaction.guild?.name!,
+								icon_url: interaction.guild?.iconURL()!,
+	            }
+						}) 
+					}
+
+			    await pagination({
+					  embeds: warns?.length !== 0 ? [...Array(Math.ceil(warns.length / 5))].map(() => show()) : [show()],
+					  author: interaction.member.user,
+					  interaction: interaction,
+					  ephemeral: false,
+					  time: 40000,
+					  disableButtons: true,
+					  fastSkip: false,
+					  pageTravel: false,
+					  buttons: [
+					    {
+					      type: ButtonTypes.previous,
+					      label: 'Previous Page',
+					      style: ButtonStyles.Success,
+			          emoji: `${emojis.arrow2}`
+					    },
+					    {
+					      type: ButtonTypes.next,
+					      label: 'Next Page',
+					      style: ButtonStyles.Success,
+			          emoji: `${emojis.arrow}`
+					    }
+					  ],
+					});
+          
 				} catch {
 					await interaction.editReply(defaultError);
 				}

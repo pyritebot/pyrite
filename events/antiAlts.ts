@@ -15,7 +15,41 @@ export default class AntiAlts {
 		const accDays = Math.ceil(accAge / (1000 * 60 * 60 * 24));
 		if (accDays <= 7) {
 			const user = member.user;
-			await member.kick('This account was detected as a alternative account');
+			if (!interaction.guild?.members?.me?.permissions?.has(PermissionFlagsBits.KickMembers)) {
+				const errorEmbed = new EmbedBuilder({
+					title: 'Alt Account Detected!',
+					description: `<:arrow:1068604670764916876> ${user} was detected as a alternative account.
+	        <:arrow:1068604670764916876> They were not kicked by the **Anti Alts system** because I don't have permission to kick members
+	        <:arrow:1068604670764916876> This happened at: <t:${Math.floor(Date.now() / 1000)}:R>`,
+					thumbnail: {
+						url: user.displayAvatarURL(),
+					},
+					color: 0x2b2d31,
+				});
+				
+				await logs.send({ embeds: [errorEmbed], ephemeral: true });
+				return;
+			}
+	
+			if (!member) return;
+			
+			try {
+				await member.kick(reason);
+			} catch {
+				const errorEmbed = new EmbedBuilder({
+					title: 'Alt Account Detected!',
+					description: `<:arrow:1068604670764916876> ${user} was detected as a alternative account.
+	        <:arrow:1068604670764916876> They were not kicked by the **Anti Alts system** because they had higher permitions that myself
+	        <:arrow:1068604670764916876> This happened at: <t:${Math.floor(Date.now() / 1000)}:R>`,
+					thumbnail: {
+						url: user.displayAvatarURL(),
+					},
+					color: 0x2b2d31,
+				});
+				
+				await logs.send({ embeds: [errorEmbed], ephemeral: true });
+				return;
+			}
 			const logs = member.guild?.channels.cache.get(guild?.logs!) as TextChannel;
 
 			const embed = new EmbedBuilder({

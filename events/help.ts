@@ -14,7 +14,7 @@ export default class Help {
 		switch (interaction.values[0]) {
 			case 'start':
 				helpEmbed
-					.setTitle(`${emojis.pyrite}  Help`)
+					.setTitle(`${emojis.list}  Help`)
 					.setDescription(`
 Thanks for choosing Pyrite Bot, the future of Discord server security! 
 
@@ -132,14 +132,9 @@ Click on __**Select Category**__ below to get started.
 					{ name: '</antispam on:1014153355330850847>', value: `${emojis.blank}${emojis.arrow} Turn on anti spam so no one can spam.` },
 					{ name: '</antispam off:1014153355330850847>', value: `${emojis.blank}${emojis.arrow} Turn on off anti spam.` },
 					{
-						name: '</antispam limit:1014153355330850847>',
+						name: '</antispam set:1014153355330850847>',
 						value:
-							`${emojis.blank}${emojis.arrow} Set a limit for the amount of messages a user can send in a couple seconds before they get muted.`,
-					},
-					{
-						name: '</antispam minutes:1014153355330850847>',
-						value:
-							`${emojis.blank}${emojis.arrow} Set a number of how many minutes a spammer will be muted for when they spam.`,
+							`${emojis.blank}${emojis.arrow} Set the different limits of the antispam filter.`,
 					},
 					{ name: '</antitoxicity on:1014153355330850848>', value: `${emojis.blank}${emojis.arrow} Turn on anti toxicity in your server.` },
 					{

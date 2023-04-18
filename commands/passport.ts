@@ -2,12 +2,9 @@ import type { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder, AttachmentBuilder } from 'discord.js';
 import sharp from 'sharp';
 import { loadImage, defaultError, errorEmbedBuilder, timeSince } from '../utils.js';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime.js';
 import { join } from 'node:path';
 import prisma from '../database.js';
-
-dayjs.extend(relativeTime);
+import qr from 'qr-image';
 
 export default class Info {
 	data = new SlashCommandBuilder()
@@ -41,6 +38,8 @@ export default class Info {
 				</svg>
 	 		`);
 
+			const code = qr.imageSync(`https://discord.com/users/${user.id}`, { type: 'png', size: 4, margin: 2 });		
+
 			const toxicityUser = await prisma.user.findUnique({
 				where: { user: user.id },
 				select: { 
@@ -51,34 +50,41 @@ export default class Info {
 
 			const toxicity = toxicityUser?.toxicity?.toFixed(2);
 			const username = Buffer.from(`
-				<svg width="618" height="437">
-	 				<style>
+				<svg width="625" height="400">
+					<style>
 		 				.name {
-							font-size: ${user.tag.length > 25 ? '20' : user.tag.length > 22 ? '22' : '25'}px;
-							font-family: sans-serif;
-							font-weight: bold;
+							font-size: 35px;							
+			 				font-weight: bold;
+			 				font-family: sans-serif;
 							fill: #fff;
 						}
 
 	 					.tag {
-							font-size: 20px;
+							font-size: 25px;
 							font-family: sans-serif;
 							font-weight: bold;
-							fill: #bdbdbd;
+							fill: #ededed;
+						}
+
+	 					.opt {
+			 				font-size: 16px;
+							font-family: sans-serif;
+			 				font-weight: bold;
+			 				fill: #ededed;
 						}
 	 				</style>
-		 	 		<text x="40" y="140" class="name">
+		 	 		<text x="220" y="90" class="name">
 						${user.username}<tspan class="tag">#${user.discriminator}</tspan>
 		 			</text>
-					<text x="410" y="140" class="name">
-						<tspan class="tag">Danger:</tspan> ${
+					<text x="336" y="178" class="opt">
+						${
 							(toxicity?.endsWith('00') ? toxicity?.slice(0, -3) : toxicity?.endsWith('0') ? toxicity?.slice(0, -1) : toxicity) ?? 0
 						}%
 		 			</text>
-					<text x="410" y="180" class="name">
-						<tspan class="tag">Warnings:</tspan> ${toxicityUser?.warns?.length ?? 0}
+					<text x="362" y="156" class="opt">
+						${toxicityUser?.warns?.length ?? 0}
 		 			</text>
-					<text x="40" y="180" class="tag">Created ${timeSince(user.createdAt)}</text>
+					<text x="423" y="134" class="opt">${timeSince(user.createdAt)}</text>
 				</svg>
  			`);
 
@@ -93,12 +99,17 @@ export default class Info {
 				.png()
 				.toBuffer();
 
-			const image = await sharp(join(process.cwd(), './assets/card.png'))
+			const image = await sharp(join(process.cwd(), user.id === '807705107852558386' ? './assets/card-pinkred.png' : user.id === '713745288619360306' ? './assets/card-pinkblue.png' : './assets/card.png'))
 				.composite([
 					{
 						input: avatarRoundedBuffer,
-						top: 15,
-						left: 75,
+						top: 60,
+						left: 47,
+					},
+					{
+						input: code,
+						top: 205,
+						left: 363,
 					},
 					{ input: username },
 				])
@@ -107,7 +118,7 @@ export default class Info {
 
 			await interaction.editReply({ files: [new AttachmentBuilder(image, { name: 'card.png' })] });
 		} catch (e) {
-			console.error(e);
+			console.log(e)
 			await interaction.editReply(defaultError);
 		}
 	}

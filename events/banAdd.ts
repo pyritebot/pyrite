@@ -1,4 +1,3 @@
-
 import type { GuildBan, TextChannel } from "discord.js"
 import { Events, AuditLogEvent, PermissionFlagsBits } from "discord.js";
 import { logBuilder, getQuarantine } from "../utils.js";

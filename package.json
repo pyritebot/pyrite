@@ -5,18 +5,21 @@
   "description": "Know your members. Know your community.",
   "main": ".build/index.js",
   "dependencies": {
-    "@prisma/client": "^4.10.1",
-    "captcha-canvas": "^3.2.1",
-    "dayjs": "^1.11.7",
+    "@devraelfreeze/discordjs-pagination": "^2.7.2",
+    "@prisma/client": "^4.2.0",
+    "captcha-canvas": "^4.0.0--next.3",
+    "cuid": "^3.0.0",
+    "discord-js-button-pagination-ts": "^4.1.2",
     "discord.js": "^14.9.0",
     "fastify": "^4.15.0",
     "googleapis": "^118.0.0",
-    "loxt": "^3.9.1",
+    "loxt": "^3.9.3",
+    "qr-image": "^3.2.0",
     "sharp": "^0.32.0"
   },
   "devDependencies": {
-    "esbuild": "^0.15.10",
-    "prisma": "^4.10.1"
+    "esbuild": "^0.17.16",
+    "prisma": "^4.12.0"
   },
   "repository": {
     "type": "git",

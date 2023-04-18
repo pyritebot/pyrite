@@ -143,14 +143,20 @@ export const warnEmbedBuilder = (message: string) =>
 
 export const logBuilder = ({ member, guild, content, reason, punished = false }: LogBuilderOptions) => {
 	const embed = new EmbedBuilder({
+    title: '<:warn:1027361416119853187> New Alert',
 		description: `
+  <:reply:1067159718646263910> A new Moderator action was just logged below :
+  
 <:arrow:1068604670764916876> **Executor:** ${member?.user ?? member}
-<:arrow:1068604670764916876> **Reason:** **\`${reason}\`**
-<:arrow:1068604670764916876> **Punished:** \`${punished ? 'yes' : 'no'}\`
+<:arrow:1068604670764916876> **Reason:** ${reason}
+<:arrow:1068604670764916876> **Punished:** \`${punished ? 'Yes' : 'No'}\`
 <:arrow:1068604670764916876> **Time:** <t:${Math.floor(Date.now() / 1000)}:R>`,
 		footer: {
 			text: member?.guild?.name ?? guild?.name!,
 			icon_url: member?.guild?.iconURL() ?? guild?.iconURL()!,
+		},
+    thumbnail: {
+			url: member.user.displayAvatarURL(),
 		},
 		timestamp: new Date().toISOString(),
 		color: 0x2b2d31,
@@ -231,16 +237,11 @@ export const addWarn = async (interaction: ChatInputCommandInteraction) => {
 			return;
 		}
 
-		await prisma.user.upsert({
-			where: { user: member.user.id },
-			update: {
-				warns: {
-					push: { guild: interaction.guildId!, reason, created },
-				},
-			},
-			create: {
-				user: member.user.id,
-				warns: [{ guild: interaction.guildId!, reason }],
+		await prisma.warn.create({
+			data: {
+				userId: member.user.id,
+				guildId: interaction.guildId!, 
+				reason,
 			},
 		});
 	} catch (err) {
@@ -285,7 +286,14 @@ export const optionButtons = (id: string) =>
 	});
 
 export const defaultError = {
-	files: [new AttachmentBuilder(join(process.cwd(), './assets/error.gif'), { name: 'error.gif' })],
+	files: [
+		new AttachmentBuilder(
+			join(process.cwd(), './assets/error.gif'), 
+			{ 
+				name: 'error.gif', 
+				description: 'It seems you stumbled upon an unknown error!, if the problem persists, do not doubt to contact us our support server.',
+			})
+	],
 	components: [buttons],
 	ephemeral: true,
 };

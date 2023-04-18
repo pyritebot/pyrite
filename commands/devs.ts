@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction } from 'discord.js';
-import { SlashCommandBuilder, AttachmentBuilder } from 'discord.js';
+import { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import { join } from 'node:path';
+import emojis from '../emojis.js';
 import { buttons } from '../utils.js';
 
 export default class Developers {
@@ -11,11 +12,65 @@ export default class Developers {
 		.setDescriptionLocalizations({ 'es-ES': 'Los desarrolladores oficiales del bot.' });
 
 	async run(interaction: ChatInputCommandInteraction) {
+		const user1 = await interaction.client.users.fetch('807705107852558386')
+		const user2 = await interaction.client.users.fetch('713745288619360306')
+		
+		const embed1 = new EmbedBuilder()
+			.setTitle(`${emojis.pyrite} ${user1?.tag}`)
+			.setThumbnail(user1?.displayAvatarURL()!)
+			.setFields(
+        {
+					name: 'ID',
+          value: `${emojis.reply1} \`807705107852558386\` `,
+				},
+        {
+					name: 'Role',
+          value: `${emojis.reply1} Lead Developer`,
+				},
+        {
+					name: 'Joined Discord',
+          value: `${emojis.reply1} <t:${Math.floor(user1?.createdTimestamp / 1000) + 3600}:F>`,
+				},
+        {
+					name: 'Github',
+          value: `${emojis.reply1} **__https://github.com/AngelNext__**`,
+				}
+			)
+      .setFooter({ 
+				text: user1.tag, 
+				iconURL: user1?.displayAvatarURL()!,
+			})
+    	.setColor(0x2b2d31)
+    
+		const embed2 = new EmbedBuilder()
+			.setTitle(`${emojis.pyrite} ${user2?.tag}`)
+			.setThumbnail(user2?.displayAvatarURL()!)
+			.setFields(
+        {
+					name: 'ID',
+          value: `${emojis.reply1} \`713745288619360306\` `,
+				},
+        {
+					name: 'Role',
+          value: `${emojis.reply1} Developer, Designer`,
+				},
+        {
+					name: 'Joined Discord',
+          value: `${emojis.reply1} <t:${Math.floor(user2?.createdTimestamp / 1000) + 3600}:F>`,
+				},
+        {
+					name: 'Github',
+          value: `${emojis.reply1} **__https://github.com/eldimindcrafter123__**`,
+				}
+			)
+      .setFooter({ 
+				text: user2.tag, 
+				iconURL: user2?.displayAvatarURL()!, 
+			})
+    	.setColor(0x2b2d31)
+		
 		await interaction.reply({
-			files: [
-				new AttachmentBuilder(join(process.cwd(), './assets/angelnext.png'), { name: 'angelnext.png' }),
-				new AttachmentBuilder(join(process.cwd(), './assets/eldi.png'), { name: 'eldi.png' }),
-			],
+			embeds: [embed1, embed2],
 			components: [buttons],
 		});
 	}

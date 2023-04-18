@@ -1,7 +1,8 @@
 import type { GuildMemberRoleManager, Interaction, Message, GuildMember, TextChannel } from 'discord.js';
 import { Events, AttachmentBuilder, EmbedBuilder, Colors, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { CaptchaGenerator } from 'captcha-canvas';
-import { successEmbedBuilder, errorEmbedBuilder } from '../utils.js';
+import { successEmbedBuilder, errorEmbedBuilder, buttons } from '../utils.js';
+import emojis from '../emojis.js'
 import prisma from '../database.js';
 
 export default class Verification {
@@ -36,12 +37,12 @@ export default class Verification {
 
 	async embedBuilder() {
 		const captcha = new CaptchaGenerator({ width: 450, height: 150 });
-
+		captcha.setDecoy({ total: 30 })
 		const buffer = await captcha.generate();
 
 		const file = new AttachmentBuilder(buffer, { name: 'verification.png' });
 		const verificationEmbed = new EmbedBuilder({
-			title: '<:check:1027354811164786739> Verification',
+			title: `${emojis.check} Verification`,
 			description: `Are you a human? Lets find out. Simply type the following captcha below so I can verify that you are human. The captcha will only last 10 seconds so be quick!`,
 			image: {
 				url: 'attachment://verification.png',
@@ -50,7 +51,7 @@ export default class Verification {
 		});
 
 		return {
-			message: { embeds: [verificationEmbed], files: [file] },
+			message: { embeds: [verificationEmbed], components: [buttons], files: [file] },
 			text: captcha.text!,
 		};
 	}
@@ -79,10 +80,10 @@ export default class Verification {
 			});
 
 			const embed = new EmbedBuilder({
-				title: '<:warn:1027361416119853187> Toxic User Detected!',
-				description: `${interaction.user} has a estimate toxicity of **${user?.toxicity ?? 0}%**.
-<:blank:1008721958210383902> <:arrow:1068604670764916876> What would you like to proceed with? 
-<:blank:1008721958210383902> <:arrow:1068604670764916876> **Verification was attempted:** <t:${Math.floor(Date.now() / 1000)}:R>`,
+				title: `${emojis.warn} Toxic User Detected!`,
+				description: `${interaction.user} has a estimate toxicity of **${user.toxicity}%**.
+${emojis.blank}${emojis.arrow} What would you like to proceed with? 
+${emojis.blank}${emojis.arrow} **Verification was attempted:** <t:${Math.floor(Date.now() / 1000)}:R>`,
 				color: 0x2b2d31,
 				thumbnail: {
 					url: interaction.user.displayAvatarURL(),

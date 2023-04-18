@@ -17,7 +17,7 @@ export default class Verification {
 		.setNameLocalizations({ 'es-ES': 'verificación' })
 		.setDescription('Configure verification in your server!')
 		.setDescriptionLocalizations({ 'es-ES': '¡Configura la verificación en tu servidor!' })
-		.setDefaultMemberPermissions(PermissionFlagsBits.Adminastraitor)
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('on')

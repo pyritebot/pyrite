@@ -14,4 +14,6 @@ export default {
   moderator: '<:security:1071812054010298528>',
   pyrite: '<:pyrite:1074700667307950180>',
   pyritebeta: '<:pyritebeta:1074701015644901417>',
+  arrow2: '<:arrow2:1096900871545159801>',
+  compass: '<:compass:1097894967545958520>',
 }

@@ -4,9 +4,9 @@ import { logBuilder } from "../utils.js";
 import prisma from "../database.js";
 
 export default class AntiLinks {
-	name = Events.MessageCreate
+	name = Events.MessageUpdate
 
-	async run(message: Message) {
+	async run(_: Message, message: Message) {
 		if (!message.inGuild()) return;
 		const guild = await prisma.guild.findUnique({
 			where: { guild: message.guildId! },

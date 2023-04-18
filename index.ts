@@ -21,6 +21,7 @@ interface IEvent {
 }
 
 const rest = new REST().setToken(TOKEN!);
+
 const commands = new Collection<string, ICommand>();
 const usersCollection = new Collection<string, number>();
 

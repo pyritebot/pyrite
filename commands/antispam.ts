@@ -1,5 +1,5 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, ModalBuilder } from 'discord.js';
 import { 
 	defaultError, 
 	successEmbedBuilder, 
@@ -17,21 +17,17 @@ export default class AntiSpam {
 		.addSubcommand(subcommand => subcommand.setName('off').setDescription('turn anti spam off!'))
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName('minutes')
-				.setDescription('How many minutes will the spammer be muted, default is 5')
+				.setName('set')
+				.setDescription('Set the different limits of the antispam filter')
 				.addIntegerOption(option =>
-					option.setName('minutes').setDescription('You can pass an integer which will the determines the minutes of the mute').setRequired(true)
+					option
+						.setName('minutes')
+						.setDescription('You can pass an integer which will the determines the minutes of the mute')
 				)
-		)
-		.addSubcommand(subcommand =>
-			subcommand
-				.setName('limit')
-				.setDescription('How many messages will the spammer have to send before being muted, default is 7')
 				.addIntegerOption(option =>
 					option
 						.setName('limit')
 						.setDescription('You can pass an integer which will the determines the amount of messages before a mute')
-						.setRequired(true)
 				)
 		);
 
@@ -68,7 +64,6 @@ export default class AntiSpam {
 					await onLogs?.send(
 						logBuilder({
 							member: interaction.member as GuildMember,
-							content: `Anti-Spam has been activated by ${interaction.user}!`,
 							reason: `anti-spam feature has been activated by ${interaction.user.tag}`,
 						})
 					);
@@ -97,73 +92,68 @@ export default class AntiSpam {
 					await offLogs?.send(
 						logBuilder({
 							member: interaction.member as GuildMember,
-							content: `Anti-Spam has been deactivated by ${interaction.user}!`,
 							reason: `anti-spam feature has been deactivated by ${interaction.user.tag}`,
 						})
 					);
 					break;
 
-				case 'minutes':
-					const minutes = interaction.options.getInteger('minutes', true);
+				case 'set':
+					const minutes = interaction.options.getInteger('minutes');
+					const limit = interaction.options.getInteger('limit');
 
-					const minGuild = await prisma.guild.upsert({
-						where: {
-							guild: interaction.guildId,
-						},
-						select: {
-							logs: true,
-						},
-						update: {
-							spamMinutes: minutes,
-						},
-						create: {
-							guild: interaction.guildId,
-							spamMinutes: minutes,
-						},
-					});
+					if (minutes) {
+						const minGuild = await prisma.guild.upsert({
+							where: {
+								guild: interaction.guildId,
+							},
+							select: {
+								logs: true,
+							},
+							update: {
+								spamMinutes: minutes,
+							},
+							create: {
+								guild: interaction.guildId,
+								spamMinutes: minutes,
+							},
+						});
+	
+						const minLogs = interaction.guild?.channels.cache.get(minGuild?.logs!) as TextChannel;
+						await minLogs?.send(
+							logBuilder({
+								member: interaction.member as GuildMember,
+								reason: `anti-spam minutes has been changed by ${interaction.user.tag}`,
+							})
+						);
+					}
 
-					const minLogs = interaction.guild?.channels.cache.get(minGuild?.logs!) as TextChannel;
-					await minLogs?.send(
-						logBuilder({
-							member: interaction.member as GuildMember,
-							content: `Anti-Spam minutes has been changed by ${interaction.user}!`,
-							reason: `anti-spam minutes has been changed by ${interaction.user.tag}`,
-						})
-					);
+					if (limit) {
+						const limitGuild = await prisma.guild.upsert({
+							where: {
+								guild: interaction.guildId,
+							},
+							select: {
+								logs: true,
+							},
+							update: {
+								spamMessageLimit: limit,
+							},
+							create: {
+								guild: interaction.guildId,
+								spamMessageLimit: limit,
+							},
+						});
+	
+						const limitLogs = interaction.guild?.channels.cache.get(limitGuild?.logs!) as TextChannel;
+						await limitLogs?.send(
+							logBuilder({
+								member: interaction.member as GuildMember,
+								reason: `anti-spam message limit has been changed by ${interaction.user.tag}`,
+							})
+						);
+					}
 
-					await interaction.editReply({ embeds: [successEmbedBuilder(`Changed timeout time to ${minutes} minutes`)] });
-					break;
-
-				case 'limit':
-					const limit = interaction.options.getInteger('limit', true);
-
-					const limitGuild = await prisma.guild.upsert({
-						where: {
-							guild: interaction.guildId,
-						},
-						select: {
-							logs: true,
-						},
-						update: {
-							spamMessageLimit: limit,
-						},
-						create: {
-							guild: interaction.guildId,
-							spamMessageLimit: limit,
-						},
-					});
-
-					const limitLogs = interaction.guild?.channels.cache.get(limitGuild?.logs!) as TextChannel;
-					await limitLogs?.send(
-						logBuilder({
-							member: interaction.member as GuildMember,
-							content: `Anti-Spam message limit has been changed by ${interaction.user}!`,
-							reason: `anti-spam message limit has been changed by ${interaction.user.tag}`,
-						})
-					);
-
-					await interaction.editReply({ embeds: [successEmbedBuilder(`Changed message limit to ${limit}!`)] });
-					break;
+					await interaction.editReply({ embeds: [successEmbedBuilder(`Your settings have been saved successfully!`)] });
 			}
 		} catch {
 			await interaction.editReply(defaultError);

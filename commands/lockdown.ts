@@ -2,6 +2,7 @@ import type { ChatInputCommandInteraction, TextChannel, VoiceChannel } from 'dis
 import { SlashCommandBuilder, EmbedBuilder, Colors, ButtonBuilder, ActionRowBuilder, ButtonStyle, PermissionFlagsBits } from 'discord.js';
 import { defaultError, errorEmbedBuilder, successEmbedBuilder } from '../utils.js';
 import prisma from '../database.js';
+import emojis from '../emojis.js'
 
 export default class Lockdown {
 	data = new SlashCommandBuilder()
@@ -46,10 +47,16 @@ export default class Lockdown {
 				});
 
 				const lockdownOnEmbed = new EmbedBuilder({
+					title: `${emojis.warn}  Warning!`,
+					description: `${emojis.reply1} Lockdown will lock every channel in your server, and kick everyone new that joins to your server.
+		 
+**__Note:__** We **aren't** responsible in any way for the damage this can cause to your server. Are you sure you want to continue?
+`,
 					color: 0x2b2d31,
-          image: {
-            url: 'https://media.discordapp.net/attachments/1009363862837002360/1068617054812381224/WARNING.png?width=1352&height=676',
-          }
+          footer: {
+	          text: interaction.guild?.name!,
+						icon_url: interaction.guild?.iconURL()!,
+	        }
 				});
 				await interaction.reply({ embeds: [lockdownOnEmbed], components: [confirm], ephemeral: true });
 				break;
@@ -125,8 +132,8 @@ export default class Lockdown {
 					const newEmbed = { ...embed?.data };
 					newEmbed.fields ??= [];
 					newEmbed.fields.push({
-						name: `<:arrow:1027722692662673429> Update #${(embed?.fields?.length ?? 0) + 1}`,
-						value: `<:blank:1008721958210383902> ${content}`,
+						name: `${emojis.arrow} Update #${(embed?.fields?.length ?? 0) + 1}`,
+						value: `${emojis.blank} ${content}`,
 					});
 					newEmbed.timestamp = new Date().toISOString()
 

@@ -1,6 +1,7 @@
 import type { ChatInputCommandInteraction, GuildMember } from 'discord.js';
 import { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, Colors } from 'discord.js';
 import { defaultError, errorEmbedBuilder, successEmbedBuilder } from '../utils.js';
+import emojis from '../emojis.js';
 import prisma from '../database.js';
 
 export default class Whitelist {
@@ -166,10 +167,12 @@ export default class Whitelist {
 					break;
 
 				case 'show':
-					const NOT_SET = '<:error:1027359606126690344> Not Set';
+					const NOT_SET = `${emojis.error} Not Set`;
 
 					const guild = await prisma.guild.findUnique({
-						where: { guild: interaction.guildId, },
+						where: { 
+							guild: interaction.guildId, 
+						},
 						select: {
 							members: true,
 							mods: true,
@@ -179,14 +182,18 @@ export default class Whitelist {
 					});
 
 					const showEmbed = new EmbedBuilder({
-						title: `<:list:1030927155472904283> Whitelist`,
+						title: `${emojis.list}  Whitelist`,
 					  fields: [
-							{ name: 'Members', value: `${guild?.members ? `<@&${guild?.members}>` : NOT_SET}` },
-							{ name: 'Mods', value: `${guild?.mods ? `<@&${guild?.mods}>` : NOT_SET}` },
-							{ name: 'Admins', value: `${guild?.admins?.length ? guild.admins.reduce((acc, val) => acc.concat(`<@${val}>\n`), '') : NOT_SET}` },
-							{ name: 'Owners', value: `${guild?.owners?.length ? guild.owners.reduce((acc, val) => acc.concat(`<@${val}>\n`), '') : NOT_SET}` },
+							{ name: '__Members__', inline: true, value: `${emojis.reply1}${guild?.members ? `<@&${guild?.members}>` : NOT_SET}` },
+							{ name: '__Mods__', inline: true, value: `${emojis.reply1}${guild?.mods ? `<@&${guild?.mods}>` : NOT_SET}` },
+							{ name: '__Admins__', inline: true, value: `${emojis.reply1}${guild?.admins?.length ? guild.admins.reduce((acc, val) => acc.concat(`<@${val}>\n`), '') : NOT_SET}` },
+							{ name: '__Owners__', inline: true, value: `${emojis.reply1}${guild?.owners?.length ? guild.owners.reduce((acc, val) => acc.concat(`<@${val}>\n`), '') : NOT_SET}` },
 						],
 						color: 0x2b2d31,
+            footer: {
+	            text: interaction.guild?.name!,
+							icon_url: interaction.guild?.iconURL()!,
+	          }
 					});
 
 					await interaction.editReply({ embeds: [showEmbed] });
