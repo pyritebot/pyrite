@@ -1,30 +1,42 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
-import { SlashCommandBuilder, AttachmentBuilder } from 'discord.js';
-import sharp from 'sharp';
-import { loadImage, defaultError, errorEmbedBuilder, timeSince } from '../utils.js';
-import { join } from 'node:path';
-import prisma from '../database.js';
-import qr from 'qr-image';
+import type { ChatInputCommandInteraction } from "discord.js";
+import { SlashCommandBuilder, AttachmentBuilder } from "discord.js";
+import sharp from "sharp";
+import {
+	loadImage,
+	defaultError,
+	errorEmbedBuilder,
+	timeSince,
+} from "../utils.js";
+import { join } from "node:path";
+import prisma from "../database.js";
+import qr from "qr-image";
 
 export default class Info {
 	data = new SlashCommandBuilder()
-		.setName('passport')
-		.setNameLocalizations({ 'es-ES': 'pasaporte' })
-		.setDescription('A card with all important info of a user.')
-		.setDescriptionLocalizations({ 'es-ES': 'Una tarjeta con toda la informacion importante de un usuario.' })
-		.addUserOption(option =>
+		.setName("passport")
+		.setNameLocalizations({ "es-ES": "pasaporte" })
+		.setDescription("A card with all important info of a user.")
+		.setDescriptionLocalizations({
+			"es-ES": "Una tarjeta con toda la informacion importante de un usuario.",
+		})
+		.addUserOption((option) =>
 			option
-				.setName('user')
-				.setNameLocalizations({ 'es-ES': 'usuario' })
-				.setDescription('You can pass a mention or an id of a user.')
-				.setDescriptionLocalizations({ 'es-ES': 'Puedes pasar una mención o un id de un usuario' })
+				.setName("user")
+				.setNameLocalizations({ "es-ES": "usuario" })
+				.setDescription("You can pass a mention or an id of a user.")
+				.setDescriptionLocalizations({
+					"es-ES": "Puedes pasar una mención o un id de un usuario",
+				}),
 		);
 
 	async run(interaction: ChatInputCommandInteraction) {
-		const user = interaction.options.getUser('user') ?? interaction.user;
+		const user = interaction.options.getUser("user") ?? interaction.user;
 
 		if (user.bot) {
-			await interaction.reply({ embeds: [errorEmbedBuilder('You cannot get the passport of a Bot!')], ephemeral: true });
+			await interaction.reply({
+				embeds: [errorEmbedBuilder("You cannot get the passport of a Bot!")],
+				ephemeral: true,
+			});
 			return;
 		}
 
@@ -38,12 +50,16 @@ export default class Info {
 				</svg>
 	 		`);
 
-			const code = qr.imageSync(`https://discord.com/users/${user.id}`, { type: 'png', size: 4, margin: 2 });		
+			const code = qr.imageSync(`https://discord.com/users/${user.id}`, {
+				type: "png",
+				size: 4,
+				margin: 2,
+			});
 
 			const toxicityUser = await prisma.user.findUnique({
 				where: { user: user.id },
-				select: { 
-					toxicity: true, 
+				select: {
+					toxicity: true,
 					warns: true,
 				},
 			});
@@ -78,7 +94,11 @@ export default class Info {
 		 			</text>
 					<text x="336" y="178" class="opt">
 						${
-							(toxicity?.endsWith('00') ? toxicity?.slice(0, -3) : toxicity?.endsWith('0') ? toxicity?.slice(0, -1) : toxicity) ?? 0
+							(toxicity?.endsWith("00")
+								? toxicity?.slice(0, -3)
+								: toxicity?.endsWith("0")
+								? toxicity?.slice(0, -1)
+								: toxicity) ?? 0
 						}%
 		 			</text>
 					<text x="362" y="156" class="opt">
@@ -93,13 +113,22 @@ export default class Info {
 				.composite([
 					{
 						input: roundedCorners,
-						blend: 'dest-in',
+						blend: "dest-in",
 					},
 				])
 				.png()
 				.toBuffer();
 
-			const image = await sharp(join(process.cwd(), user.id === '807705107852558386' ? './assets/card-pinkred.png' : user.id === '713745288619360306' ? './assets/card-pinkblue.png' : './assets/card.png'))
+			const image = await sharp(
+				join(
+					process.cwd(),
+					user.id === "807705107852558386"
+						? "./assets/card-pinkred.png"
+						: user.id === "713745288619360306"
+						? "./assets/card-pinkblue.png"
+						: "./assets/card.png",
+				),
+			)
 				.composite([
 					{
 						input: avatarRoundedBuffer,
@@ -116,9 +145,11 @@ export default class Info {
 				.png()
 				.toBuffer();
 
-			await interaction.editReply({ files: [new AttachmentBuilder(image, { name: 'card.png' })] });
+			await interaction.editReply({
+				files: [new AttachmentBuilder(image, { name: "card.png" })],
+			});
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 			await interaction.editReply(defaultError);
 		}
 	}

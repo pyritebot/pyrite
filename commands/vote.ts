@@ -1,36 +1,45 @@
-import type { CommandInteraction } from 'discord.js';
-import { SlashCommandBuilder, EmbedBuilder, Colors, ButtonBuilder, ActionRowBuilder, ButtonStyle } from 'discord.js';
+import type { ChatInputCommandInteraction } from "discord.js";
+import {
+	SlashCommandBuilder,
+	EmbedBuilder,
+	ButtonBuilder,
+	ActionRowBuilder,
+	ButtonStyle,
+} from "discord.js";
+import emojis from "../emojis";
 
 export default class Help {
 	data = new SlashCommandBuilder()
-		.setName('vote')
-		.setNameLocalizations({ 'es-ES': 'votar' })
-		.setDescription('Vote our bot to help us!')
-		.setDescriptionLocalizations({ 'es-ES': 'Vota a nuestro bot para ayudarnos!' });
-
-	async run(interaction: CommandInteraction) {
-		const embed = new EmbedBuilder({
-			title: '<:check:1027354811164786739> Vote Us!',
-			description:
-				'<:arrow:1068604670764916876> By voting us, you help us grow and protect more servers! Please take 1 minute of your time to help us get to more servers.',
-			color: 0x2b2d31,
+		.setName("vote")
+		.setNameLocalizations({ "es-ES": "votar" })
+		.setDescription("Vote our bot to help us!")
+		.setDescriptionLocalizations({
+			"es-ES": "Vota a nuestro bot para ayudarnos!",
 		});
 
-		const buttons = new ActionRowBuilder<ButtonBuilder>({
-			components: [
-				new ButtonBuilder({
-					label: 'Top.gg',
-					style: ButtonStyle.Link,
-					url: 'https://top.gg/bot/1008400801628164096',
-				}),
-				new ButtonBuilder({
-					label: 'Discord Bot List',
-					style: ButtonStyle.Link,
-					url: 'https://discord.ly/pyrite',
-				}),
-			],
-		});
+	async run(interaction: ChatInputCommandInteraction) {
+		const embed = new EmbedBuilder()
+			.setTitle(`${emojis.check} Vote Us!`)
+			.setDescription(
+				`${emojis.arrow} By voting us, you help us grow and protect more servers! Please take 1 minute of your time to help us get to more servers.`,
+			)
+			.setColor(0x2b2d31);
 
-		await interaction.reply({ embeds: [embed], components: [buttons], ephemeral: true });
+		const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder()
+				.setLabel("Top.gg")
+				.setStyle(ButtonStyle.Link)
+				.setURL("https://top.gg/bot/1008400801628164096"),
+			new ButtonBuilder()
+				.setLabel("Discord Bot List")
+				.setStyle(ButtonStyle.Link)
+				.setURL("https://discord.ly/pyrite"),
+		);
+
+		await interaction.reply({
+			embeds: [embed],
+			components: [buttons],
+			ephemeral: true,
+		});
 	}
 }

@@ -1,47 +1,63 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
-import { SlashCommandBuilder, PermissionFlagsBits, ModalBuilder } from 'discord.js';
-import { 
-	defaultError, 
-	successEmbedBuilder, 
-	errorEmbedBuilder, 
+import type {
+	ChatInputCommandInteraction,
+	GuildMember,
+	TextChannel,
+} from "discord.js";
+import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
+import {
+	defaultError,
+	successEmbedBuilder,
+	errorEmbedBuilder,
 	logBuilder,
-} from '../utils.js';
-import prisma from '../database.js';
+} from "../utils.js";
+import prisma from "../database.js";
 
 export default class AntiSpam {
 	data = new SlashCommandBuilder()
-		.setName('antispam')
-		.setDescription('Toggle Anti Spam in your server!')
+		.setName("antispam")
+		.setDescription("Toggle Anti Spam in your server!")
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.addSubcommand(subcommand => subcommand.setName('on').setDescription('turn anti spam on!'))
-		.addSubcommand(subcommand => subcommand.setName('off').setDescription('turn anti spam off!'))
-		.addSubcommand(subcommand =>
+		.addSubcommand((subcommand) =>
+			subcommand.setName("on").setDescription("turn anti spam on!"),
+		)
+		.addSubcommand((subcommand) =>
+			subcommand.setName("off").setDescription("turn anti spam off!"),
+		)
+		.addSubcommand((subcommand) =>
 			subcommand
-				.setName('set')
-				.setDescription('Set the different limits of the antispam filter')
-				.addIntegerOption(option =>
+				.setName("set")
+				.setDescription("Set the different limits of the antispam filter")
+				.addIntegerOption((option) =>
 					option
-						.setName('minutes')
-						.setDescription('You can pass an integer which will the determines the minutes of the mute')
+						.setName("minutes")
+						.setDescription(
+							"You can pass an integer which will the determines the minutes of the mute",
+						),
 				)
-				.addIntegerOption(option =>
+				.addIntegerOption((option) =>
 					option
-						.setName('limit')
-						.setDescription('You can pass an integer which will the determines the amount of messages before a mute')
-				)
+						.setName("limit")
+						.setDescription(
+							"You can pass an integer which will the determines the amount of messages before a mute",
+						),
+				),
 		);
 
 	async run(interaction: ChatInputCommandInteraction) {
 		try {
 			if (!interaction.inGuild()) {
-				await interaction.reply({ embeds: [errorEmbedBuilder('This command can only be run on a server!')] });
+				await interaction.reply({
+					embeds: [
+						errorEmbedBuilder("This command can only be run on a server!"),
+					],
+				});
 				return;
 			}
 
 			await interaction.deferReply({ ephemeral: true });
 
 			switch (interaction.options.getSubcommand()) {
-				case 'on':
+				case "on":
 					const onGuild = await prisma.guild.upsert({
 						where: {
 							guild: interaction.guildId,
@@ -57,19 +73,27 @@ export default class AntiSpam {
 							antiSpam: true,
 						},
 					});
-					
-					await interaction.editReply({ embeds: [successEmbedBuilder(`anti spam filter has been activated successfully!`)] });
-					
-					const onLogs = interaction.guild?.channels.cache.get(onGuild?.logs!) as TextChannel;
+
+					await interaction.editReply({
+						embeds: [
+							successEmbedBuilder(
+								"anti spam filter has been activated successfully!",
+							),
+						],
+					});
+
+					const onLogs = interaction.guild?.channels.cache.get(
+						onGuild?.logs ?? "",
+					) as TextChannel;
 					await onLogs?.send(
 						logBuilder({
 							member: interaction.member as GuildMember,
 							reason: `anti-spam feature has been activated by ${interaction.user.tag}`,
-						})
+						}),
 					);
 					break;
 
-				case 'off':
+				case "off":
 					const offGuild = await prisma.guild.upsert({
 						where: {
 							guild: interaction.guildId,
@@ -85,21 +109,29 @@ export default class AntiSpam {
 							antiSpam: false,
 						},
 					});
-					
-					await interaction.editReply({ embeds: [successEmbedBuilder(`anti spam filter has been deactivated successfully!`)] });
-					
-					const offLogs = interaction.guild?.channels.cache.get(offGuild?.logs!) as TextChannel;
+
+					await interaction.editReply({
+						embeds: [
+							successEmbedBuilder(
+								"anti spam filter has been deactivated successfully!",
+							),
+						],
+					});
+
+					const offLogs = interaction.guild?.channels.cache.get(
+						offGuild?.logs ?? "",
+					) as TextChannel;
 					await offLogs?.send(
 						logBuilder({
 							member: interaction.member as GuildMember,
 							reason: `anti-spam feature has been deactivated by ${interaction.user.tag}`,
-						})
+						}),
 					);
 					break;
 
-				case 'set':
-					const minutes = interaction.options.getInteger('minutes');
-					const limit = interaction.options.getInteger('limit');
+				case "set":
+					const minutes = interaction.options.getInteger("minutes");
+					const limit = interaction.options.getInteger("limit");
 
 					if (minutes) {
 						const minGuild = await prisma.guild.upsert({
@@ -117,13 +149,15 @@ export default class AntiSpam {
 								spamMinutes: minutes,
 							},
 						});
-	
-						const minLogs = interaction.guild?.channels.cache.get(minGuild?.logs!) as TextChannel;
+
+						const minLogs = interaction.guild?.channels.cache.get(
+							minGuild?.logs ?? "",
+						) as TextChannel;
 						await minLogs?.send(
 							logBuilder({
 								member: interaction.member as GuildMember,
 								reason: `anti-spam minutes has been changed by ${interaction.user.tag}`,
-							})
+							}),
 						);
 					}
 
@@ -143,17 +177,25 @@ export default class AntiSpam {
 								spamMessageLimit: limit,
 							},
 						});
-	
-						const limitLogs = interaction.guild?.channels.cache.get(limitGuild?.logs!) as TextChannel;
+
+						const limitLogs = interaction.guild?.channels.cache.get(
+							limitGuild?.logs ?? "",
+						) as TextChannel;
 						await limitLogs?.send(
 							logBuilder({
 								member: interaction.member as GuildMember,
 								reason: `anti-spam message limit has been changed by ${interaction.user.tag}`,
-							})
+							}),
 						);
 					}
 
-					await interaction.editReply({ embeds: [successEmbedBuilder(`Your settings have been saved successfully!`)] });
+					await interaction.editReply({
+						embeds: [
+							successEmbedBuilder(
+								"Your settings have been saved successfully!",
+							),
+						],
+					});
 			}
 		} catch {
 			await interaction.editReply(defaultError);

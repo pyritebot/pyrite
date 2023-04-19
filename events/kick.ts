@@ -1,11 +1,11 @@
-import type { GuildMember, TextChannel } from 'discord.js';
-import { Events, AuditLogEvent, PermissionFlagsBits } from 'discord.js';
-import { logBuilder, getQuarantine } from '../utils.js';
-import prisma from '../database.js';
+import type { GuildMember, TextChannel } from "discord.js";
+import { Events, AuditLogEvent, PermissionFlagsBits } from "discord.js";
+import { logBuilder, getQuarantine } from "../utils.js";
+import prisma from "../database.js";
 
 export default class Kick {
 	name = Events.GuildMemberRemove;
-	
+
 	static times = 0;
 	static timeout = setTimeout(() => {
 		Kick.times = 0;
@@ -23,42 +23,50 @@ export default class Kick {
 		Kick.timeout.refresh();
 
 		if (Kick.times % 5 === 0) {
-			const auditLogFetch = await member.guild.fetchAuditLogs({ limit: 1, type: AuditLogEvent.MemberKick });
+			const auditLogFetch = await member.guild.fetchAuditLogs({
+				limit: 1,
+				type: AuditLogEvent.MemberKick,
+			});
 			const log = auditLogFetch.entries.first();
-			
+
 			if (!log) return;
-			if (log.createdAt < member.joinedAt!) return;
-			if (log.target.id !== member.id) return;
-			
+			if (log.createdAt < (member.joinedAt ?? new Date())) return;
+			if (log.target?.id !== member.id) return;
+
 			if (member.client.user?.id === log.executor?.id) return;
-			
-			const executor = await member.guild.members.fetch(log?.executor?.id!);
-			const quarantine = await getQuarantine(member.guild)
+
+			const executor = await member.guild.members.fetch(
+				log?.executor?.id ?? "",
+			);
+			const quarantine = await getQuarantine(member.guild);
 
 			executor.roles.cache
-				.filter(r => r.id !== member.guild.id)
-				.forEach(async r => {
+				.filter((r) => r.id !== member.guild.id)
+				.forEach(async (r) => {
 					await executor.roles
-						.remove(r, 'Kicking too many users')
+						.remove(r, "Kicking too many users")
 						.catch(async () => {
 							if (!executor.user.bot) return;
-							r?.setPermissions([]).catch(() => {})
-						})
-				})
-			
-			await executor.roles.add(quarantine, 'Kicking too many users')
+							r?.setPermissions([]).catch(() => {});
+						});
+				});
+
+			if (quarantine) {
+				await executor.roles.add(quarantine, "Kicking too many users");
+			}
 
 			await executor
-				.timeout(1440 * 60_000, 'Kicking too many users')
-				.catch(() => {})
+				.timeout(1440 * 60_000, "Kicking too many users")
+				.catch(() => {});
 
-			const logs = member.guild?.channels.cache.get(guild?.logs!) as TextChannel;
+			const logs = member.guild?.channels.cache.get(
+				guild?.logs ?? "",
+			) as TextChannel;
 			await logs?.send(
 				logBuilder({
 					member,
-					content: `${member.user} has been demoted for kicking too many users.`,
-					reason: `Too many users kicked.`,
-				})
+					reason: "Too many users kicked.",
+				}),
 			);
 		}
 	}

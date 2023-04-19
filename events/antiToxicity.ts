@@ -1,30 +1,30 @@
-import type { Message } from 'discord.js';
-import { Events, EmbedBuilder } from 'discord.js';
-import prisma from '../database.js'
-import { analyzeText } from '../utils.js'
+import type { Message, TextChannel } from "discord.js";
+import { Events, EmbedBuilder } from "discord.js";
+import prisma from "../database.js";
+import { analyzeText } from "../utils.js";
 
 export default class AntiToxicity {
-	name = Events.MessageCreate
+	name = Events.MessageCreate;
 
 	async run(message: Message) {
 		if (!message.inGuild()) return;
 		if (message.author.id === message.client.user?.id) return;
 		if (message.author.bot) return;
-	
+
 		try {
 			const guild = await prisma.guild.findUnique({
 				where: { guild: message.guildId },
 				select: { logs: true, toxicityFilter: true },
 			});
-	
+
 			const level = await analyzeText(message.content);
 			const danger = Math.ceil(level);
-	
+
 			const user = await prisma.user.findUnique({
 				where: { user: message.author.id },
 				select: { toxicity: true },
 			});
-	
+
 			if (danger < 20) {
 				await prisma.user.upsert({
 					where: { user: message.author.id },
@@ -53,17 +53,17 @@ export default class AntiToxicity {
 					});
 				}
 			}
-	
+
 			if (!guild?.toxicityFilter) return;
 			if (danger < 90) return;
-	
+
 			await message.delete();
 			const embed = new EmbedBuilder({
 				author: {
 					name: message.author.tag,
 					icon_url: message.author.displayAvatarURL(),
 				},
-				title: 'Toxic message detected!',
+				title: "Toxic message detected!",
 				description: `
 A user was detected being toxic in a channel, here are the details below:
     
@@ -72,14 +72,16 @@ A user was detected being toxic in a channel, here are the details below:
 <:arrow:1068604670764916876> **Reason:** toxicity`,
 				color: 0x2b2d31,
 				footer: {
-					text: message.guild?.name!,
-					icon_url: message.guild?.iconURL()!,
+					text: message.guild?.name ?? "",
+					icon_url: message.guild?.iconURL() ?? "",
 				},
-				timestamp: new Date().toISOString()
+				timestamp: new Date().toISOString(),
 			});
 
-			const logs = message.guild.channels.cache.get(guild?.logs!) as TextChannel | null;
-	
+			const logs = message.guild.channels.cache.get(
+				guild?.logs ?? "",
+			) as TextChannel | null;
+
 			await logs?.send({ embeds: [embed] });
 		} catch {
 			return;

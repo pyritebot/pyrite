@@ -1,71 +1,118 @@
-import type { ChatInputCommandInteraction, TextChannel, VoiceChannel } from 'discord.js';
-import { SlashCommandBuilder, EmbedBuilder, Colors, ButtonBuilder, ActionRowBuilder, ButtonStyle, PermissionFlagsBits } from 'discord.js';
-import { defaultError, errorEmbedBuilder, successEmbedBuilder } from '../utils.js';
-import prisma from '../database.js';
-import emojis from '../emojis.js'
+import type {
+	ChatInputCommandInteraction,
+	TextChannel,
+	VoiceChannel,
+} from "discord.js";
+import {
+	SlashCommandBuilder,
+	EmbedBuilder,
+	Colors,
+	ButtonBuilder,
+	ActionRowBuilder,
+	ButtonStyle,
+	PermissionFlagsBits,
+} from "discord.js";
+import {
+	defaultError,
+	errorEmbedBuilder,
+	successEmbedBuilder,
+} from "../utils.js";
+import prisma from "../database.js";
+import emojis from "../emojis.js";
 
 export default class Lockdown {
 	data = new SlashCommandBuilder()
-		.setName('lockdown')
-		.setDescription('Lockdown the entire server!')
+		.setName("lockdown")
+		.setDescription("Lockdown the entire server!")
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.addSubcommand(subcommand => subcommand.setName('on').setDescription('turn the lockdown on!'))
-		.addSubcommand(subcommand => subcommand.setName('off').setDescription('turn the lockdown off!'))
-		.addSubcommand(subcommand =>
+		.addSubcommand((subcommand) =>
+			subcommand.setName("on").setDescription("turn the lockdown on!"),
+		)
+		.addSubcommand((subcommand) =>
+			subcommand.setName("off").setDescription("turn the lockdown off!"),
+		)
+		.addSubcommand((subcommand) =>
 			subcommand
-				.setName('update')
-				.setDescription('Post an update on the lockdown!')
-				.addStringOption(message =>
-					message.setName('message').setDescription('The update message that will be posted during lockdown').setRequired(true)
-				)
+				.setName("update")
+				.setDescription("Post an update on the lockdown!")
+				.addStringOption((message) =>
+					message
+						.setName("message")
+						.setDescription(
+							"The update message that will be posted during lockdown",
+						)
+						.setRequired(true),
+				),
 		);
 
 	async run(interaction: ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
-			await interaction.reply({ embeds: [errorEmbedBuilder('This command can only be run on a server!')] });
+			await interaction.reply({
+				embeds: [
+					errorEmbedBuilder("This command can only be run on a server!"),
+				],
+			});
 			return;
 		}
 
 		const tempGuild = await prisma.guild.findUnique({
-			where: { guild: interaction.guildId! },
+			where: { guild: interaction.guildId },
 			select: { owners: true },
 		});
 
-		if (!(tempGuild?.owners.includes(interaction.user.id) || interaction.guild?.ownerId === interaction.user.id)) {
-			await interaction.reply({ embeds: [errorEmbedBuilder('Only an owner can use the </lockdown:1014153355330850855>.')], ephemeral: true });
+		if (
+			!(
+				tempGuild?.owners.includes(interaction.user.id) ||
+				interaction.guild?.ownerId === interaction.user.id
+			)
+		) {
+			await interaction.reply({
+				embeds: [
+					errorEmbedBuilder(
+						"Only an owner can use the </lockdown:1014153355330850855>.",
+					),
+				],
+				ephemeral: true,
+			});
 			return;
 		}
 
 		switch (interaction.options.getSubcommand()) {
-			case 'on':
+			case "on":
 				const confirm = new ActionRowBuilder<ButtonBuilder>({
-					components: [new ButtonBuilder({
-						label: 'Continue',
-						style: ButtonStyle.Danger,
-						custom_id: 'lockdown_continue',
-					})],
+					components: [
+						new ButtonBuilder({
+							label: "Continue",
+							style: ButtonStyle.Danger,
+							custom_id: "lockdown_continue",
+						}),
+					],
 				});
 
-				const lockdownOnEmbed = new EmbedBuilder({
-					title: `${emojis.warn}  Warning!`,
-					description: `${emojis.reply1} Lockdown will lock every channel in your server, and kick everyone new that joins to your server.
+				const lockdownOnEmbed = new EmbedBuilder()
+					.setTitle(`${emojis.warn}  Warning!`)
+					.setDescription(`${emojis.reply1} Lockdown will lock every channel in your server, and kick everyone new that joins to your server.
 		 
-**__Note:__** We **aren't** responsible in any way for the damage this can cause to your server. Are you sure you want to continue?
-`,
-					color: 0x2b2d31,
-          footer: {
-	          text: interaction.guild?.name!,
-						icon_url: interaction.guild?.iconURL()!,
-	        }
+					**__Note:__** We **aren't** responsible in any way for the damage this can cause to your server. Are you sure you want to continue?
+					`)
+					.setColor(0x2b2d31)
+					.setFooter({
+						text: interaction.guild?.name ?? "",
+						iconURL: interaction.guild?.iconURL() ?? "",
+					});
+
+				await interaction.reply({
+					embeds: [lockdownOnEmbed],
+					components: [confirm],
+					ephemeral: true,
 				});
-				await interaction.reply({ embeds: [lockdownOnEmbed], components: [confirm], ephemeral: true });
 				break;
 
-			case 'off':
+			case "off":
 				try {
 					await interaction.deferReply({ ephemeral: true });
 					const guild = await prisma.guild.findUnique({
-						where: { guild: interaction.guildId! },
+						where: { guild: interaction.guildId },
 						select: {
 							lockdownChannel: true,
 							verificationChannel: true,
@@ -73,16 +120,24 @@ export default class Lockdown {
 					});
 
 					if (!guild?.lockdownChannel) {
-						await interaction.editReply({ embeds: [errorEmbedBuilder('Lockdown has not been activated in this server!')] });
+						await interaction.editReply({
+							embeds: [
+								errorEmbedBuilder(
+									"Lockdown has not been activated in this server!",
+								),
+							],
+						});
 						return;
 					}
 
-					const lockdownChannel = await interaction.guild?.channels.fetch(guild?.lockdownChannel);
-					await lockdownChannel?.delete('Lockdown has been turned off');
+					const lockdownChannel = await interaction.guild?.channels.fetch(
+						guild?.lockdownChannel,
+					);
+					await lockdownChannel?.delete("Lockdown has been turned off");
 
 					await prisma.guild.update({
 						where: {
-							guild: interaction.guildId!,
+							guild: interaction.guildId,
 						},
 						data: {
 							raidMode: false,
@@ -91,27 +146,33 @@ export default class Lockdown {
 						},
 					});
 
-					interaction.guild?.channels.cache.forEach(ch => {
+					interaction.guild?.channels.cache.forEach((ch) => {
 						const c = ch as TextChannel | VoiceChannel;
-						interaction.guild?.roles.cache
-							.forEach(async role => await c.permissionOverwrites.edit(role.id, { SendMessages: true }));
+						interaction.guild?.roles.cache.forEach(
+							async (role) =>
+								await c.permissionOverwrites.edit(role.id, {
+									SendMessages: true,
+								}),
+						);
 					});
 
-					await interaction.editReply({ embeds: [successEmbedBuilder(`Lockdown is now off.`)] });
+					await interaction.editReply({
+						embeds: [successEmbedBuilder("Lockdown is now off.")],
+					});
 				} catch {
 					await interaction.editReply(defaultError);
 				}
 				break;
 
-			case 'update':
-				const content = interaction.options.getString('message');
+			case "update":
+				const content = interaction.options.getString("message");
 
 				await interaction.deferReply({ ephemeral: true });
 
 				try {
 					const guild = await prisma.guild.findUnique({
 						where: {
-							guild: interaction.guildId!,
+							guild: interaction.guildId,
 						},
 						select: {
 							lockdownMessage: true,
@@ -120,12 +181,22 @@ export default class Lockdown {
 					});
 
 					if (!(guild?.lockdownChannel || guild?.lockdownMessage)) {
-						await interaction.editReply({ embeds: [errorEmbedBuilder('lockdown has not been activated in this server!')] });
+						await interaction.editReply({
+							embeds: [
+								errorEmbedBuilder(
+									"lockdown has not been activated in this server!",
+								),
+							],
+						});
 						return;
 					}
 
-					const channel = interaction.guild?.channels.cache.get(guild?.lockdownChannel!) as TextChannel | VoiceChannel | null;
-					const message = await channel?.messages?.fetch(guild?.lockdownMessage!);
+					const channel = interaction.guild?.channels.cache.get(
+						guild?.lockdownChannel ?? "",
+					) as TextChannel | VoiceChannel | null;
+					const message = await channel?.messages?.fetch(
+						guild?.lockdownMessage ?? "",
+					);
 
 					const embed = message?.embeds[0];
 
@@ -135,7 +206,7 @@ export default class Lockdown {
 						name: `${emojis.arrow} Update #${(embed?.fields?.length ?? 0) + 1}`,
 						value: `${emojis.blank} ${content}`,
 					});
-					newEmbed.timestamp = new Date().toISOString()
+					newEmbed.timestamp = new Date().toISOString();
 
 					await message?.edit({ embeds: [newEmbed] });
 				} catch {
@@ -143,7 +214,11 @@ export default class Lockdown {
 					break;
 				}
 
-				await interaction.editReply({ embeds: [successEmbedBuilder(`Successfully posted the lockdown update!`)] });
+				await interaction.editReply({
+					embeds: [
+						successEmbedBuilder("Successfully posted the lockdown update!"),
+					],
+				});
 				break;
 		}
 	}
