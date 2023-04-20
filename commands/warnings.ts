@@ -314,9 +314,9 @@ export default class Warnings {
 						embeds:
 							warns?.length !== 0
 								? [...Array(Math.ceil(warns.length / 5))].map(
-										() => show().data as Embed,
+										() => show(),
 								  )
-								: [show().data as Embed],
+								: [show()],
 						author: interaction.member.user as User,
 						interaction: interaction,
 						ephemeral: false,
@@ -339,7 +339,8 @@ export default class Warnings {
 							},
 						],
 					});
-				} catch {
+				} catch (e) {
+					console.error(e)
 					await interaction.editReply(defaultError);
 				}
 				break;

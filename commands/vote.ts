@@ -6,7 +6,7 @@ import {
 	ActionRowBuilder,
 	ButtonStyle,
 } from "discord.js";
-import emojis from "../emojis";
+import emojis from "../emojis.js";
 
 export default class Help {
 	data = new SlashCommandBuilder()
