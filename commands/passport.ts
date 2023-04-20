@@ -122,11 +122,9 @@ export default class Info {
 			const image = await sharp(
 				join(
 					process.cwd(),
-					user.id === "807705107852558386"
-						? "./assets/card-pinkred.png"
-						: user.id === "713745288619360306"
+					user.id === "713745288619360306" || user.id === "807705107852558386"
 						? "./assets/card-pinkblue.png"
-						: "./assets/card.png",
+						: "./assets/card-blue.png",
 				),
 			)
 				.composite([
