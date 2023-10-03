@@ -140,14 +140,28 @@ export default class Clear {
 					return;
 				}
 
-				const messages = await interaction.channel?.bulkDelete(amount ?? 0);
-				await interaction.editReply({
-					embeds: [
-						successEmbedBuilder(
-							`Successfully deleted **${messages?.size ?? 0}** messages`,
-						),
-					],
-				});
+				try {
+					[...(await interaction.channel?.messages.fetch()).values()].slice(0, amount).forEach(
+						async (m) => {
+							await m.delete().catch(() => {})
+						}
+					);
+
+					await interaction.editReply({
+						embeds: [
+							successEmbedBuilder(
+								`Successfully deleted **${amount ?? 0}** messages`,
+							),
+						],
+					});
+				} catch {
+					await interaction.editReply({
+						embeds: [
+							errorEmbedBuilder("Can't delete messages older than 14 days"),
+						],
+					});
+					return;
+				}
 		}
 
 		if (option !== "messages") {

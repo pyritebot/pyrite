@@ -4,8 +4,6 @@ import {
 	TextChannel,
 	VoiceChannel,
 	AttachmentBuilder,
-} from "discord.js";
-import {
 	Client,
 	GatewayIntentBits,
 	REST,
@@ -15,6 +13,7 @@ import {
 	Colors,
 	PermissionFlagsBits,
 } from "discord.js";
+
 import { loxt } from "loxt";
 import {
 	setActivity,
@@ -63,7 +62,6 @@ interface IEvent {
 const rest = new REST().setToken(TOKEN);
 
 const commands = new Collection<string, ICommand>();
-const usersCollection = new Collection<string, number>();
 
 const client = new Client({
 	intents: [

@@ -7,20 +7,20 @@
 	"dependencies": {
 		"@devraelfreeze/discordjs-pagination": "^2.7.2",
 		"@prisma/client": "^4.2.0",
-		"captcha-canvas": "^4.0.0--next.3",
-		"cuid": "^3.0.0",
+		"captcha-canvas": "^3.2.1",
 		"discord-js-button-pagination-ts": "^4.1.2",
 		"discord.js": "^14.9.0",
 		"fastify": "^4.15.0",
 		"googleapis": "^118.0.0",
-		"loxt": "^3.9.3",
+		"loxt": "^3.11.0",
+		"nanoid": "^4.0.2",
 		"qr-image": "^3.2.0",
 		"sharp": "^0.32.0",
 		"zod": "^3.21.4"
 	},
 	"devDependencies": {
-		"@types/qr-image": "^3.2.5",
 		"@types/node": "18.15.11",
+		"@types/qr-image": "^3.2.5",
 		"esbuild": "^0.17.17",
 		"prisma": "^4.13.0"
 	},

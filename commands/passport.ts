@@ -69,17 +69,10 @@ export default class Info {
 				<svg width="625" height="400">
 					<style>
 		 				.name {
-							font-size: 35px;							
+							font-size: 25px;							
 			 				font-weight: bold;
 			 				font-family: sans-serif;
 							fill: #fff;
-						}
-
-	 					.tag {
-							font-size: 25px;
-							font-family: sans-serif;
-							font-weight: bold;
-							fill: #ededed;
 						}
 
 	 					.opt {
@@ -90,7 +83,7 @@ export default class Info {
 						}
 	 				</style>
 		 	 		<text x="220" y="90" class="name">
-						${user.username}<tspan class="tag">#${user.discriminator}</tspan>
+						${user.username}
 		 			</text>
 					<text x="336" y="178" class="opt">
 						${
@@ -122,7 +115,7 @@ export default class Info {
 			const image = await sharp(
 				join(
 					process.cwd(),
-					user.id === "713745288619360306" || user.id === "807705107852558386"
+					user.id === "713745288619360306"
 						? "./assets/card-pinkblue.png"
 						: "./assets/card-blue.png",
 				),
