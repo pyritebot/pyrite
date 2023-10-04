@@ -16,6 +16,9 @@
 		"sharp": "^0.32.6",
 		"zod": "^3.22.3"
 	},
+	"engines": {
+		"node": ">=19"
+	},
 	"devDependencies": {
 		"@types/node": "18.15.11",
 		"@types/qr-image": "^3.2.7",
