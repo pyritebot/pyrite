@@ -1,5 +1,5 @@
 <div align="center">
-	<a href="https://pyritebot.netlify.appe/">
+	<a href="https://pyritebot.netlify.app/">
 		<img
 			src="https://user-images.githubusercontent.com/79442303/215068077-5ae12c02-4970-4844-985d-df50e516538a.png" 
       height="200" 
