@@ -9,7 +9,7 @@ ENTRYPOINTS=$(find -type f -name '*.[tj]s' -not -path './node_modules/*')
 
 esbuild $ENTRYPOINTS \
 	--log-level=warning \
-	--outdir='./.build' \
+	--outdir='./dist' \
 	--outbase=. \
 	--sourcemap \
 	--target='node16' \

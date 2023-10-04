@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../events/verificationQuarantine.ts"],
+  "sourcesContent": ["import { Events, GuildMember } from \"discord.js\";\nimport { getQuarantine } from \"../utils.js\";\nimport prisma from \"../database.js\";\n\nexport default class VerificationQuarantine {\n\tname = Events.GuildMemberAdd;\n\n\tasync run(member: GuildMember) {\n\t\tif (!member) return;\n\n\t\tconst guild = await prisma.guild.findUnique({\n\t\t\twhere: { guild: member.guild.id },\n\t\t\tselect: { verificationChannel: true },\n\t\t});\n\n\t\tif (!guild?.verificationChannel) return;\n\n\t\tconst quarantine = await getQuarantine(member.guild);\n\n\t\tif (quarantine) {\n\t\t\tawait member.roles.add(quarantine);\n\t\t}\n\t}\n}\n"],
+  "mappings": ";AAAA,SAAS,cAA2B;AACpC,SAAS,qBAAqB;AAC9B,OAAO,YAAY;AAEnB,qBAAqB,uBAAuB;AAAA,EAC3C,OAAO,OAAO;AAAA,EAEd,MAAM,IAAI,QAAqB;AAC9B,QAAI,CAAC;AAAQ;AAEb,UAAM,QAAQ,MAAM,OAAO,MAAM,WAAW;AAAA,MAC3C,OAAO,EAAE,OAAO,OAAO,MAAM,GAAG;AAAA,MAChC,QAAQ,EAAE,qBAAqB,KAAK;AAAA,IACrC,CAAC;AAED,QAAI,EAAC,+BAAO;AAAqB;AAEjC,UAAM,aAAa,MAAM,cAAc,OAAO,KAAK;AAEnD,QAAI,YAAY;AACf,YAAM,OAAO,MAAM,IAAI,UAAU;AAAA,IAClC;AAAA,EACD;AACD;",
+  "names": []
+}

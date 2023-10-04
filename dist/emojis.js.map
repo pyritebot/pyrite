@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../emojis.ts"],
+  "sourcesContent": ["export default {\n\thome: '<:home:1068613634957266964>',\n\tlist: '<:list:1030927155472904283>',\n\tlock: '<:lock:1027724211944431708>',\n\twarn: '<:warn:1027361416119853187>',\n\tsettings: '<:settings:1028282277299503104>',\n\terror: '<:error:1027359606126690344>',\n\tcheck: '<:check:1027354811164786739>',\n\tarrow: '<:arrow:1068604670764916876>',\n  reply1: '<:reply:1067159718646263910>',\n  reply2: '<:replycontinued2:1067140301187186738>',\n  reply3: '<:replycontinued:1067140193146114048>',\n\tblank: '<:blank:1008721958210383902>',\n  moderator: '<:security:1071812054010298528>',\n  pyrite: '<:pyrite:1074700667307950180>',\n  pyritebeta: '<:pyritebeta:1074701015644901417>',\n  arrow2: '<:arrow2:1096900871545159801>',\n  compass: '<:compass:1097894967545958520>',\n}"],
+  "mappings": ";AAAA,eAAe;AAAA,EACd,MAAM;AAAA,EACN,MAAM;AAAA,EACN,MAAM;AAAA,EACN,MAAM;AAAA,EACN,UAAU;AAAA,EACV,OAAO;AAAA,EACP,OAAO;AAAA,EACP,OAAO;AAAA,EACN,QAAQ;AAAA,EACR,QAAQ;AAAA,EACR,QAAQ;AAAA,EACT,OAAO;AAAA,EACN,WAAW;AAAA,EACX,QAAQ;AAAA,EACR,YAAY;AAAA,EACZ,QAAQ;AAAA,EACR,SAAS;AACX;",
+  "names": []
+}

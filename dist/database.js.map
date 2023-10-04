@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../database.ts"],
+  "sourcesContent": ["import { PrismaClient } from '@prisma/client'\n\nconst prisma = new PrismaClient();\n\nexport default prisma\n"],
+  "mappings": ";AAAA,SAAS,oBAAoB;AAE7B,MAAM,SAAS,IAAI,aAAa;AAEhC,eAAe;",
+  "names": []
+}
