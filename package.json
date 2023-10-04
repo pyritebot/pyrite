@@ -23,7 +23,8 @@
 		"prisma": "^4.16.2"
 	},
 	"scripts": {
-		"start": "node index.js"
+		"build": "./.config/build.sh",
+		"start": "node dist/index.js"
 	},
 	"repository": {
 		"type": "git",
