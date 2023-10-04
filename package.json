@@ -3,7 +3,6 @@
 	"type": "module",
 	"version": "3.0.0",
 	"description": "Know your members. Know your community.",
-	"main": "index.js",
 	"dependencies": {
 		"@devraelfreeze/discordjs-pagination": "^2.7.6",
 		"@prisma/client": "^4.16.2",
@@ -22,6 +21,9 @@
 		"@types/qr-image": "^3.2.7",
 		"esbuild": "^0.19.4",
 		"prisma": "^4.16.2"
+	},
+	"scripts": {
+		"start": "node index.js"
 	},
 	"repository": {
 		"type": "git",
