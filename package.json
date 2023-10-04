@@ -3,7 +3,7 @@
 	"type": "module",
 	"version": "3.0.0",
 	"description": "Know your members. Know your community.",
-	"main": "dist/index.js",
+	"main": "index.js",
 	"dependencies": {
 		"@devraelfreeze/discordjs-pagination": "^2.7.6",
 		"@prisma/client": "^4.16.2",
