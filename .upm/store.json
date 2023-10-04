@@ -1,0 +1,1 @@
+{"version":2,"languages":{"nodejs-npm":{"specfileHash":"74fa2c72f297d880d4e120078f7dccd0","lockfileHash":"76c7d5cd92da544707a4a1921ad1b57c","guessedImports":["discord.js","captcha-canvas","googleapis","loxt","@prisma/client","@devraelfreeze/discordjs-pagination","sharp","qr-image","nanoid","fastify","zod"],"guessedImportsHash":"8d53435d9445d7e93d450a3769af2505"}}}
