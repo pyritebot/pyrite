@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../events/joinGate.ts"],
-  "sourcesContent": ["import type { GuildMember } from \"discord.js\";\nimport { Events, EmbedBuilder } from \"discord.js\";\nimport prisma from \"../database.js\";\nimport emojis from \"../emojis.js\";\n\nexport default class JoinGate {\n\tname = Events.GuildMemberAdd;\n\n\tasync run(member: GuildMember) {\n\t\tconst guild = await prisma.guild.findUnique({\n\t\t\twhere: { guild: member.guild.id },\n\t\t\tselect: { raidMode: true },\n\t\t});\n\n\t\tif (!guild?.raidMode) return;\n\n\t\tconst raidModeEmbed = new EmbedBuilder({\n\t\t\tauthor: {\n\t\t\t\tname: member.guild.name,\n\t\t\t\ticon_url: member.guild.iconURL() ?? \"\",\n\t\t\t},\n\t\t\tdescription: `${emojis.arrow} **Join Gate** is currently active in this server. Meaning no one can join at the moment.`,\n\t\t\tcolor: 0x2f3136,\n\t\t});\n\n\t\tawait member.send({ embeds: [raidModeEmbed] });\n\t\tawait member.kick(\"Join Gate System\");\n\t}\n}\n"],
-  "mappings": ";AACA,SAAS,QAAQ,oBAAoB;AACrC,OAAO,YAAY;AACnB,OAAO,YAAY;AAEnB,qBAAqB,SAAS;AAAA,EAC7B,OAAO,OAAO;AAAA,EAEd,MAAM,IAAI,QAAqB;AAC9B,UAAM,QAAQ,MAAM,OAAO,MAAM,WAAW;AAAA,MAC3C,OAAO,EAAE,OAAO,OAAO,MAAM,GAAG;AAAA,MAChC,QAAQ,EAAE,UAAU,KAAK;AAAA,IAC1B,CAAC;AAED,QAAI,EAAC,+BAAO;AAAU;AAEtB,UAAM,gBAAgB,IAAI,aAAa;AAAA,MACtC,QAAQ;AAAA,QACP,MAAM,OAAO,MAAM;AAAA,QACnB,UAAU,OAAO,MAAM,QAAQ,KAAK;AAAA,MACrC;AAAA,MACA,aAAa,GAAG,OAAO,KAAK;AAAA,MAC5B,OAAO;AAAA,IACR,CAAC;AAED,UAAM,OAAO,KAAK,EAAE,QAAQ,CAAC,aAAa,EAAE,CAAC;AAC7C,UAAM,OAAO,KAAK,kBAAkB;AAAA,EACrC;AACD;",
-  "names": []
-}
