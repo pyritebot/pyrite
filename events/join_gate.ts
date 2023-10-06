@@ -1,9 +1,9 @@
 import type { GuildMember } from "discord.js";
 import { Events, EmbedBuilder } from "discord.js";
-import prisma from "../database.js";
-import emojis from "../emojis.js";
+import { prisma } from "../database.js";
+import { emojis } from "../utils.js";
 
-export default class JoinGate {
+export default class {
 	name = Events.GuildMemberAdd;
 
 	async run(member: GuildMember) {
@@ -14,14 +14,13 @@ export default class JoinGate {
 
 		if (!guild?.raidMode) return;
 
-		const raidModeEmbed = new EmbedBuilder({
-			author: {
+		const raidModeEmbed = new EmbedBuilder()
+			.setDescription(`${emojis.arrow} **Join Gate** is currently active in this server. Meaning no one can join at the moment.`)
+			.setColor(0x2b2d31)
+			.setAuthor({
 				name: member.guild.name,
-				icon_url: member.guild.iconURL() ?? "",
-			},
-			description: `${emojis.arrow} **Join Gate** is currently active in this server. Meaning no one can join at the moment.`,
-			color: 0x2f3136,
-		});
+				iconURL: member.guild.iconURL() ?? ""
+			})
 
 		await member.send({ embeds: [raidModeEmbed] });
 		await member.kick("Join Gate System");

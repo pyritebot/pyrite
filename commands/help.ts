@@ -1,14 +1,13 @@
-import type { ChatInputCommandInteraction } from "discord.js";
 import {
+	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 	EmbedBuilder,
 	ActionRowBuilder,
 	StringSelectMenuBuilder,
 } from "discord.js";
-import { defaultError, buttons } from "../utils.js";
-import emojis from "../emojis.js";
+import { defaultError, buttons, emojis } from "../utils.js";
 
-export default class Help {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("help")
 		.setNameLocalizations({ "es-ES": "ayuda" })

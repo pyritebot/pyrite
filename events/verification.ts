@@ -9,17 +9,15 @@ import {
 	Events,
 	AttachmentBuilder,
 	EmbedBuilder,
-	Colors,
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
 } from "discord.js";
 import { CaptchaGenerator } from "captcha-canvas";
-import { successEmbedBuilder, errorEmbedBuilder, buttons } from "../utils.js";
-import emojis from "../emojis.js";
-import prisma from "../database.js";
+import { successEmbedBuilder, errorEmbedBuilder, buttons, emojis } from "../utils.js";
+import { prisma } from "../database.js";
 
-export default class Verification {
+export default class {
 	name = Events.InteractionCreate;
 
 	async verify(
@@ -64,13 +62,13 @@ export default class Verification {
 				await this.embedBuilder();
 
 			await msg.edit(incorrectEmbed);
-			await this.verify(incorrectText, interaction, msg, guild);
+			await this.verify(incorrectText ?? "", interaction, msg, guild);
 		} catch {
 			const { message: timeOutEmbed, text: timeOutText } =
 				await this.embedBuilder();
 
 			await msg.edit(timeOutEmbed);
-			await this.verify(timeOutText, interaction, msg, guild);
+			await this.verify(timeOutText ?? "", interaction, msg, guild);
 		}
 	}
 
@@ -80,15 +78,11 @@ export default class Verification {
 		const buffer = await captcha.generate();
 
 		const file = new AttachmentBuilder(buffer, { name: "verification.png" });
-		const verificationEmbed = new EmbedBuilder({
-			title: `${emojis.check} Verification`,
-			description:
-				"Are you a human? Lets find out. Simply type the following captcha below so I can verify that you are human. The captcha will only last 10 seconds so be quick!",
-			image: {
-				url: "attachment://verification.png",
-			},
-			color: 0x2b2d31,
-		});
+		const verificationEmbed = new EmbedBuilder()
+			.setTitle(`${emojis.check} Verification`)
+			.setDescription("Are you a human? Lets find out. Simply type the following captcha below so I can verify that you are human. The captcha will only last 10 seconds so be quick!")
+			.setImage("attachment://verification.png")
+			.setColor(0x2b2d31)
 
 		return {
 			message: {
@@ -201,6 +195,6 @@ ${emojis.blank}${emojis.arrow} **Verification was attempted:** <t:${Math.floor(
 
 		if (!msg) return;
 
-		this.verify(initialText, interaction, msg, guild);
+		this.verify(initialText ?? "", interaction, msg, guild);
 	}
 }

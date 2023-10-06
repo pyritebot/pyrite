@@ -19,16 +19,16 @@ import {
   errorEmbedBuilder,
   setActivity,
   successEmbedBuilder,
+  emojis
 } from "./utils.js";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
-import emojis from "./emojis.js";
-import prisma from "./database.js";
+import { prisma } from "./database.js";
 import Fastify from "fastify";
 import { z } from "zod";
 
 const envVariables = z.object({
-  TOKEN: z.string(),
+  DISCORD_TOKEN: z.string(),
   DATABASE_URL: z.string(),
   GOOGLE_API_KEY: z.string(),
 });
@@ -42,7 +42,7 @@ declare global {
   }
 }
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = process.env.DISCORD_TOKEN;
 
 interface ICommand {
   data: SlashCommandBuilder;
@@ -71,25 +71,21 @@ const client = new Client({
 
 client.once("ready", async () => {
   setActivity(client);
-  console.log(`logged in as ${client.user?.tag}`);
+  console.log(`\x1b[32m \x1b[0m logged in as ${client.user?.tag}`);
   console.log(`client in ${client.guilds.cache.size} servers`);
 });
 
 client.on("guildCreate", async (guild) => {
   setActivity(client);
-  const embed = new EmbedBuilder({
-    title: "<:list:1030927155472904283> Welcome to Pyrite Bot",
-    description:
-      `<:reply:1067159718646263910> Thank you for choosing **Pyrite Bot**, I will make sure to try my best to protect your server from raider's, spammer's and so much more.
+  const embed = new EmbedBuilder()
+    .setTitle(`${emojis.list} Welcome to Pyrite Bot`)
+    .setDescription(`${emojis.reply1} Thank you for choosing **Pyrite Bot**, I will make sure to try my best to protect your server from raider's, spammer's and so much more.
    
 You can configure me on the dashboard below this message. Need more servers protected? Add me to any server you think needs protection!
-
-`,
-    color: 0x2b2d31,
-    image: {
-      url: "attachment://pyritebot.png",
-    },
-  });
+`)
+    .setColor(0x2b2d31)
+    .setImage("attachment://pyritebot.png");
+  
   const owner = await guild.fetchOwner();
   await owner
     .send({
@@ -137,17 +133,15 @@ client.on("interactionCreate", async (interaction) => {
         );
     });
 
-    const lockdownEmbed = new EmbedBuilder({
-      title: `${emojis.lock} Lockdown`,
-      description:
-        `${emojis.reply1} This server is currently on lockdown. Meaning no one can chat in this server. Please wait until the owners unlock the server.`,
-      color: 0x2b2d31,
-      footer: {
-        icon_url: interaction.guild?.iconURL() ?? "",
-        text: interaction.guild?.name ?? "",
-      },
-      timestamp: new Date().toISOString(),
-    });
+    const lockdownEmbed = new EmbedBuilder()
+      .setTitle(`${emojis.lock} Lockdown`)
+      .setDescription(`${emojis.reply1} This server is currently on lockdown. Meaning no one can chat in this server. Please wait until the owners unlock the server.`)
+      .setColor(0x2b2d31)
+      .setTimestamp(new Date())
+      .setFooter({
+        iconURL: interaction.guild?.iconURL() ?? "",
+        text: interaction.guild?.name ?? ""
+      })
 
     const message = await channel?.send({ embeds: [lockdownEmbed] });
 
@@ -174,7 +168,7 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-const registerCommands = async () => {
+const loadCommands = async () => {
   const files = await readdir(join(dir, "./commands"));
   files
     .filter((file) => file.endsWith(".js"))
@@ -204,7 +198,7 @@ const server = Fastify();
 server.get("/", async () => "Bot hosting running correctly!");
 
 try {
-  await registerCommands();
+  await loadCommands();
   await registerEvents();
   await client.login(TOKEN);
   await server.listen({ port: 3000, host: "0.0.0.0" });

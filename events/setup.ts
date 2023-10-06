@@ -3,7 +3,6 @@ import {
 	PermissionFlagsBits,
 	Events,
 	EmbedBuilder,
-	Colors,
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
@@ -14,9 +13,9 @@ import {
 	getQuarantine,
 	errorEmbedBuilder,
 } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class Setup {
+export default class {
 	name = Events.InteractionCreate;
 
 	async run(interaction: Interaction) {

@@ -1,15 +1,14 @@
 import type { GuildBasedChannel, TextChannel } from "discord.js";
-import { Events, AuditLogEvent, PermissionFlagsBits } from "discord.js";
+import { Events, AuditLogEvent } from "discord.js";
 import { logBuilder, getQuarantine } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class ChannelCreations {
-	name = Events.ChannelCreate;
+export default class ChannelDeletions {
+	name = Events.ChannelDelete;
 
 	static times = 0;
-	static channels: string[] = [];
 	static timeout = setTimeout(() => {
-		ChannelCreations.times = 0;
+		ChannelDeletions.times = 0;
 	}, 8_000);
 
 	async run(channel: GuildBasedChannel) {
@@ -19,16 +18,15 @@ export default class ChannelCreations {
 		});
 
 		if (!guild?.antiRaid) return;
-		if (!channel.guild) return false;
+		if (!channel.guild) return;
 
-		ChannelCreations.channels.push(channel.id);
-		ChannelCreations.times++;
-		ChannelCreations.timeout.refresh();
+		ChannelDeletions.times++;
+		ChannelDeletions.timeout.refresh();
 
-		if (ChannelCreations.times % 5 === 0) {
+		if (ChannelDeletions.times % 5 === 0) {
 			const auditLogFetch = await channel.guild.fetchAuditLogs({
 				limit: 1,
-				type: AuditLogEvent.ChannelCreate,
+				type: AuditLogEvent.ChannelDelete,
 			});
 			const log = auditLogFetch.entries.first();
 
@@ -41,33 +39,26 @@ export default class ChannelCreations {
 				.filter((r) => r.id !== channel.guild.id)
 				.forEach(async (r) => {
 					await member.roles
-						.remove(r, "Creating too many channels")
+						.remove(r, "Deleting to many channels")
 						.catch(async () => {
 							if (!member.user.bot) return;
 							r?.setPermissions([]).catch(() => {});
 						});
 				});
 
-			await member.roles.add(quarantine, "Creating too many channels");
+			await member.roles.add(quarantine, "Deleting to many channels");
 
 			await member
-				.timeout(1440 * 60_000, "Creating too many channels")
+				.timeout(1440 * 60_000, "Deleting too many channels")
 				.catch(() => {});
-
-			ChannelCreations.channels.forEach(async (c) => {
-				await channel.guild.channels.cache
-					.get(c)
-					?.delete()
-					?.catch(() => {});
-			});
 
 			const logs = channel.guild?.channels.cache.get(
 				guild?.logs ?? "",
-			) as TextChannel;
+			) as TextChannel | null;
 			await logs?.send(
 				logBuilder({
 					member,
-					reason: "Too many channels created.",
+					reason: "Too many channels deleted.",
 					punished: true,
 				}),
 			);

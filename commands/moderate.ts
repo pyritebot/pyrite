@@ -1,15 +1,15 @@
-import type { ChatInputCommandInteraction, GuildMember, TextChannel } from "discord.js";
 import {
+	type ChatInputCommandInteraction,
+	type GuildMember,
+	type TextChannel,
 	SlashCommandBuilder,
-	EmbedBuilder,
-	Colors,
 	PermissionFlagsBits,
 } from "discord.js";
 import { successEmbedBuilder, errorEmbedBuilder, buttons, logBuilder } from "../utils.js";
 import { nanoid } from "nanoid/non-secure";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class Moderate {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("modnick")
 		.setNameLocalizations({ "es-ES": "moderar-apodo" })

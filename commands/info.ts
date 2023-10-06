@@ -1,9 +1,7 @@
 import {
-	ChatInputCommandInteraction,
-	GuildMember,
-	PermissionResolvable,
-} from "discord.js";
-import {
+	type ChatInputCommandInteraction,
+	type GuildMember,
+	type PermissionResolvable,
 	SlashCommandBuilder,
 	EmbedBuilder,
 	PermissionFlagsBits,
@@ -11,10 +9,9 @@ import {
 	ActionRowBuilder,
 	ButtonStyle,
 } from "discord.js";
-import emojis from "../emojis.js";
-import { errorEmbedBuilder, buttons } from "../utils.js";
+import { errorEmbedBuilder, buttons, emojis } from "../utils.js";
 
-export default class Info {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("info")
 		.setNameLocalizations({ "es-ES": "info" })

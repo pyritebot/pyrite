@@ -1,29 +1,28 @@
-import type {
-	ChatInputCommandInteraction,
-	GuildMember,
-	TextChannel,
+import {
+	type ChatInputCommandInteraction,
+	type GuildMember,
+	type TextChannel,
+	SlashCommandBuilder,
+	PermissionFlagsBits,
 } from "discord.js";
-import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 import {
 	defaultError,
 	successEmbedBuilder,
 	errorEmbedBuilder,
 	logBuilder,
 } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class AntiToxicity {
+export default class {
 	data = new SlashCommandBuilder()
-		.setName("antitoxicity")
-		.setDescription(
-			"Add a toxicity filter to your server to keep a PG-13 environment.",
-		)
+		.setName("antiraid")
+		.setDescription("Turn on the anti raid feature")
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.addSubcommand((subcommand) =>
-			subcommand.setName("on").setDescription("Turn toxicity filter on!"),
+			subcommand.setName("on").setDescription("Turn on anti raid!"),
 		)
 		.addSubcommand((subcommand) =>
-			subcommand.setName("off").setDescription("Turn toxicity filter off!"),
+			subcommand.setName("off").setDescription("Turn off anti raid!"),
 		);
 
 	async run(interaction: ChatInputCommandInteraction) {
@@ -42,18 +41,12 @@ export default class AntiToxicity {
 				case "on":
 					const onGuild = await prisma.guild.upsert({
 						where: { guild: interaction.guildId },
-						select: { logs: true },
-						update: { toxicityFilter: true },
-						create: {
-							guild: interaction.guildId,
-							toxicityFilter: true,
-						},
+						update: { antiRaid: true },
+						create: { guild: interaction.guildId, antiRaid: true },
 					});
 					await interaction.editReply({
 						embeds: [
-							successEmbedBuilder(
-								"toxicity filter has been activated successfully!",
-							),
+							successEmbedBuilder("anti raid has been activated successfully!"),
 						],
 					});
 
@@ -63,7 +56,7 @@ export default class AntiToxicity {
 					await onLogs?.send(
 						logBuilder({
 							member: interaction.member as GuildMember,
-							reason: `anti-toxicity feature has been activated by ${interaction.user.tag}`,
+							reason: `anti raid features have been activated by ${interaction.user.tag}`,
 						}),
 					);
 					break;
@@ -71,19 +64,8 @@ export default class AntiToxicity {
 				case "off":
 					const offGuild = await prisma.guild.upsert({
 						where: { guild: interaction.guildId },
-						select: { logs: true },
-						update: { toxicityFilter: false },
-						create: {
-							guild: interaction.guildId,
-							toxicityFilter: false,
-						},
-					});
-					await interaction.editReply({
-						embeds: [
-							successEmbedBuilder(
-								"toxicity filter has been deactivated successfully!",
-							),
-						],
+						update: { antiRaid: false },
+						create: { guild: interaction.guildId, antiRaid: false },
 					});
 
 					const offLogs = interaction.guild?.channels.cache.get(
@@ -92,9 +74,17 @@ export default class AntiToxicity {
 					await offLogs?.send(
 						logBuilder({
 							member: interaction.member as GuildMember,
-							reason: `anti-toxicity feature has been deactivated by ${interaction.user.tag}`,
+							reason: `anti raid features have been deactivated by ${interaction.user.tag}`,
 						}),
 					);
+
+					await interaction.editReply({
+						embeds: [
+							successEmbedBuilder(
+								"anti raid has been deactivated successfully!",
+							),
+						],
+					});
 					break;
 			}
 		} catch {

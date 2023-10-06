@@ -1,11 +1,13 @@
-import type { ChatInputCommandInteraction } from "discord.js";
-import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
+import {
+	type ChatInputCommandInteraction,
+	SlashCommandBuilder,
+	PermissionFlagsBits,
+} from "discord.js";
 import { successEmbedBuilder, errorEmbedBuilder } from "../utils.js";
-import prisma from "../database.js";
 
-export default class Clear {
+export default class {
 	data = new SlashCommandBuilder()
-		.setName("clear")
+		.setName("clean")
 		.setNameLocalizations({ "es-ES": "eliminar" })
 		.setDescription("Deletes a channel/role with the specified name")
 		.setDescriptionLocalizations({
@@ -78,15 +80,6 @@ export default class Clear {
 		const name = interaction.options.getString("name");
 		const amount = interaction.options.getInteger("amount");
 
-		const guild = await prisma.guild.findUnique({
-			where: {
-				guild: interaction.guildId,
-			},
-			select: {
-				logs: true,
-			},
-		});
-
 		await interaction.deferReply({ ephemeral: true });
 
 		switch (option) {
@@ -94,9 +87,9 @@ export default class Clear {
 				if (!name) {
 					await interaction
 						.editReply({
-							embeds: [errorEmbedBuilder("No channel names provided!")],
+							embeds: [errorEmbedBuilder("No role names provided!")],
 						})
-						.catch(() => {});
+						.catch(() => { });
 					return;
 				}
 
@@ -106,8 +99,14 @@ export default class Clear {
 						async (r) =>
 							await r
 								.delete(`Requested by ${interaction.user}!`)
-								.catch(() => {}),
+								.catch(() => { }),
 					);
+				await interaction
+					.editReply({
+						embeds: [
+							successEmbedBuilder(`Deleted all roles with name **${name}**`),
+						],
+					});
 				break;
 
 			case "channel":
@@ -116,7 +115,7 @@ export default class Clear {
 						.editReply({
 							embeds: [errorEmbedBuilder("No channel names provided!")],
 						})
-						.catch(() => {});
+						.catch(() => { });
 					return;
 				}
 
@@ -126,11 +125,26 @@ export default class Clear {
 						async (c) =>
 							await c
 								.delete(`Requested by ${interaction.user}!`)
-								.catch(() => {}),
+								.catch(() => { }),
 					);
+				await interaction
+					.editReply({
+						embeds: [
+							successEmbedBuilder(`Deleted all channels with name **${name}**`),
+						],
+					});
 				break;
 
 			case "messages":
+				if (!amount) {
+					await interaction.editReply({
+						embeds: [
+							errorEmbedBuilder("No amount provided!")
+						]
+					})
+					return;
+				}
+
 				if ((amount ?? 0) > 100) {
 					await interaction.editReply({
 						embeds: [
@@ -141,16 +155,12 @@ export default class Clear {
 				}
 
 				try {
-					[...(await interaction.channel?.messages.fetch()).values()].slice(0, amount).forEach(
-						async (m) => {
-							await m.delete().catch(() => {})
-						}
-					);
+					await interaction.channel?.bulkDelete(amount)
 
 					await interaction.editReply({
 						embeds: [
 							successEmbedBuilder(
-								`Successfully deleted **${amount ?? 0}** messages`,
+								`Successfully deleted **${amount}** messages`,
 							),
 						],
 					});
@@ -162,16 +172,6 @@ export default class Clear {
 					});
 					return;
 				}
-		}
-
-		if (option !== "messages") {
-			await interaction
-				.editReply({
-					embeds: [
-						successEmbedBuilder(`Deleted all ${option}s with name **${name}**`),
-					],
-				})
-				.catch(() => {});
 		}
 	}
 }

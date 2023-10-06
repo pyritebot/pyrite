@@ -1,6 +1,6 @@
 import type { Message, TextChannel } from "discord.js";
 import { Events, Collection, ChannelType } from "discord.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 import { logBuilder } from "../utils.js";
 
 export default class AntiSpam {

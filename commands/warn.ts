@@ -2,7 +2,7 @@ import type { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import { addWarn, errorEmbedBuilder } from '../utils.js';
 
-export default class Warn {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName('warn')
 		.setNameLocalizations({ 'es-ES': 'advertir' })

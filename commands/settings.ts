@@ -1,21 +1,19 @@
-import type { CommandInteraction } from "discord.js";
 import {
-	Colors,
+	type ChatInputCommandInteraction,
 	EmbedBuilder,
 	SlashCommandBuilder,
 	PermissionFlagsBits,
 } from "discord.js";
-import { errorEmbedBuilder } from "../utils.js";
-import emojis from "../emojis.js";
-import prisma from "../database.js";
+import { errorEmbedBuilder, emojis } from "../utils.js";
+import { prisma } from "../database.js";
 
-export default class AntiSpam {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("settings")
 		.setDescription("Show your configured settings!")
 		.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers);
 
-	async run(interaction: CommandInteraction) {
+	async run(interaction: ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
 			await interaction.reply({
 				embeds: [
@@ -44,10 +42,6 @@ export default class AntiSpam {
 			},
 		});
 
-		const check = "<:check:1027354811164786739>";
-		const error = "<:error:1027359606126690344>";
-		const blank = "<:blank:1008721958210383902>";
-
 		const embed = new EmbedBuilder({
 			title: "<:settings:1028282277299503104>  Settings",
 			description: `${emojis.reply1} Here are all of the configured settings below:`,
@@ -71,25 +65,25 @@ export default class AntiSpam {
           `,
 				},
 				{
-					name: `${guild?.logs ? check : error} __Logs__`,
+					name: `${guild?.logs ? emojis.check : emojis.error} __Logs__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Logs Channel:** <#${guild?.logs}>
           `,
 				},
 				{
-					name: `${guild?.toxicityFilter ? check : error} __Anti Toxicity__`,
+					name: `${guild?.toxicityFilter ? emojis.check : emojis.error} __Anti Toxicity__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Toxicity Logs Channel:** <#${guild?.logs}>
           `,
 				},
 				{
-					name: `${guild?.antiLinks ? check : error} __Anti Links__`,
+					name: `${guild?.antiLinks ? emojis.check : emojis.error} __Anti Links__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Anti Links Log Channel:** <#${guild?.logs}>
           `,
 				},
 				{
-					name: `${guild?.antiRaid ? check : error} __Anti Raid__`,
+					name: `${guild?.antiRaid ? emojis.check : emojis.error} __Anti Raid__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Anti Raid Log Channel:** <#${guild?.logs}>
           ${emojis.blank}${emojis.arrow} **Channel Creation Limit:** \`5\`
@@ -100,14 +94,14 @@ export default class AntiSpam {
           `,
 				},
 				{
-					name: `${guild?.antiAlts ? check : error} __Anti Alts__`,
+					name: `${guild?.antiAlts ? emojis.check : emojis.error} __Anti Alts__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Anti Alts Log Channel:** <#${guild?.logs}>
           ${emojis.blank}${emojis.arrow} **Max Days:** \`7\`
           `,
 				},
 				{
-					name: `${guild?.lockdownChannel ? check : error} __Lockdown__`,
+					name: `${guild?.lockdownChannel ? emojis.check : emojis.error} __Lockdown__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Lockdown Channel**: ${
 						guild?.lockdownChannel ? `<#${guild?.lockdownChannel}>` : "Not Set"

@@ -1,9 +1,14 @@
-import type { ChatInputCommandInteraction, GuildBasedChannel } from 'discord.js';
-import { SlashCommandBuilder, PermissionFlagsBits, ChannelType } from 'discord.js';
+import {
+	type ChatInputCommandInteraction,
+	type GuildBasedChannel,
+	SlashCommandBuilder,
+	PermissionFlagsBits,
+	ChannelType,
+} from 'discord.js';
 import { successEmbedBuilder, errorEmbedBuilder, defaultError } from '../utils.js';
-import prisma from '../database.js';
+import { prisma } from '../database.js';
 
-export default class Logger {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName('logs')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)

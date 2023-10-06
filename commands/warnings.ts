@@ -17,16 +17,16 @@ import {
   errorEmbedBuilder,
   logBuilder,
   successEmbedBuilder,
+  emojis,
 } from "../utils.js";
 import {
   ButtonStyles,
   ButtonTypes,
   pagination,
 } from "@devraelfreeze/discordjs-pagination";
-import emojis from "../emojis.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class Warnings {
+export default class {
   data = new SlashCommandBuilder()
     .setName("warnings")
     .setDescription("Use this command to manage the warnings in your server!")

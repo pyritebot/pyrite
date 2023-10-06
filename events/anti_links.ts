@@ -1,12 +1,12 @@
 import type { TextChannel, Message } from "discord.js";
 import { Events } from "discord.js";
 import { logBuilder } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class AntiLinks {
-	name = Events.MessageUpdate;
+export default class {
+	name = Events.MessageCreate;
 
-	async run(_: Message, message: Message) {
+	async run(message: Message) {
 		if (!message.inGuild()) return;
 		const guild = await prisma.guild.findUnique({
 			where: { guild: message.guildId },
@@ -24,7 +24,7 @@ export default class AntiLinks {
 			) as TextChannel;
 			await logs?.send(
 				logBuilder({
-					// rome-ignore lint/style/noNonNullAssertion: Member will always be defined.
+					// biome-ignore lint/style/noNonNullAssertion: Member will always be defined.
 					member: message.member!,
 					reason: "Self promote is not allowed in this server!",
 				}),

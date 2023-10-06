@@ -16,8 +16,9 @@ const getAllFiles = (dir = process.cwd()) => {
 				file.includes("typings") ||
 				file.includes("dist") ||
 				file.includes("scripts")
-			)
+			) {
 				return;
+			}
 
 			if (statSync(join(dir, file)).isDirectory()) {
 				return getAllFiles(join(dir, file));
@@ -39,6 +40,7 @@ await build({
 	target: "node16",
 	platform: "node",
 	minify: true,
+	tsconfig: join(process.cwd(), "tsconfig.json")
 });
 
 console.log("\x1b[32m  Project compiled successfully\x1b[0m");

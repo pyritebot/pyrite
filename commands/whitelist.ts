@@ -3,15 +3,14 @@ import {
 	SlashCommandBuilder,
 	PermissionFlagsBits,
 	EmbedBuilder,
-	Colors,
 } from "discord.js";
 import {
 	defaultError,
 	errorEmbedBuilder,
 	successEmbedBuilder,
+	emojis,
 } from "../utils.js";
-import emojis from "../emojis.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
 export default class Whitelist {
 	data = new SlashCommandBuilder()
@@ -269,40 +268,36 @@ export default class Whitelist {
 							{
 								name: "__Members__",
 								inline: true,
-								value: `${emojis.reply1}${
-									guild?.members ? `<@&${guild?.members}>` : NOT_SET
-								}`,
+								value: `${emojis.reply1}${guild?.members ? `<@&${guild?.members}>` : NOT_SET
+									}`,
 							},
 							{
 								name: "__Mods__",
 								inline: true,
-								value: `${emojis.reply1}${
-									guild?.mods ? `<@&${guild?.mods}>` : NOT_SET
-								}`,
+								value: `${emojis.reply1}${guild?.mods ? `<@&${guild?.mods}>` : NOT_SET
+									}`,
 							},
 							{
 								name: "__Admins__",
 								inline: true,
-								value: `${emojis.reply1}${
-									guild?.admins?.length
+								value: `${emojis.reply1}${guild?.admins?.length
 										? guild.admins.reduce(
-												(acc, val) => acc.concat(`<@${val}>\n`),
-												"",
-										  )
+											(acc, val) => acc.concat(`<@${val}>\n`),
+											"",
+										)
 										: NOT_SET
-								}`,
+									}`,
 							},
 							{
 								name: "__Owners__",
 								inline: true,
-								value: `${emojis.reply1}${
-									guild?.owners?.length
+								value: `${emojis.reply1}${guild?.owners?.length
 										? guild.owners.reduce(
-												(acc, val) => acc.concat(`<@${val}>\n`),
-												"",
-										  )
+											(acc, val) => acc.concat(`<@${val}>\n`),
+											"",
+										)
 										: NOT_SET
-								}`,
+									}`,
 							},
 						],
 						color: 0x2b2d31,

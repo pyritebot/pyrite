@@ -1,5 +1,8 @@
-import type { ChatInputCommandInteraction } from "discord.js";
-import { SlashCommandBuilder, AttachmentBuilder } from "discord.js";
+import {
+	type ChatInputCommandInteraction,
+	SlashCommandBuilder,
+	AttachmentBuilder,
+} from "discord.js";
 import sharp from "sharp";
 import {
 	loadImage,
@@ -8,10 +11,10 @@ import {
 	timeSince,
 } from "../utils.js";
 import { join } from "node:path";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 import qr from "qr-image";
 
-export default class Info {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("passport")
 		.setNameLocalizations({ "es-ES": "pasaporte" })

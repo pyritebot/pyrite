@@ -1,12 +1,16 @@
-import type { ChatInputCommandInteraction, GuildMember } from "discord.js";
-import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
+import {
+	type ChatInputCommandInteraction,
+	type GuildMember,
+	SlashCommandBuilder,
+	PermissionFlagsBits,
+} from "discord.js";
 import {
 	successEmbedBuilder,
 	getQuarantine,
 	errorEmbedBuilder,
 } from "../utils.js";
 
-export default class Quarantine {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("quarantine")
 		.setNameLocalizations({ "es-ES": "quarentena" })

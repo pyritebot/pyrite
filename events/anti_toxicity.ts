@@ -1,12 +1,12 @@
 import type { Message, TextChannel } from "discord.js";
 import { Events, EmbedBuilder } from "discord.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 import { analyzeText } from "../utils.js";
 
-export default class AntiToxicity {
-	name = Events.MessageUpdate;
+export default class {
+	name = Events.MessageCreate;
 
-	async run(_: Message, message: Message) {
+	async run(message: Message) {
 		if (!message.inGuild()) return;
 		if (message.author.id === message.client.user?.id) return;
 		if (message.author.bot) return;

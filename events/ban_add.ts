@@ -1,7 +1,7 @@
 import type { GuildBan, TextChannel } from "discord.js";
-import { Events, AuditLogEvent, PermissionFlagsBits } from "discord.js";
+import { Events, AuditLogEvent } from "discord.js";
 import { logBuilder, getQuarantine } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
 export default class BanAdd {
 	name = Events.GuildBanAdd;

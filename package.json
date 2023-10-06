@@ -14,12 +14,13 @@
 		"nanoid": "^4.0.2",
 		"qr-image": "^3.2.0",
 		"sharp": "^0.32.6",
-		"zod": "^3.22.3"
+		"zod": "^3.22.4"
 	},
 	"engines": {
 		"node": ">=19 <20"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "^1.2.2",
 		"@types/node": "18.15.11",
 		"@types/qr-image": "^3.2.7",
 		"esbuild": "^0.19.4",
@@ -33,8 +34,11 @@
 		"type": "git",
 		"url": "git+https://github.com/pyritebot/pyrite.git"
 	},
-	"keywords": ["bot", "verification"],
-	"author": "AngelNext",
+	"keywords": [
+		"bot",
+		"verification"
+	],
+	"author": "angelnext",
 	"license": "GPL",
 	"bugs": {
 		"url": "https://github.com/pyritebot/pyrite/issues"

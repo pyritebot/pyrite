@@ -1,8 +1,8 @@
 import { Events, GuildMember } from "discord.js";
 import { getQuarantine } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class VerificationQuarantine {
+export default class {
 	name = Events.GuildMemberAdd;
 
 	async run(member: GuildMember) {

@@ -2,7 +2,7 @@ import type { Interaction } from 'discord.js'
 import { Events, EmbedBuilder } from 'discord.js'
 import emojis from '../emojis.js'
 
-export default class Help {
+export default class {
 	name = Events.InteractionCreate
 
 	async run(interaction: Interaction) {

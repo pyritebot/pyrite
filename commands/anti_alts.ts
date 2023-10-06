@@ -1,9 +1,12 @@
-import type { ChatInputCommandInteraction } from "discord.js";
-import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
+import {
+	type ChatInputCommandInteraction,
+	SlashCommandBuilder,
+	PermissionFlagsBits,
+} from "discord.js";
 import { successEmbedBuilder, errorEmbedBuilder } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class AntiAlts {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("antialts")
 		.setDescription(

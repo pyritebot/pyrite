@@ -1,14 +1,13 @@
-import type { CommandInteraction } from 'discord.js';
-import { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, Colors } from 'discord.js';
-import { errorEmbedBuilder, optionButtons } from '../utils.js';
+import { type ChatInputCommandInteraction, SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } from 'discord.js';
+import { emojis, errorEmbedBuilder, optionButtons } from '../utils.js';
 
-export default class Setup {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName('setup')
 		.setDescription('Setup the Bot in this server!')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
-	async run(interaction: CommandInteraction) {
+	async run(interaction: ChatInputCommandInteraction) {
 		if (!interaction.inGuild()) {
 			await interaction.reply({ embeds: [errorEmbedBuilder('This command can only be run on a server!')] });
 			return;
@@ -30,11 +29,10 @@ export default class Setup {
 
 		await interaction.reply({ content: `Go to ${channel} to continue setting up the server!`, ephemeral: true });
 		await channel?.send({ content: `${interaction.user}, I will walk you through the steps to set up ${interaction.client.user} in this server!` });
-		const embed = new EmbedBuilder({
-			title: ':no_entry_sign: Anti Spam',
-			description: '<:reply:1067159718646263910> Would you like to use our effective spam system to stop members from spamming in your server?',
-			color: 0x2b2d31,
-		});
+		const embed = new EmbedBuilder()
+			.setTitle(':no_entry_sign: Anti Spam')
+			.setDescription(`${emojis.reply1} Would you like to use our effective spam system to stop members from spamming in your server?`)
+			.setColor(0x2b2d31);
 		await channel?.send({ embeds: [embed], components: [optionButtons('antispam')] });
 	}
 }

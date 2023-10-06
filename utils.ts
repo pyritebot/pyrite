@@ -18,10 +18,29 @@ import {
 import { google } from "googleapis";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import prisma from "./database.js";
-import emojis from "./emojis.js";
+import { prisma } from "./database.js";
 
 export const dir = dirname(fileURLToPath(import.meta.url));
+
+export const emojis = {
+	home: '<:home:1068613634957266964>',
+	list: '<:list:1030927155472904283>',
+	lock: '<:lock:1027724211944431708>',
+	warn: '<:warn:1027361416119853187>',
+	settings: '<:settings:1028282277299503104>',
+	error: '<:error:1027359606126690344>',
+	check: '<:check:1027354811164786739>',
+	arrow: '<:arrow:1068604670764916876>',
+	reply1: '<:reply:1067159718646263910>',
+	reply2: '<:replycontinued2:1067140301187186738>',
+	reply3: '<:replycontinued:1067140193146114048>',
+	blank: '<:blank:1008721958210383902>',
+	moderator: '<:security:1071812054010298528>',
+	pyrite: '<:pyrite:1074700667307950180>',
+	pyritebeta: '<:pyritebeta:1074701015644901417>',
+	arrow2: '<:arrow2:1096900871545159801>',
+	compass: '<:compass:1097894967545958520>',
+};
 
 interface LogBuilderOptions {
 	member: GuildMember | string;
@@ -53,7 +72,7 @@ export const timeSince = (date: Date) => {
 		return `${secondsPast / 60}m`;
 	} else if (secondsPast <= 86400) {
 		return `${secondsPast / 3600}h`;
-	} else if (secondsPast > 86400) {
+	} else {
 		const day = date.getDate();
 		const month = date.toDateString().match(/ [a-zA-Z]*/)?.[0].replace(" ", "");
 		const year =
@@ -129,43 +148,35 @@ export const analyzeText = async (text: string) => {
 	return response.data.attributeScores.TOXICITY.summaryScore.value * 100;
 };
 
-export const buttons = new ActionRowBuilder<ButtonBuilder>({
-	components: [
-		new ButtonBuilder({
-			label: "Invite Me",
-			style: ButtonStyle.Link,
-			url: "https://discord.com/oauth2/authorize?client_id=1008400801628164096&permissions=8&scope=bot%20applications.commands",
-		}),
-		new ButtonBuilder({
-			label: "Support Server",
-			style: ButtonStyle.Link,
-			url: "https://discord.gg/NxJzWWqhdQ",
-		}),
-		new ButtonBuilder({
-			label: "Website",
-			style: ButtonStyle.Link,
-			url: "https://pyritebot.netlify.app/",
-		}),
-	],
-});
+export const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+	new ButtonBuilder()
+		.setLabel("Invite Me")
+		.setStyle(ButtonStyle.Link)
+		.setURL("https://discord.com/oauth2/authorize?client_id=1008400801628164096&permissions=8&scope=bot%20applications.commands"),
+	new ButtonBuilder()
+		.setLabel("Support Server")
+		.setStyle(ButtonStyle.Link)
+		.setURL("https://discord.gg/NxJzWWqhdQ"),
+	new ButtonBuilder()
+		.setLabel("Website")
+		.setStyle(ButtonStyle.Link)
+		.setURL("https://pyritebot.netlify.app/"),
+);
 
 export const errorEmbedBuilder = (message: string) =>
-	new EmbedBuilder({
-		description: `${emojis.error}  ${message}`,
-		color: Colors.DarkRed,
-	});
+	new EmbedBuilder()
+		.setDescription(`${emojis.error}  ${message}`)
+		.setColor(Colors.DarkRed);
 
 export const successEmbedBuilder = (message: string) =>
-	new EmbedBuilder({
-		description: `${emojis.check}  ${message}`,
-		color: Colors.Green,
-	});
+	new EmbedBuilder()
+		.setDescription(`${emojis.check}  ${message}`)
+		.setColor(Colors.Green);
 
 export const warnEmbedBuilder = (message: string) =>
-	new EmbedBuilder({
-		description: `${emojis.warn}  ${message}`,
-		color: Colors.Yellow,
-	});
+	new EmbedBuilder()
+		.setDescription(`${emojis.warn}  ${message}`)
+		.setColor(Colors.Yellow);
 
 export const logBuilder = ({
 	member,
@@ -173,55 +184,46 @@ export const logBuilder = ({
 	reason,
 	punished = false,
 }: LogBuilderOptions) => {
-	const embed = new EmbedBuilder({
-		title: "<:warn:1027361416119853187> New Alert",
-		description: `
-  <:reply:1067159718646263910> A new Moderator action was just logged below :
-  
-<:arrow:1068604670764916876> **Executor:** ${
-			(member as GuildMember)?.user ?? `<@${member}>`
-		}
-<:arrow:1068604670764916876> **Reason:** ${reason}
-<:arrow:1068604670764916876> **Punished:** \`${punished ? "Yes" : "No"}\`
-<:arrow:1068604670764916876> **Time:** <t:${Math.floor(Date.now() / 1000)}:R>`,
-		footer: {
+	const embed = new EmbedBuilder()
+		.setTitle(`${emojis.warn} New Alert`)
+		.setDescription(`
+${emojis.reply1} A new Moderator action was just logged below:
+
+${emojis.arrow} **Executor:** ${(member as GuildMember)?.user ?? `<@${member}>`}
+${emojis.arrow} **Reason:** ${reason}
+${emojis.arrow} **Punished:** \`${punished ? "Yes" : "No"}\`
+${emojis.arrow} **Time:** <t:${Math.floor(Date.now() / 1000)}:R>
+`)
+		.setTimestamp(new Date())
+		.setColor(0x2b2d31)
+		.setThumbnail((member as GuildMember | null)?.user.displayAvatarURL() ?? "")
+		.setFooter({
 			text: (member as GuildMember)?.guild?.name ?? guild?.name,
-			icon_url:
-				(member as GuildMember)?.guild?.iconURL() ??
+			iconURL: (member as GuildMember)?.guild?.iconURL() ??
 				guild?.iconURL() ??
 				undefined,
-		},
-		thumbnail: {
-			url: (member as GuildMember | null)?.user.displayAvatarURL() ?? "",
-		},
-		timestamp: new Date().toISOString(),
-		color: 0x2b2d31,
-	});
+		});
+	
 	return {
 		embeds: [embed],
 	};
 };
 
 export const punishButtons = (id: string) =>
-	new ActionRowBuilder<ButtonBuilder>({
-		components: [
-			new ButtonBuilder({
-				custom_id: `punish_kick-${id}`,
-				label: "Kick",
-				style: ButtonStyle.Danger,
-			}),
-			new ButtonBuilder({
-				custom_id: `punish_ban-${id}`,
-				label: "Ban",
-				style: ButtonStyle.Danger,
-			}),
-			new ButtonBuilder({
-				custom_id: `punish_quarantine-${id}`,
-				label: "Quarantine",
-				style: ButtonStyle.Secondary,
-			}),
-		],
-	});
+	new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder()
+			.setCustomId(`punish_kick-${id}`)
+			.setLabel("Kick")
+			.setStyle(ButtonStyle.Danger),
+		new ButtonBuilder()
+			.setCustomId(`punish_ban-${id}`)
+			.setLabel("Ban")
+			.setStyle(ButtonStyle.Danger),
+		new ButtonBuilder()
+			.setCustomId(`punish_quarantine-${id}`)
+			.setLabel("Quarantine")
+			.setStyle(ButtonStyle.Secondary),
+	);
 
 export const addWarn = async (interaction: ChatInputCommandInteraction) => {
 	const member = interaction.options.getMember("member") as GuildMember;
@@ -334,6 +336,7 @@ export const addWarn = async (interaction: ChatInputCommandInteraction) => {
 	const logs = interaction.guild?.channels.cache.get(
 		guild?.logs ?? "",
 	) as TextChannel;
+
 	await logs?.send(
 		logBuilder({
 			member: interaction.member as GuildMember,
@@ -343,28 +346,22 @@ export const addWarn = async (interaction: ChatInputCommandInteraction) => {
 };
 
 export const optionButtons = (id: string) =>
-	new ActionRowBuilder<ButtonBuilder>({
-		components: [
-			new ButtonBuilder({
-				label: "Yes",
-				style: ButtonStyle.Primary,
-				custom_id: `${id}_yes`,
-			}),
-			new ButtonBuilder({
-				label: "No",
-				style: ButtonStyle.Danger,
-				custom_id: `${id}_no`,
-			}),
-		],
-	});
+	new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder()
+			.setLabel("Yes")
+			.setStyle(ButtonStyle.Primary)
+			.setCustomId(`${id}_yes`),
+		new ButtonBuilder()
+			.setLabel("No")
+			.setStyle(ButtonStyle.Danger)
+			.setCustomId(`${id}_no`),
+	);
 
 export const defaultError = {
 	files: [
-		new AttachmentBuilder(join(process.cwd(), "./assets/error.gif"), {
-			name: "error.gif",
-			description:
-				"It seems you stumbled upon an unknown error!, if the problem persists, do not doubt to contact us our support server.",
-		}),
+		new AttachmentBuilder(join(process.cwd(), "./assets/error.gif"))
+			.setName("error.gif")
+			.setDescription("It seems you stumbled upon an unknown error!, if the problem persists, do not doubt to contact us our support server."),
 	],
 	components: [buttons],
 	ephemeral: true,

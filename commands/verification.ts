@@ -1,10 +1,8 @@
-import type {
-	ChatInputCommandInteraction,
-	GuildMember,
-	TextChannel,
-	VoiceChannel,
-} from "discord.js";
 import {
+	type ChatInputCommandInteraction,
+	type GuildMember,
+	type TextChannel,
+	type VoiceChannel,
 	SlashCommandBuilder,
 	EmbedBuilder,
 	ActionRowBuilder,
@@ -20,9 +18,9 @@ import {
 	successEmbedBuilder,
 	getQuarantine,
 } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class Verification {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("verification")
 		.setNameLocalizations({ "es-ES": "verificación" })
@@ -116,7 +114,7 @@ export default class Verification {
 						return;
 					}
 
-					// rome-ignore lint/style/noNonNullAssertion: Guild will always be defined, since this command doesn't allow you to run it in anything other than a guild.
+					// biome-ignore lint/style/noNonNullAssertion: Guild will always be defined, since this command doesn't allow you to run it in anything other than a guild.
 					const quarantine = await getQuarantine(interaction.guild!);
 
 					interaction.guild?.channels.cache.forEach(async (ch) => {

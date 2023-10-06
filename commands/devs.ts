@@ -1,14 +1,11 @@
-import { ChatInputCommandInteraction } from "discord.js";
 import {
+	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	AttachmentBuilder,
 	EmbedBuilder,
 } from "discord.js";
-import { join } from "node:path";
-import emojis from "../emojis.js";
-import { buttons } from "../utils.js";
+import { buttons, emojis } from "../utils.js";
 
-export default class Developers {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("devs")
 		.setNameLocalizations({ "es-ES": "desarrolladores" })
@@ -35,13 +32,12 @@ export default class Developers {
 				},
 				{
 					name: "Joined Discord",
-					value: `${emojis.reply1} <t:${
-						Math.floor(user1?.createdTimestamp / 1000) + 3600
-					}:F>`,
+					value: `${emojis.reply1} <t:${Math.floor(user1?.createdTimestamp / 1000) + 3600
+						}:F>`,
 				},
 				{
 					name: "Github",
-					value: `${emojis.reply1} **__https://github.com/AngelNext__**`,
+					value: `${emojis.reply1} **__https://github.com/angelnext__**`,
 				},
 			)
 			.setFooter({
@@ -64,9 +60,8 @@ export default class Developers {
 				},
 				{
 					name: "Joined Discord",
-					value: `${emojis.reply1} <t:${
-						Math.floor(user2?.createdTimestamp / 1000) + 3600
-					}:F>`,
+					value: `${emojis.reply1} <t:${Math.floor(user2?.createdTimestamp / 1000) + 3600
+						}:F>`,
 				},
 				{
 					name: "Github",

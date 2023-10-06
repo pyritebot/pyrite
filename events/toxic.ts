@@ -1,13 +1,9 @@
 import type { Interaction } from "discord.js";
 import { Events } from "discord.js";
-import {
-	successEmbedBuilder,
-	errorEmbedBuilder,
-	getQuarantine,
-} from "../utils.js";
-import prisma from "../database.js";
+import { errorEmbedBuilder } from "../utils.js";
+import { prisma } from "../database.js";
 
-export default class RoleDeletions {
+export default class {
 	name = Events.InteractionCreate;
 
 	async run(interaction: Interaction) {
@@ -23,7 +19,7 @@ export default class RoleDeletions {
 		}
 
 		const [_, memberId] = interaction.customId.split("-");
-		const member = await interaction.guild?.members.fetch(memberId);
+		const member = await interaction.guild?.members.fetch(memberId ?? "");
 
 		if (!member) {
 			await interaction.reply({

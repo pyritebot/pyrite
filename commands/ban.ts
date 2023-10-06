@@ -1,18 +1,19 @@
-import type {
-	ChatInputCommandInteraction,
-	GuildMember,
-	TextChannel,
+import {
+	type ChatInputCommandInteraction,
+	type GuildMember,
+	type TextChannel,
+	SlashCommandBuilder,
+	PermissionFlagsBits,
 } from "discord.js";
-import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 import {
 	errorEmbedBuilder,
 	successEmbedBuilder,
 	warnEmbedBuilder,
 	logBuilder,
 } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class Ban {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("ban")
 		.setDescription("Bans a user from the server.")

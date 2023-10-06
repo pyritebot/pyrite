@@ -1,12 +1,12 @@
 import type { TextChannel, Message } from "discord.js";
 import { Events } from "discord.js";
 import { logBuilder } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class AntiLinks {
-	name = Events.MessageCreate;
+export default class {
+	name = Events.MessageUpdate;
 
-	async run(message: Message) {
+	async run(_: Message, message: Message) {
 		if (!message.inGuild()) return;
 		const guild = await prisma.guild.findUnique({
 			where: { guild: message.guildId },

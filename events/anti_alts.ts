@@ -1,8 +1,8 @@
 import type { TextChannel, GuildMember } from "discord.js";
-import { Events, EmbedBuilder, Colors, PermissionFlagsBits } from "discord.js";
-import prisma from "../database.js";
+import { Events, EmbedBuilder, PermissionFlagsBits } from "discord.js";
+import { prisma } from "../database.js";
 
-export default class AntiAlts {
+export default class {
 	name = Events.GuildMemberAdd;
 
 	async run(member: GuildMember) {

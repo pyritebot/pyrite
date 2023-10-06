@@ -1,12 +1,9 @@
-import type {
-	ChatInputCommandInteraction,
-	TextChannel,
-	VoiceChannel,
-} from "discord.js";
 import {
+	type ChatInputCommandInteraction,
+	type TextChannel,
+	type VoiceChannel,
 	SlashCommandBuilder,
 	EmbedBuilder,
-	Colors,
 	ButtonBuilder,
 	ActionRowBuilder,
 	ButtonStyle,
@@ -16,11 +13,11 @@ import {
 	defaultError,
 	errorEmbedBuilder,
 	successEmbedBuilder,
+	emojis,
 } from "../utils.js";
-import prisma from "../database.js";
-import emojis from "../emojis.js";
+import { prisma } from "../database.js";
 
-export default class Lockdown {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("lockdown")
 		.setDescription("Lockdown the entire server!")

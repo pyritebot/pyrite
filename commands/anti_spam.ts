@@ -1,18 +1,19 @@
-import type {
-	ChatInputCommandInteraction,
-	GuildMember,
-	TextChannel,
+import {
+	type ChatInputCommandInteraction,
+	type GuildMember,
+	type TextChannel,
+	SlashCommandBuilder,
+	PermissionFlagsBits,
 } from "discord.js";
-import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
 import {
 	defaultError,
 	successEmbedBuilder,
 	errorEmbedBuilder,
 	logBuilder,
 } from "../utils.js";
-import prisma from "../database.js";
+import { prisma } from "../database.js";
 
-export default class AntiSpam {
+export default class {
 	data = new SlashCommandBuilder()
 		.setName("antispam")
 		.setDescription("Toggle Anti Spam in your server!")
