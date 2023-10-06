@@ -31,15 +31,15 @@ Click on __**Select Category**__ below to get started.
 			case 'moderation':
 				helpEmbed.setTitle('<:moderator:1008717826552504321> Moderation').setDescription("> Here's a list of the moderation commands").setFields(
 					{
-						name: '</warnings add:1014153355377004669>',
+						name: '</warnings add:1098597583506645123>',
 						value: `${emojis.blank}${emojis.arrow} Warn a server member`,
 					},
 					{
-						name: '</warnings show:1014153355377004669>',
+						name: '</warnings show:1098597583506645123>',
 						value: `${emojis.blank}${emojis.arrow} Show the amount of warnings a user has`,
 					},
 					{
-						name: '</warnings remove:1014153355377004669>',
+						name: '</warnings remove:1098597583506645123>',
 						value: `${emojis.blank}${emojis.arrow} Remove a user's warns`,
 					},
 					{
