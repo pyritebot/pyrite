@@ -1,11 +1,11 @@
 import {
 	type ChatInputCommandInteraction,
 	EmbedBuilder,
-	SlashCommandBuilder,
 	PermissionFlagsBits,
+	SlashCommandBuilder,
 } from "discord.js";
-import { errorEmbedBuilder, emojis } from "../utils.js";
 import { prisma } from "../database.js";
+import { emojis, errorEmbedBuilder } from "../utils.js";
 
 export default class {
 	data = new SlashCommandBuilder()
@@ -71,19 +71,25 @@ export default class {
           `,
 				},
 				{
-					name: `${guild?.toxicityFilter ? emojis.check : emojis.error} __Anti Toxicity__`,
+					name: `${
+						guild?.toxicityFilter ? emojis.check : emojis.error
+					} __Anti Toxicity__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Toxicity Logs Channel:** <#${guild?.logs}>
           `,
 				},
 				{
-					name: `${guild?.antiLinks ? emojis.check : emojis.error} __Anti Links__`,
+					name: `${
+						guild?.antiLinks ? emojis.check : emojis.error
+					} __Anti Links__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Anti Links Log Channel:** <#${guild?.logs}>
           `,
 				},
 				{
-					name: `${guild?.antiRaid ? emojis.check : emojis.error} __Anti Raid__`,
+					name: `${
+						guild?.antiRaid ? emojis.check : emojis.error
+					} __Anti Raid__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Anti Raid Log Channel:** <#${guild?.logs}>
           ${emojis.blank}${emojis.arrow} **Channel Creation Limit:** \`5\`
@@ -94,14 +100,18 @@ export default class {
           `,
 				},
 				{
-					name: `${guild?.antiAlts ? emojis.check : emojis.error} __Anti Alts__`,
+					name: `${
+						guild?.antiAlts ? emojis.check : emojis.error
+					} __Anti Alts__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Anti Alts Log Channel:** <#${guild?.logs}>
           ${emojis.blank}${emojis.arrow} **Max Days:** \`7\`
           `,
 				},
 				{
-					name: `${guild?.lockdownChannel ? emojis.check : emojis.error} __Lockdown__`,
+					name: `${
+						guild?.lockdownChannel ? emojis.check : emojis.error
+					} __Lockdown__`,
 					value: `
           ${emojis.blank}${emojis.arrow} **Lockdown Channel**: ${
 						guild?.lockdownChannel ? `<#${guild?.lockdownChannel}>` : "Not Set"

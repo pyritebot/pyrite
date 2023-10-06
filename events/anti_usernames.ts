@@ -1,7 +1,7 @@
-import type { TextChannel, GuildMember } from "discord.js";
+import type { GuildMember, TextChannel } from "discord.js";
 import { Events } from "discord.js";
-import { logBuilder } from "../utils.js";
 import { prisma } from "../database.js";
+import { logBuilder } from "../utils.js";
 
 export default class {
 	name = Events.GuildMemberAdd;

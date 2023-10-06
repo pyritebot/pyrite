@@ -1,5 +1,5 @@
 import type { Message, TextChannel } from "discord.js";
-import { Events, EmbedBuilder } from "discord.js";
+import { EmbedBuilder, Events } from "discord.js";
 import { prisma } from "../database.js";
 import { analyzeText } from "../utils.js";
 

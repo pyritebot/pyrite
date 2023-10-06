@@ -1,7 +1,7 @@
 import type { Role, TextChannel } from "discord.js";
-import { Events, AuditLogEvent } from "discord.js";
-import { logBuilder, getQuarantine } from "../utils.js";
+import { AuditLogEvent, Events } from "discord.js";
 import { prisma } from "../database.js";
+import { getQuarantine, logBuilder } from "../utils.js";
 
 export default class RoleDeletions {
 	name = Events.GuildRoleDelete;

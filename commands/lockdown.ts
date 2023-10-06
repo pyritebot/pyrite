@@ -1,21 +1,21 @@
 import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
 	type ChatInputCommandInteraction,
+	EmbedBuilder,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
 	type TextChannel,
 	type VoiceChannel,
-	SlashCommandBuilder,
-	EmbedBuilder,
-	ButtonBuilder,
-	ActionRowBuilder,
-	ButtonStyle,
-	PermissionFlagsBits,
 } from "discord.js";
+import { prisma } from "../database.js";
 import {
 	defaultError,
+	emojis,
 	errorEmbedBuilder,
 	successEmbedBuilder,
-	emojis,
 } from "../utils.js";
-import { prisma } from "../database.js";
 
 export default class {
 	data = new SlashCommandBuilder()
@@ -75,7 +75,7 @@ export default class {
 		}
 
 		switch (interaction.options.getSubcommand()) {
-			case "on":
+			case "on": {
 				const confirm = new ActionRowBuilder<ButtonBuilder>({
 					components: [
 						new ButtonBuilder({
@@ -104,6 +104,7 @@ export default class {
 					ephemeral: true,
 				});
 				break;
+			}
 
 			case "off":
 				try {
@@ -161,7 +162,7 @@ export default class {
 				}
 				break;
 
-			case "update":
+			case "update": {
 				const content = interaction.options.getString("message");
 
 				await interaction.deferReply({ ephemeral: true });
@@ -217,6 +218,7 @@ export default class {
 					],
 				});
 				break;
+			}
 		}
 	}
 }

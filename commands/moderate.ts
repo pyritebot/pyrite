@@ -1,13 +1,18 @@
 import {
 	type ChatInputCommandInteraction,
 	type GuildMember,
-	type TextChannel,
-	SlashCommandBuilder,
 	PermissionFlagsBits,
+	SlashCommandBuilder,
+	type TextChannel,
 } from "discord.js";
-import { successEmbedBuilder, errorEmbedBuilder, buttons, logBuilder } from "../utils.js";
 import { nanoid } from "nanoid/non-secure";
 import { prisma } from "../database.js";
+import {
+	buttons,
+	errorEmbedBuilder,
+	logBuilder,
+	successEmbedBuilder,
+} from "../utils.js";
 
 export default class {
 	data = new SlashCommandBuilder()
@@ -15,8 +20,7 @@ export default class {
 		.setNameLocalizations({ "es-ES": "moderar-apodo" })
 		.setDescription("Moderate a users name to one that can be mentioned!")
 		.setDescriptionLocalizations({
-			"es-ES":
-				"Cambia el nombre de usuario a uno que pueda ser mencionado!",
+			"es-ES": "Cambia el nombre de usuario a uno que pueda ser mencionado!",
 		})
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageNicknames)
 		.addUserOption((option) =>
@@ -80,22 +84,23 @@ export default class {
 				where: { guild: interaction.guildId },
 				select: { logs: true },
 			});
-	
+
 			const logs = interaction.guild?.channels.cache.get(
 				guild?.logs ?? "",
 			) as TextChannel;
-		
+
 			logs?.send(
 				logBuilder({
 					member: interaction.member as GuildMember,
 					reason: `${member.user} nickname moderated`,
 				}),
 			);
-
 		} catch {
 			await interaction.reply({
 				embeds: [
-					errorEmbedBuilder("Can't moderate this user's nickname, if this problem persists, please contact support")
+					errorEmbedBuilder(
+						"Can't moderate this user's nickname, if this problem persists, please contact support",
+					),
 				],
 				components: [buttons],
 				ephemeral: true,

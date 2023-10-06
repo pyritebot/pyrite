@@ -1,19 +1,19 @@
 import type { Interaction, TextChannel, VoiceChannel } from "discord.js";
 import {
-	PermissionFlagsBits,
-	Events,
-	EmbedBuilder,
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	EmbedBuilder,
+	Events,
+	PermissionFlagsBits,
 } from "discord.js";
+import { prisma } from "../database.js";
 import {
+	errorEmbedBuilder,
+	getQuarantine,
 	optionButtons,
 	successEmbedBuilder,
-	getQuarantine,
-	errorEmbedBuilder,
 } from "../utils.js";
-import { prisma } from "../database.js";
 
 export default class {
 	name = Events.InteractionCreate;
@@ -142,7 +142,7 @@ export default class {
 				name: "verify-here",
 			});
 
-			// rome-ignore lint/style/noNonNullAssertion: Guild will always be defined, since this command doesn't allow you to run it in anything other than a guild.
+			// biome-ignore lint/style/noNonNullAssertion: Guild will always be defined, since this command doesn't allow you to run it in anything other than a guild.
 			const quarantine = await getQuarantine(interaction?.guild!);
 
 			interaction.guild?.channels.cache.forEach(async (ch) => {

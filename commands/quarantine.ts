@@ -1,13 +1,13 @@
 import {
 	type ChatInputCommandInteraction,
 	type GuildMember,
-	SlashCommandBuilder,
 	PermissionFlagsBits,
+	SlashCommandBuilder,
 } from "discord.js";
 import {
-	successEmbedBuilder,
-	getQuarantine,
 	errorEmbedBuilder,
+	getQuarantine,
+	successEmbedBuilder,
 } from "../utils.js";
 
 export default class {
@@ -69,7 +69,7 @@ export default class {
 		await interaction.deferReply({ ephemeral: true });
 
 		const member = interaction.options.getMember("user") as GuildMember;
-		// rome-ignore lint/style/noNonNullAssertion: Guild will always be defined, since this command doesn't allow you to run it in anything other than a guild.
+		// biome-ignore lint/style/noNonNullAssertion: Guild will always be defined, since this command doesn't allow you to run it in anything other than a guild.
 		const quarantine = await getQuarantine(interaction.guild!);
 
 		switch (interaction.options.getSubcommand()) {

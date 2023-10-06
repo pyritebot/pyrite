@@ -1,7 +1,7 @@
 import type { Interaction } from "discord.js";
 import { Events } from "discord.js";
-import { errorEmbedBuilder } from "../utils.js";
 import { prisma } from "../database.js";
+import { errorEmbedBuilder } from "../utils.js";
 
 export default class {
 	name = Events.InteractionCreate;

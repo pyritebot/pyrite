@@ -1,9 +1,9 @@
 import {
 	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
 	PermissionFlagsBits,
+	SlashCommandBuilder,
 } from "discord.js";
-import { successEmbedBuilder, errorEmbedBuilder } from "../utils.js";
+import { errorEmbedBuilder, successEmbedBuilder } from "../utils.js";
 
 export default class {
 	data = new SlashCommandBuilder()
@@ -89,7 +89,7 @@ export default class {
 						.editReply({
 							embeds: [errorEmbedBuilder("No role names provided!")],
 						})
-						.catch(() => { });
+						.catch(() => {});
 					return;
 				}
 
@@ -99,14 +99,13 @@ export default class {
 						async (r) =>
 							await r
 								.delete(`Requested by ${interaction.user}!`)
-								.catch(() => { }),
+								.catch(() => {}),
 					);
-				await interaction
-					.editReply({
-						embeds: [
-							successEmbedBuilder(`Deleted all roles with name **${name}**`),
-						],
-					});
+				await interaction.editReply({
+					embeds: [
+						successEmbedBuilder(`Deleted all roles with name **${name}**`),
+					],
+				});
 				break;
 
 			case "channel":
@@ -115,7 +114,7 @@ export default class {
 						.editReply({
 							embeds: [errorEmbedBuilder("No channel names provided!")],
 						})
-						.catch(() => { });
+						.catch(() => {});
 					return;
 				}
 
@@ -125,23 +124,20 @@ export default class {
 						async (c) =>
 							await c
 								.delete(`Requested by ${interaction.user}!`)
-								.catch(() => { }),
+								.catch(() => {}),
 					);
-				await interaction
-					.editReply({
-						embeds: [
-							successEmbedBuilder(`Deleted all channels with name **${name}**`),
-						],
-					});
+				await interaction.editReply({
+					embeds: [
+						successEmbedBuilder(`Deleted all channels with name **${name}**`),
+					],
+				});
 				break;
 
 			case "messages":
 				if (!amount) {
 					await interaction.editReply({
-						embeds: [
-							errorEmbedBuilder("No amount provided!")
-						]
-					})
+						embeds: [errorEmbedBuilder("No amount provided!")],
+					});
 					return;
 				}
 
@@ -155,7 +151,7 @@ export default class {
 				}
 
 				try {
-					await interaction.channel?.bulkDelete(amount)
+					await interaction.channel?.bulkDelete(amount);
 
 					await interaction.editReply({
 						embeds: [

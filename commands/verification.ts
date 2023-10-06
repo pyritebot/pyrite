@@ -1,24 +1,24 @@
 import {
-	type ChatInputCommandInteraction,
-	type GuildMember,
-	type TextChannel,
-	type VoiceChannel,
-	SlashCommandBuilder,
-	EmbedBuilder,
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	PermissionFlagsBits,
 	ChannelType,
+	type ChatInputCommandInteraction,
+	EmbedBuilder,
+	type GuildMember,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
+	type TextChannel,
+	type VoiceChannel,
 } from "discord.js";
+import { prisma } from "../database.js";
 import {
 	defaultError,
 	errorEmbedBuilder,
+	getQuarantine,
 	logBuilder,
 	successEmbedBuilder,
-	getQuarantine,
 } from "../utils.js";
-import { prisma } from "../database.js";
 
 export default class {
 	data = new SlashCommandBuilder()
@@ -100,7 +100,7 @@ export default class {
 		await interaction.deferReply({ ephemeral: true });
 		try {
 			switch (interaction.options.getSubcommand()) {
-				case "on":
+				case "on": {
 					const channel = interaction.options.getChannel(
 						"channel",
 					) as TextChannel;
@@ -183,8 +183,9 @@ export default class {
 						}),
 					);
 					break;
+				}
 
-				case "off":
+				case "off": {
 					const tempGuild = await prisma.guild.findUnique({
 						where: { guild: interaction.guildId },
 						select: { verificationChannel: true, logs: true },
@@ -216,8 +217,9 @@ export default class {
 						}),
 					);
 					break;
+				}
 
-				case "role":
+				case "role": {
 					const role = interaction.options.getRole("role");
 
 					await prisma.guild.upsert({
@@ -237,6 +239,7 @@ export default class {
 						],
 					});
 					break;
+				}
 
 				case "removerole":
 					await prisma.guild.upsert({

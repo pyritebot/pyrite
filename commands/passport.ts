@@ -1,18 +1,18 @@
+import { join } from "node:path";
 import {
+	AttachmentBuilder,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	AttachmentBuilder,
 } from "discord.js";
+import qr from "qr-image";
 import sharp from "sharp";
+import { prisma } from "../database.js";
 import {
-	loadImage,
 	defaultError,
 	errorEmbedBuilder,
+	loadImage,
 	timeSince,
 } from "../utils.js";
-import { join } from "node:path";
-import { prisma } from "../database.js";
-import qr from "qr-image";
 
 export default class {
 	data = new SlashCommandBuilder()

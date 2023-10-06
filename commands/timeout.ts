@@ -1,17 +1,17 @@
 import {
 	type ChatInputCommandInteraction,
 	type GuildMember,
-	type TextChannel,
-	SlashCommandBuilder,
 	PermissionFlagsBits,
+	SlashCommandBuilder,
+	type TextChannel,
 } from "discord.js";
+import { prisma } from "../database.js";
 import {
 	errorEmbedBuilder,
+	logBuilder,
 	successEmbedBuilder,
 	warnEmbedBuilder,
-	logBuilder,
 } from "../utils.js";
-import { prisma } from "../database.js";
 
 export default class {
 	data = new SlashCommandBuilder()
@@ -92,7 +92,7 @@ export default class {
 		}
 
 		switch (interaction.options.getSubcommand()) {
-			case "add":
+			case "add": {
 				const minutes = interaction.options.getInteger("minutes", true);
 				const reason = interaction.options.getString("reason", true);
 				const msg = await member
@@ -144,8 +144,9 @@ export default class {
 					}),
 				);
 				break;
+			}
 
-			case "remove":
+			case "remove": {
 				try {
 					await member.timeout(null);
 				} catch (err) {
@@ -180,6 +181,7 @@ export default class {
 					}),
 				);
 				break;
+			}
 		}
 	}
 }

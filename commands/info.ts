@@ -1,15 +1,15 @@
 import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
 	type ChatInputCommandInteraction,
+	EmbedBuilder,
 	type GuildMember,
+	PermissionFlagsBits,
 	type PermissionResolvable,
 	SlashCommandBuilder,
-	EmbedBuilder,
-	PermissionFlagsBits,
-	ButtonBuilder,
-	ActionRowBuilder,
-	ButtonStyle,
 } from "discord.js";
-import { errorEmbedBuilder, buttons, emojis } from "../utils.js";
+import { buttons, emojis, errorEmbedBuilder } from "../utils.js";
 
 export default class {
 	data = new SlashCommandBuilder()
@@ -59,7 +59,7 @@ export default class {
 		}
 
 		switch (interaction.options.getSubcommand()) {
-			case "user":
+			case "user": {
 				const member = interaction.options.getMember("user") as GuildMember;
 
 				if (!member) {
@@ -137,8 +137,9 @@ export default class {
 					],
 				});
 				break;
+			}
 
-			case "server":
+			case "server": {
 				const embed2 = new EmbedBuilder()
 					.setTitle(`${emojis.compass} ${interaction.guild?.name}`)
 					.setThumbnail(interaction.guild?.iconURL() ?? null)
@@ -187,6 +188,7 @@ export default class {
 
 				await interaction.reply({ embeds: [embed2] });
 				break;
+			}
 		}
 	}
 }

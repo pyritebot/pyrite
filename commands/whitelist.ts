@@ -1,16 +1,16 @@
 import type { ChatInputCommandInteraction, GuildMember } from "discord.js";
 import {
-	SlashCommandBuilder,
-	PermissionFlagsBits,
 	EmbedBuilder,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
 } from "discord.js";
+import { prisma } from "../database.js";
 import {
 	defaultError,
+	emojis,
 	errorEmbedBuilder,
 	successEmbedBuilder,
-	emojis,
 } from "../utils.js";
-import { prisma } from "../database.js";
 
 export default class Whitelist {
 	data = new SlashCommandBuilder()
@@ -167,7 +167,7 @@ export default class Whitelist {
 					});
 					break;
 
-				case "admin":
+				case "admin": {
 					const member = interaction.options.getMember("user") as GuildMember;
 
 					const tempGuild = await prisma.guild.findUnique({
@@ -206,8 +206,9 @@ export default class Whitelist {
 						],
 					});
 					break;
+				}
 
-				case "owner":
+				case "owner": {
 					const owner = interaction.options.getMember("user") as GuildMember;
 
 					const tempGuild2 = await prisma.guild.findUnique({
@@ -246,8 +247,9 @@ export default class Whitelist {
 						],
 					});
 					break;
+				}
 
-				case "show":
+				case "show": {
 					const NOT_SET = `${emojis.error} Not Set`;
 
 					const guild = await prisma.guild.findUnique({
@@ -268,36 +270,40 @@ export default class Whitelist {
 							{
 								name: "__Members__",
 								inline: true,
-								value: `${emojis.reply1}${guild?.members ? `<@&${guild?.members}>` : NOT_SET
-									}`,
+								value: `${emojis.reply1}${
+									guild?.members ? `<@&${guild?.members}>` : NOT_SET
+								}`,
 							},
 							{
 								name: "__Mods__",
 								inline: true,
-								value: `${emojis.reply1}${guild?.mods ? `<@&${guild?.mods}>` : NOT_SET
-									}`,
+								value: `${emojis.reply1}${
+									guild?.mods ? `<@&${guild?.mods}>` : NOT_SET
+								}`,
 							},
 							{
 								name: "__Admins__",
 								inline: true,
-								value: `${emojis.reply1}${guild?.admins?.length
+								value: `${emojis.reply1}${
+									guild?.admins?.length
 										? guild.admins.reduce(
-											(acc, val) => acc.concat(`<@${val}>\n`),
-											"",
-										)
+												(acc, val) => acc.concat(`<@${val}>\n`),
+												"",
+										  )
 										: NOT_SET
-									}`,
+								}`,
 							},
 							{
 								name: "__Owners__",
 								inline: true,
-								value: `${emojis.reply1}${guild?.owners?.length
+								value: `${emojis.reply1}${
+									guild?.owners?.length
 										? guild.owners.reduce(
-											(acc, val) => acc.concat(`<@${val}>\n`),
-											"",
-										)
+												(acc, val) => acc.concat(`<@${val}>\n`),
+												"",
+										  )
 										: NOT_SET
-									}`,
+								}`,
 							},
 						],
 						color: 0x2b2d31,
@@ -309,8 +315,9 @@ export default class Whitelist {
 
 					await interaction.editReply({ embeds: [showEmbed] });
 					break;
+				}
 
-				case "remove":
+				case "remove": {
 					const setting = interaction.options.getString("setting");
 					switch (setting) {
 						case "member":
@@ -345,7 +352,7 @@ export default class Whitelist {
 							});
 							break;
 
-						case "admin":
+						case "admin": {
 							const member = interaction.options.getMember(
 								"user",
 							) as GuildMember;
@@ -398,8 +405,9 @@ export default class Whitelist {
 								],
 							});
 							break;
+						}
 
-						case "owner":
+						case "owner": {
 							const owner = interaction.options.getMember(
 								"user",
 							) as GuildMember;
@@ -452,7 +460,9 @@ export default class Whitelist {
 								],
 							});
 							break;
+						}
 					}
+				}
 			}
 		} catch {
 			await interaction.editReply(defaultError);

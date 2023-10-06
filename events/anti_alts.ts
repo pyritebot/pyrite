@@ -1,5 +1,5 @@
-import type { TextChannel, GuildMember } from "discord.js";
-import { Events, EmbedBuilder, PermissionFlagsBits } from "discord.js";
+import type { GuildMember, TextChannel } from "discord.js";
+import { EmbedBuilder, Events, PermissionFlagsBits } from "discord.js";
 import { prisma } from "../database.js";
 
 export default class {

@@ -1,6 +1,6 @@
 import { Events, GuildMember } from "discord.js";
-import { getQuarantine } from "../utils.js";
 import { prisma } from "../database.js";
+import { getQuarantine } from "../utils.js";
 
 export default class {
 	name = Events.GuildMemberAdd;

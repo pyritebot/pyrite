@@ -1,7 +1,7 @@
-import { build } from "esbuild";
 import { readdirSync, statSync } from "node:fs";
 import { rm } from "node:fs/promises";
 import { join } from "node:path";
+import { build } from "esbuild";
 
 await rm(join(process.cwd(), "dist"), { recursive: true, force: true });
 
@@ -40,7 +40,7 @@ await build({
 	target: "node16",
 	platform: "node",
 	minify: true,
-	tsconfig: join(process.cwd(), "tsconfig.json")
+	tsconfig: join(process.cwd(), "tsconfig.json"),
 });
 
 console.log("\x1b[32m \x1b[0m Project compiled successfully");

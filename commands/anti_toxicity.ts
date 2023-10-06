@@ -1,17 +1,17 @@
 import {
 	type ChatInputCommandInteraction,
 	type GuildMember,
-	type TextChannel,
-	SlashCommandBuilder,
 	PermissionFlagsBits,
+	SlashCommandBuilder,
+	type TextChannel,
 } from "discord.js";
+import { prisma } from "../database.js";
 import {
 	defaultError,
-	successEmbedBuilder,
 	errorEmbedBuilder,
 	logBuilder,
+	successEmbedBuilder,
 } from "../utils.js";
-import { prisma } from "../database.js";
 
 export default class {
 	data = new SlashCommandBuilder()
@@ -40,7 +40,7 @@ export default class {
 
 			await interaction.deferReply({ ephemeral: true });
 			switch (interaction.options.getSubcommand()) {
-				case "on":
+				case "on": {
 					const onGuild = await prisma.guild.upsert({
 						where: { guild: interaction.guildId },
 						select: { logs: true },
@@ -68,8 +68,9 @@ export default class {
 						}),
 					);
 					break;
+				}
 
-				case "off":
+				case "off": {
 					const offGuild = await prisma.guild.upsert({
 						where: { guild: interaction.guildId },
 						select: { logs: true },
@@ -97,6 +98,7 @@ export default class {
 						}),
 					);
 					break;
+				}
 			}
 		} catch {
 			await interaction.editReply(defaultError);

@@ -1,5 +1,5 @@
 import type { Message, TextChannel } from "discord.js";
-import { Events, Collection, ChannelType } from "discord.js";
+import { ChannelType, Collection, Events } from "discord.js";
 import { prisma } from "../database.js";
 import { logBuilder } from "../utils.js";
 

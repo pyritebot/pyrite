@@ -1,10 +1,10 @@
 import {
 	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
 	PermissionFlagsBits,
+	SlashCommandBuilder,
 } from "discord.js";
-import { successEmbedBuilder, errorEmbedBuilder } from "../utils.js";
 import { prisma } from "../database.js";
+import { errorEmbedBuilder, successEmbedBuilder } from "../utils.js";
 
 export default class {
 	data = new SlashCommandBuilder()

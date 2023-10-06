@@ -1,17 +1,17 @@
 import {
 	type ChatInputCommandInteraction,
 	type GuildMember,
-	type TextChannel,
-	SlashCommandBuilder,
 	PermissionFlagsBits,
+	SlashCommandBuilder,
+	type TextChannel,
 } from "discord.js";
+import { prisma } from "../database.js";
 import {
 	errorEmbedBuilder,
+	logBuilder,
 	successEmbedBuilder,
 	warnEmbedBuilder,
-	logBuilder,
 } from "../utils.js";
-import { prisma } from "../database.js";
 
 export default class {
 	data = new SlashCommandBuilder()

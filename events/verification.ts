@@ -1,21 +1,26 @@
+import { CaptchaGenerator } from "captcha-canvas";
 import type {
+	GuildMember,
 	GuildMemberRoleManager,
 	Interaction,
 	Message,
-	GuildMember,
 	TextChannel,
 } from "discord.js";
 import {
-	Events,
-	AttachmentBuilder,
-	EmbedBuilder,
 	ActionRowBuilder,
+	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	EmbedBuilder,
+	Events,
 } from "discord.js";
-import { CaptchaGenerator } from "captcha-canvas";
-import { successEmbedBuilder, errorEmbedBuilder, buttons, emojis } from "../utils.js";
 import { prisma } from "../database.js";
+import {
+	buttons,
+	emojis,
+	errorEmbedBuilder,
+	successEmbedBuilder,
+} from "../utils.js";
 
 export default class {
 	name = Events.InteractionCreate;
@@ -80,9 +85,11 @@ export default class {
 		const file = new AttachmentBuilder(buffer, { name: "verification.png" });
 		const verificationEmbed = new EmbedBuilder()
 			.setTitle(`${emojis.check} Verification`)
-			.setDescription("Are you a human? Lets find out. Simply type the following captcha below so I can verify that you are human. The captcha will only last 10 seconds so be quick!")
+			.setDescription(
+				"Are you a human? Lets find out. Simply type the following captcha below so I can verify that you are human. The captcha will only last 10 seconds so be quick!",
+			)
 			.setImage("attachment://verification.png")
-			.setColor(0x2b2d31)
+			.setColor(0x2b2d31);
 
 		return {
 			message: {

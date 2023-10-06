@@ -1,7 +1,7 @@
-import type { TextChannel, Message } from "discord.js";
+import type { Message, TextChannel } from "discord.js";
 import { Events } from "discord.js";
-import { logBuilder } from "../utils.js";
 import { prisma } from "../database.js";
+import { logBuilder } from "../utils.js";
 
 export default class {
 	name = Events.MessageUpdate;
@@ -24,7 +24,7 @@ export default class {
 			) as TextChannel;
 			await logs?.send(
 				logBuilder({
-					// rome-ignore lint/style/noNonNullAssertion: Member will always be defined.
+					// biome-ignore lint/style/noNonNullAssertion: Member will always be defined.
 					member: message.member!,
 					reason: "Self promote is not allowed in this server!",
 				}),

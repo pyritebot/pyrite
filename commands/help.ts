@@ -1,11 +1,11 @@
 import {
-	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
-	EmbedBuilder,
 	ActionRowBuilder,
+	type ChatInputCommandInteraction,
+	EmbedBuilder,
+	SlashCommandBuilder,
 	StringSelectMenuBuilder,
 } from "discord.js";
-import { defaultError, buttons, emojis } from "../utils.js";
+import { buttons, defaultError, emojis } from "../utils.js";
 
 export default class {
 	data = new SlashCommandBuilder()

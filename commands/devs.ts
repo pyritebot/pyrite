@@ -1,7 +1,7 @@
 import {
 	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
 	EmbedBuilder,
+	SlashCommandBuilder,
 } from "discord.js";
 import { buttons, emojis } from "../utils.js";
 
@@ -32,8 +32,9 @@ export default class {
 				},
 				{
 					name: "Joined Discord",
-					value: `${emojis.reply1} <t:${Math.floor(user1?.createdTimestamp / 1000) + 3600
-						}:F>`,
+					value: `${emojis.reply1} <t:${
+						Math.floor(user1?.createdTimestamp / 1000) + 3600
+					}:F>`,
 				},
 				{
 					name: "Github",
@@ -60,8 +61,9 @@ export default class {
 				},
 				{
 					name: "Joined Discord",
-					value: `${emojis.reply1} <t:${Math.floor(user2?.createdTimestamp / 1000) + 3600
-						}:F>`,
+					value: `${emojis.reply1} <t:${
+						Math.floor(user2?.createdTimestamp / 1000) + 3600
+					}:F>`,
 				},
 				{
 					name: "Github",
