@@ -72,7 +72,7 @@ const client = new Client({
 client.once("ready", async () => {
   setActivity(client);
   console.log(`\x1b[32m \x1b[0m logged in as ${client.user?.tag}`);
-  console.log(`client in ${client.guilds.cache.size} servers`);
+  console.log(`\x1b[32m \x1b[0m client in ${client.guilds.cache.size} servers`);
 });
 
 client.on("guildCreate", async (guild) => {

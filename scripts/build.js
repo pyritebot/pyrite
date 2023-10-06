@@ -43,4 +43,4 @@ await build({
 	tsconfig: join(process.cwd(), "tsconfig.json")
 });
 
-console.log("\x1b[32m  Project compiled successfully\x1b[0m");
+console.log("\x1b[32m \x1b[0m Project compiled successfully");

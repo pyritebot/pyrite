@@ -1,6 +1,6 @@
 import type { Interaction } from 'discord.js'
 import { Events, EmbedBuilder } from 'discord.js'
-import emojis from '../emojis.js'
+import { emojis } from '../utils.js'
 
 export default class {
 	name = Events.InteractionCreate
