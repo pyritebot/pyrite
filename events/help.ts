@@ -31,15 +31,15 @@ Click on __**Select Category**__ below to get started.
 			case 'moderation':
 				helpEmbed.setTitle('<:moderator:1008717826552504321> Moderation').setDescription("> Here's a list of the moderation commands").setFields(
 					{
-						name: '</warns add:1014153355377004669>',
+						name: '</warnings add:1014153355377004669>',
 						value: `${emojis.blank}${emojis.arrow} Warn a server member`,
 					},
 					{
-						name: '</warns show:1014153355377004669>',
+						name: '</warnings show:1014153355377004669>',
 						value: `${emojis.blank}${emojis.arrow} Show the amount of warnings a user has`,
 					},
 					{
-						name: '</warns remove:1014153355377004669>',
+						name: '</warnings remove:1014153355377004669>',
 						value: `${emojis.blank}${emojis.arrow} Remove a user's warns`,
 					},
 					{
@@ -56,7 +56,7 @@ Click on __**Select Category**__ below to get started.
 						value: `${emojis.blank}${emojis.arrow} Remove the timeout from a user`,
 					},
 					{
-						name: '</clear:1014153355330850850>',
+						name: '</clean:1159870583127937124>',
 						value: `${emojis.blank}${emojis.arrow} Clear a certain amount of messages in a channel`,
 					},
 					{
